@@ -32,7 +32,6 @@ ICT_MAP = {
     (0,1,1): N.array( [0,0,0,0,0,0,0,0,0,1] ),
     }
 
-
 def griddata(x1, x2, x3):
     
     " Given grid vectors, return grid data "
@@ -59,14 +58,23 @@ class pspline3_r8:
         
         x1, x2, x3: original grid arrays
         
-        bcs1, bcs2, bcs3: boundary conditions. Use bcs1,2,3=1 to apply periodic
-        boundary conditions (bcs1,2,3 defaults to None for not-a-knot boundary
-        conditions, this should be fine in most cases.
+        bcs1, bcs2, bcs3: boundary conditions. Use bcs{1,2,3}=1 to apply
+        periodic boundary conditions (bcs1,2,3 defaults to None for
+        not-a-knot boundary conditions, this should be fine in most cases.
 
-        More general boundary conditions can be applied by setting bcs{1,2,3}=(bmin, bmax)
-        where bmin/bmax can take values from 0 to 7, as described in http://w3.pppl.gov/NTCC/PSPLINE/.
-        The boundary conditions (if inhomogeneous) must then be applied by setting the class members
-        self.bcval{1,2,3}min and/or self.bcval{1,2,3}max explicitly *prior* to calling self.setup(f).
+        More general boundary conditions can be applied by setting
+
+        bcs{1,2,3}=(bmin, bmax)
+        
+        where bmin/bmax can take values from 0 to 7, as described in
+        http://w3.pppl.gov/NTCC/PSPLINE/.
+        
+        The boundary conditions (if inhomogeneous) must then be applied
+        by setting the class members
+        
+        self.bcval{1,2,3}min and/or self.bcval{1,2,3}max
+
+        explicitly *prior* to calling self.setup(f).
         
         1 -- match slope
         2 -- match 2nd derivative
@@ -76,11 +84,24 @@ class pspline3_r8:
         6 -- match 2nd derivative to 2nd divided difference
         7 -- match 3rd derivative to 3rd divided difference
 
-        For example, if one wishes to apply df/dx = a(x2,x3) on the left and d^2f/dx^2 = b(x1,x2) on the
-        right of x1, use bcs1=(1, 2) and set both self.bcval1min = a, and self.bcval1max = b where
-        shape(a) == shape(b) == (n3,n2) and n{2,3} = len(x{2,3}).
+        For example, if one wishes to apply df/dx = a(x2,x3) on the left and
 
-        
+        d^2f/dx^2 = b(x1,x2)
+
+        on the right of x1, use
+
+        bcs1=(1, 2)
+
+        and set both
+
+        self.bcval1min = a
+
+        and
+
+        self.bcval1max = b
+
+        where shape(a) == shape(b) == (n3,n2) and n{2,3} = len(x{2,3}).
+
         """
 
         self.__x1 = x1
