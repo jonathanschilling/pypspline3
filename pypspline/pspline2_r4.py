@@ -671,7 +671,7 @@ if __name__ == '__main__':
             f1,f2, ier, iwarn = spl.gradient_point(x1[i1], x2[i2])
             error += ( \
                 (f1 - f1exact[i2,i1])**2 +
-                (f2 - f2exact[i2,i1])**2)**2 
+                (f2 - f2exact[i2,i1])**2
                 )/2.
     toc = time.time()
     error /= nint
@@ -682,7 +682,7 @@ if __name__ == '__main__':
     # array
 
     tic = time.time()
-    f1,f2 ier, iwarn = spl.gradient_array(x1, x2)
+    f1,f2, ier, iwarn = spl.gradient_array(x1, x2)
     toc = time.time()
     error = N.sum(N.sum(N.sum(((f1-f1exact)**2 + (f2-f2exact)**2)/2.)))/nint
     print "gradient_array: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
@@ -696,7 +696,7 @@ if __name__ == '__main__':
     tic = time.time()
     f1,f2, ier, iwarn = spl.gradient_cloud(xc1, xc2)
     toc = time.time()
-    error = N.sum(((f1-f1cexact)**2 + (f2-f2cexact)**2/2.)/nint
+    error = N.sum(((f1-f1cexact)**2 + (f2-f2cexact)**2/2.))/nint
     print "gradient_cloud: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
           (nint, error, ier, iwarn, toc-tic)
     
