@@ -3,19 +3,29 @@
 # $Id$
 
 LIBS = ['pspline', 'ezcdf', 'portlib',]
+INCS = ['./', ]
 
 # the following should be edited to reflect your settings
 ###############################################################################
 
-MACROS = [('F2PY_REPORT_ATEXIT', '1'),]
+# f2py macros (see f2py doc)
+MACROS = [] # [('F2PY_REPORT_ATEXIT', '1'),]
 
 # if you plspline in another directory than ../LINUX/lib, change the line below
-LIBLOC = ['../LINUX/lib',] # location of libpspline.a, libezcdf.a & libportlib.a
+LIBLOC = ['../LINUX/lib',] # location of libpspline.a, etc.
 
 # the following are Fortran libraries that the C compiler must link with
+#
+# Example 1: Intel fortran compiler ifort version 8.0 with gcc 3.3.2
 # For the Intel compiler ifort version 8.0 these are:
 LIBLOC += ['/opt/intel_fc_80/lib/',]
 LIBS += ['ifcore',]
+
+# Example 2: Intel fortran compiler ifort version 8.0 with gcc 2.96, and
+##LIBLOC += ['/usr/local/intel/compiler80/intel_fc_80/lib/',]
+##LIBS += ['ifcore', 'cxa', 'unwind',]
+# to access Numpy's include files
+##INCS += ['/home/ap/include/python2.2/']
 
 ###############################################################################
 
@@ -23,7 +33,7 @@ from distutils.core import setup, Extension
 
 fpspline = Extension('fpspline',
                     define_macros = MACROS,
-                    include_dirs = ['./',],
+                    include_dirs = INCS,
                     library_dirs = LIBLOC,
                     libraries = LIBS,
                     sources = ['fpsplinemodule.c',
