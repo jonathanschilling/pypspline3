@@ -206,6 +206,158 @@ python module fpspline
         end subroutine r8herm3ev
     end interface
 
+!................bicubic........................................................................
+
+    interface  ! in :pspline
+        subroutine r8mkbicub(x,nx,y,ny, f,nf2,ibcxmin,bcxmin,ibcxmax,bcxmax,ibcymin,bcymin,ibcymax,bcymax,ilinx,iliny,ier) ! in :pspline:../pspline/r8mkbicub.f
+
+            integer, intent(hide), depend(x) :: nx = len(x)
+            integer, intent(hide), depend(y) :: ny = len(y)
+            integer, intent(hide), depend(nx) :: nf2=nx
+
+            real*8, dimension(nx), intent(in) :: x
+            real*8, dimension(ny), intent(in) :: y
+            real*8, dimension(4*nx*ny), intent(c) :: f
+
+            integer, intent(in) :: ibcxmin
+            real*8, dimension(ny), intent(in) :: bcxmin
+            integer, intent(in) :: ibcxmax
+            real*8, dimension(ny), intent(in) :: bcxmax
+
+            integer, intent(in) :: ibcymin
+            real*8, dimension(nx), intent(in) :: bcymin
+            integer, intent(in) :: ibcymax
+            real*8, dimension(nx), intent(in) :: bcymax
+
+            integer, intent(out) :: ilinx
+            integer, intent(out) :: iliny
+            integer, intent(out) :: ier
+        end subroutine r8mkbicub
+    end interface 
+
+    interface ! in :pspline
+        subroutine r8evbicub(xget,yget,x,nx,y,ny,ilinx,iliny,f,inf2,ict,fval,ier) ! in :pspline:../pspline/r8evbicub.f
+            real*8, intent(in) :: xget
+            real*8, intent(in) :: yget
+            real*8, dimension(nx), intent(in) :: x
+            integer, intent(hide), depend(x) :: nx = len(x)
+            real*8, dimension(ny), intent(in)  :: y
+            integer, intent(hide), depend(y) :: ny = len(y)
+            integer, intent(in) :: ilinx
+            integer, intent(in) :: iliny
+            real*8, dimension(4*nx*ny), intent(c) :: f
+            integer, intent(hide), depend(x) :: inf2 = len(x)
+            integer, dimension(6), intent(in) :: ict
+            real*8, intent(out) :: fval
+            integer, intent(out) :: ier
+        end subroutine r8evbicub
+    end interface
+
+    interface  ! in :pspline
+        subroutine r8gridbicub(x_newgrid,nx_new,y_newgrid,ny_new,f_new,if1,nx,xpkg,ny,ypkg,fspl,inf4,iwarn,ier) ! in :spline:../pspline/r8gridbicub.f
+            real*8, dimension(nx_new), intent(in) :: x_newgrid
+            integer, intent(hide), depend(x_newgrid) :: nx_new = len(x_newgrid)
+            real*8, dimension(ny_new), intent(in) :: y_newgrid
+            integer, intent(hide), depend(y_newgrid) :: ny_new = len(y_newgrid)
+            integer, intent(hide), depend(nx_new) :: if1 = nx_new
+            integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
+            real*8, dimension(nx*4), intent(in) :: xpkg
+            integer, intent(hide), depend(ypkg) :: ny = len(ypkg)/4
+            real*8, dimension(ny*4), intent(in) :: ypkg
+            real*8, dimension(4*nx*ny), intent(c)  :: fspl
+            integer, intent(hide), depend(xpkg) :: inf4 = len(xpkg)/4
+
+            real*8, dimension(nx_new*ny_new), intent(out) :: f_new
+
+            integer, intent(out) :: ier
+            integer, intent(out) :: iwarn
+        end subroutine r8gridbicub
+    end interface 
+
+    interface  ! in :pspline
+        subroutine r8vecbicub(ict,ivec,xvec,yvec,ivd,fval,nx,xpkg,ny,ypkg,fspl,inf4,iwarn,ier) ! in :pspline:../pspline/r8vecbicub.f
+            integer, dimension(6), intent(in) :: ict
+            integer, intent(hide), depend(xvec) :: ivec = len(xvec)
+            real*8, dimension(ivec), intent(in) :: xvec
+            real*8, dimension(ivec), intent(in)  :: yvec
+            integer, intent(hide), depend(ivec) :: ivd = ivec
+            integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
+            real*8, dimension(nx*4), intent(in) :: xpkg
+            integer, intent(hide), depend(ypkg) :: ny = len(ypkg)/4
+            real*8, dimension(ny*4), intent(in)  :: ypkg
+            real*8, dimension(4*nx*ny), intent(c) :: fspl
+            integer, intent(hide), depend(xpkg) :: inf4 = len(xpkg)/4
+
+            real*8, dimension(ivec), intent(out) :: fval
+            integer, intent(out) :: ier
+            integer, intent(out) :: iwarn
+        end subroutine r8vecbicub
+    end interface 
+
+!................1-d spline........................................................................
+
+    interface  ! in :pspline
+        subroutine r8mkspline(x,nx,f,ibcxmin,bcxmin,ibcxmax,bcxmax,ilinx,ier) ! in :pspline:../pspline/r8mkspline.f
+
+            integer, intent(hide), depend(x) :: nx = len(x)
+
+            real*8, dimension(nx), intent(in) :: x
+            real*8, dimension(2*nx), intent(c) :: f
+
+            integer, intent(in) :: ibcxmin
+            real*8, intent(in) :: bcxmin
+            integer, intent(in) :: ibcxmax
+            real*8, intent(in) :: bcxmax
+
+            integer, intent(out) :: ilinx
+            integer, intent(out) :: ier
+        end subroutine r8mkspline
+    end interface 
+
+    interface ! in :pspline
+        subroutine r8evspline(xget,x,nx,ilinx,f,ict,fval,ier) ! in :pspline:../pspline/r8evspline.f
+            real*8, intent(in) :: xget
+            real*8, dimension(nx), intent(in) :: x
+            integer, intent(hide), depend(x) :: nx = len(x)
+            integer, intent(in) :: ilinx
+            real*8, dimension(2*nx), intent(c) :: f
+            integer, dimension(3), intent(in) :: ict
+            real*8, intent(out) :: fval
+            integer, intent(out) :: ier
+        end subroutine r8evspline
+    end interface
+
+    interface  ! in :pspline
+        subroutine r8gridspline(x_newgrid,nx_new,f_new,nx,xpkg,fspl,iwarn,ier) ! in :spline:../pspline/r8gridspline.f
+            real*8, dimension(nx_new), intent(in) :: x_newgrid
+            integer, intent(hide), depend(x_newgrid) :: nx_new = len(x_newgrid)
+            integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
+            real*8, dimension(nx*4), intent(in) :: xpkg
+            real*8, dimension(2*nx), intent(c)  :: fspl
+
+            real*8, dimension(nx_new), intent(out) :: f_new
+
+            integer, intent(out) :: ier
+            integer, intent(out) :: iwarn
+        end subroutine r8gridspline
+    end interface 
+
+    interface  ! in :pspline
+        subroutine r8vecspline(ict,ivec,xvec,ivd,fval,nx,xpkg,fspl,iwarn,ier) ! in :pspline:../pspline/r8vecspline.f
+            integer, dimension(3), intent(in) :: ict
+            integer, intent(hide), depend(xvec) :: ivec = len(xvec)
+            real*8, dimension(ivec), intent(in) :: xvec
+            integer, intent(hide), depend(ivec) :: ivd = ivec
+            integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
+            real*8, dimension(nx*4), intent(in) :: xpkg
+            real*8, dimension(2*nx), intent(c) :: fspl
+
+            real*8, dimension(ivec), intent(out) :: fval
+            integer, intent(out) :: ier
+            integer, intent(out) :: iwarn
+        end subroutine r8vecspline
+    end interface 
+
 !!!!!!!!!!!!!!!!! real*4 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     interface  ! in :pspline

@@ -3,7 +3,7 @@
 # $Id$
 
 """
-1-D spline in real*4 precision
+1-D spline in real*8 precision
 """
 
 import Numeric as N
@@ -107,7 +107,7 @@ class pspline:
         self.bcval1max = 0
 
         # Compact cubic coefficient arrays
-        self.__fspl = N.zeros( (n1,2,), N.Float32 )
+        self.__fspl = N.zeros( (n1,2,), N.Float64 )
 
         # storage
         self.__x1pkg = None
@@ -128,7 +128,7 @@ class pspline:
         """
 
         if N.shape(f) != (self.__n1,):
-            raise 'pspline1_r4::setup shape error. Got shape(f)=%s should be %s' % \
+            raise 'pspline1_r8::setup shape error. Got shape(f)=%s should be %s' % \
                   ( str(N.shape(f)), str((self.__n1,)) )
 
         # default values for genxpg
@@ -139,23 +139,23 @@ class pspline:
         
         iper=0        
         if self.__ibctype1[0]==-1 or self.__ibctype1[1]==-1: iper=1
-        self.__x1pkg, ifail = fpspline.genxpkg(self.__x1, iper)
+        self.__x1pkg, ifail = fpspline.r8genxpkg(self.__x1, iper)
         if ifail!=0:
-            raise 'pspline1_r4::setup failed to compute x1pkg'
+            raise 'pspline1_r8::setup failed to compute x1pkg'
         
         self.__isReady = 0
 
         self.__fspl[:,0] = f
 
         self.__ilin1, ifail = \
-                      fpspline.mkspline(self.__x1, \
+                      fpspline.r8mkspline(self.__x1, \
                                        self.__fspl.flat, \
                                        self.__ibctype1[0], self.bcval1min, \
                                        self.__ibctype1[1], self.bcval1max, \
                                        )
         
         if ifail != 0 :
-            raise 'pspline1_r4::setup error'
+            raise 'pspline1_r8::setup error'
 
         self.__isReady = 1
 
@@ -167,7 +167,7 @@ class pspline:
         """
 
         iwarn = 0
-        fi,ier = fpspline.evspline(p1, \
+        fi,ier = fpspline.r8evspline(p1, \
                                     self.__x1, \
                                     self.__ilin1, \
                                     self.__fspl.flat, ICT_FVAL)
@@ -179,7 +179,7 @@ class pspline:
         Cloud interpolation for all p1[:].
         """
 
-        fi,iwarn,ier = fpspline.vecspline(ICT_FVAL, p1, \
+        fi,iwarn,ier = fpspline.r8vecspline(ICT_FVAL, p1, \
                                          self.__x1pkg, \
                                          self.__fspl.flat)
         return fi, ier, iwarn   
@@ -191,7 +191,7 @@ class pspline:
         In 1-D, this is the same as interp_cloud.
         """
 
-        fi, iwarn,ier = fpspline.vecspline(ICT_FVAL, p1, \
+        fi, iwarn,ier = fpspline.r8vecspline(ICT_FVAL, p1, \
                                          self.__x1pkg, \
                                          self.__fspl.flat)
 
@@ -215,7 +215,7 @@ class pspline:
         """
 
         if self.__isReady != 1:
-            raise 'pspline1_r4::interp: spline coefficients were not set up!'
+            raise 'pspline1_r8::interp: spline coefficients were not set up!'
 
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.interp_point(p1)
@@ -223,9 +223,9 @@ class pspline:
             fi, ier, iwarn = self.interp_cloud(p1, p2)        
 
         if ier:
-            raise "pspline1_r4::interp error ier=%d"%ier
+            raise "pspline1_r8::interp error ier=%d"%ier
         if iwarn:
-            warnings.warn('pspline1_r4::interp abscissae are out of bound!')
+            warnings.warn('pspline1_r8::interp abscissae are out of bound!')
     
         return fi
 
@@ -237,7 +237,7 @@ class pspline:
         """
 
         iwarn = 0
-        fi,ier = fpspline.evspline(p1, \
+        fi,ier = fpspline.r8evspline(p1, \
                                     self.__x1, \
                                     self.__ilin1, \
                                     self.__fspl.flat, ICT_MAP[i1])
@@ -250,7 +250,7 @@ class pspline:
         i1>=0 and i1<=2.
         """
 
-        fi,iwarn,ier = fpspline.vecspline(ICT_MAP[i1], p1, \
+        fi,iwarn,ier = fpspline.r8vecspline(ICT_MAP[i1], p1, \
                                          self.__x1pkg, \
                                          self.__fspl.flat)
         return fi, ier, iwarn
@@ -262,7 +262,7 @@ class pspline:
         i1>=0 and i1<=2. Same as derivative_cloud in 1-D.
         """
 
-        fi,iwarn,ier = fpspline.vecspline(ICT_MAP[i1], p1, \
+        fi,iwarn,ier = fpspline.r8vecspline(ICT_MAP[i1], p1, \
                                          self.__x1pkg, \
                                          self.__fspl.flat)
         return fi, ier, iwarn
@@ -276,7 +276,7 @@ class pspline:
         """
 
         if self.__isReady != 1:
-            raise 'pspline1_r4::derivative: spline coefficients were not set up!'
+            raise 'pspline1_r8::derivative: spline coefficients were not set up!'
 
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.derivative_point(i1,p1)
@@ -284,9 +284,9 @@ class pspline:
             fi, ier, iwarn = self.derivative_cloud(i1,p1)
 
         if ier:
-            raise "pspline1_r4::derivative error"
+            raise "pspline1_r8::derivative error"
         if iwarn:
-            warnings.warn('pspline1_r4::derivative abscissae are out of bound!')
+            warnings.warn('pspline1_r8::derivative abscissae are out of bound!')
     
         return fi
         
@@ -303,7 +303,7 @@ class pspline:
 
         ncf = NetCDFFile(filename, mode='w')
 
-        ncf.title = "pspline1_r4.save(..) file created on %s" % time.asctime()
+        ncf.title = "pspline1_r8.save(..) file created on %s" % time.asctime()
 
         ncf.createDimension('_1', 1)
         ncf.createDimension('_2', 2)
@@ -311,10 +311,10 @@ class pspline:
         isHermite = ncf.createVariable('isHermite', N.Int, ('_1',)) 
         isReady = ncf.createVariable('isReady', N.Int, ('_1',))
         ibctype1 = ncf.createVariable('ibctype1', N.Int, ('_2',))
-        x1 = ncf.createVariable('x1', N.Float32, ('n1',))
-        bcval1min = ncf.createVariable('bcval1min',  N.Float32, ('_1',))
-        bcval1max = ncf.createVariable('bcval1max',  N.Float32, ('_1',))
-        f = ncf.createVariable('f',  N.Float32, ('n1',))
+        x1 = ncf.createVariable('x1', N.Float64, ('n1',))
+        bcval1min = ncf.createVariable('bcval1min',  N.Float64, ('_1',))
+        bcval1max = ncf.createVariable('bcval1max',  N.Float64, ('_1',))
+        f = ncf.createVariable('f',  N.Float64, ('n1',))
         isHermite.assignValue(0)
         isReady.assignValue(self.__isReady)
         ibctype1.assignValue(self.__ibctype1)
@@ -335,7 +335,7 @@ class pspline:
         ncf = NetCDFFile(filename, mode='r')
         
         if ncf.variables['isHermite'][:][0] !=0:
-            raise 'pspline1_r4::load incompatible interpolation method'
+            raise 'pspline1_r8::load incompatible interpolation method'
 
         self.__ibctype1 = tuple(ncf.variables['ibctype1'][:])
         self.__x1 = ncf.variables['x1'][:]
@@ -358,7 +358,7 @@ if __name__ == '__main__':
     bcs1 = (0,0)
     x1min, x1max = 0., 1.
     x1 = N.arange(x1min, x1max+eps, (x1max-x1min)/float(n1-1),
-                  typecode=N.Float32)
+                  typecode=N.Float64)
 
     tic =  time.time()
     #########
@@ -370,7 +370,7 @@ if __name__ == '__main__':
     tic = time.time()
     spl = pspline(x1)
     # may set BCs if not-a-knot 
-    spl.setup(f.astype(N.Float32))
+    spl.setup(f.astype(N.Float64))
     toc = time.time()
     print "init/setup: %d original grid nodes time->%10.1f secs" % \
           (n1, toc-tic)

@@ -7,7 +7,6 @@
 """
 
 import Numeric as N
-import MLab
 import fpspline
 import warnings, types, time
 
