@@ -27,6 +27,14 @@ LIBS += ['ifcore',]
 # to access Numpy's include files
 ##INCS += ['/home/ap/include/python2.2/']
 
+# Example 3: LaheyFujitsu fortran compiler
+##LIBLOC += ['/usr/local/lf95/lib/',]
+##LIBS += ['fj9i6','fj9f6','fj9e6',]
+# to access Numpy's include files
+##INCS += ['/home/ap/include/python2.2/']
+
+
+
 ###############################################################################
 
 from distutils.core import setup, Extension
