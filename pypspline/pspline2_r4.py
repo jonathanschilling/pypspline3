@@ -659,7 +659,7 @@ if __name__ == '__main__':
 
     ## gradients
 
-    f1exact = 9*xx1**2 + 2*    xx2**3
+    f1exact = 3*xx1**2 + 2*    xx2**3
     f2exact =            6*xx1*xx2**2 
 
     # point
@@ -690,7 +690,7 @@ if __name__ == '__main__':
 
     # cloud
 
-    f1cexact = 9*xc1**2 + 2*    xc2**3
+    f1cexact = 3*xc1**2 + 2*    xc2**3
     f2cexact =            6*xc1*xc2**2
     
     tic = time.time()
