@@ -206,17 +206,17 @@ python module fpspline
         end subroutine r8herm3ev
     end interface
 
-!!!!!!!!!!!!!!!!! real*4 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!! real*4 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     interface  ! in :pspline
         subroutine genxpkg(nx,x,xpkg,iper,imsg,itol,ztol,ialg,ier) ! in :pspline:../pspline/genxpkg.f
             integer, intent(hide) :: nx
-            real*8, dimension(nx), intent(in) :: x
-            real*8, dimension(nx*4), intent(out) :: xpkg
+            real*4, dimension(nx), intent(in) :: x
+            real*4, dimension(nx*4), intent(out) :: xpkg
             integer, intent(in) :: iper
             integer, intent(in) :: imsg=0
             integer, intent(in) :: itol=0
-            real*8, intent(in) :: ztol=5.e-7
+            real*4, intent(in) :: ztol=5.e-7
             integer, intent(in) :: ialg=-3
             integer, intent(out) :: ier
         end subroutine genxpkg
@@ -235,25 +235,25 @@ python module fpspline
             integer, intent(hide), depend(nx) :: nf2=nx
             integer, intent(hide), depend(ny) :: nf3=ny
 
-            real*8, dimension(nx), intent(in) :: x
-            real*8, dimension(ny), intent(in) :: y
-            real*8, dimension(nz), intent(in) :: z
-            real*8, dimension(8*nx*ny*nz), intent(c) :: f
+            real*4, dimension(nx), intent(in) :: x
+            real*4, dimension(ny), intent(in) :: y
+            real*4, dimension(nz), intent(in) :: z
+            real*4, dimension(8*nx*ny*nz), intent(c) :: f
 
             integer, intent(in) :: ibcxmin
-            real*8, dimension(ny*nz), intent(in) :: bcxmin
+            real*4, dimension(ny*nz), intent(in) :: bcxmin
             integer, intent(in) :: ibcxmax
-            real*8, dimension(ny*nz), intent(in) :: bcxmax
+            real*4, dimension(ny*nz), intent(in) :: bcxmax
 
             integer, intent(in) :: ibcymin
-            real*8, dimension(nx*nz), intent(in) :: bcymin
+            real*4, dimension(nx*nz), intent(in) :: bcymin
             integer, intent(in) :: ibcymax
-            real*8, dimension(nx*nz), intent(in) :: bcymax
+            real*4, dimension(nx*nz), intent(in) :: bcymax
 
             integer, intent(in) :: ibczmin
-            real*8 dimension(nx*ny), intent(in) :: bczmin
+            real*4 dimension(nx*ny), intent(in) :: bczmin
             integer, intent(in) :: ibczmax
-            real*8 dimension(nx*ny), intent(in) :: bczmax
+            real*4 dimension(nx*ny), intent(in) :: bczmax
 
             integer, intent(out) :: ilinx
             integer, intent(out) :: iliny
@@ -266,21 +266,21 @@ python module fpspline
         subroutine vectricub(ict,ivec,xvec,yvec,zvec,ivd,fval,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :pspline:../pspline/vectricub.f
             integer, dimension(10), intent(in) :: ict
             integer, intent(hide), depend(xvec) :: ivec = len(xvec)
-            real*8, dimension(ivec), intent(in) :: xvec
-            real*8, dimension(ivec), intent(in)  :: yvec
-            real*8, dimension(ivec), intent(in)  :: zvec
+            real*4, dimension(ivec), intent(in) :: xvec
+            real*4, dimension(ivec), intent(in)  :: yvec
+            real*4, dimension(ivec), intent(in)  :: zvec
             integer, intent(hide), depend(ivec) :: ivd = ivec
             integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
-            real*8, dimension(nx*4), intent(in) :: xpkg
+            real*4, dimension(nx*4), intent(in) :: xpkg
             integer, intent(hide), depend(ypkg) :: ny = len(ypkg)/4
-            real*8, dimension(ny*4), intent(in)  :: ypkg
+            real*4, dimension(ny*4), intent(in)  :: ypkg
             integer, intent(hide), depend(zpkg) :: nz = len(zpkg)/4
-            real*8, dimension(nz*4), intent(in)  :: zpkg
-            real*8, dimension(8*nx*ny*nz), intent(c) :: fspl
+            real*4, dimension(nz*4), intent(in)  :: zpkg
+            real*4, dimension(8*nx*ny*nz), intent(c) :: fspl
             integer, intent(hide), depend(xpkg) :: inf4 = len(xpkg)/4
             integer, intent(hide), depend(xpkg) :: inf5 = len(ypkg)/4
 
-            real*8, dimension(ivec), intent(out) :: fval
+            real*4, dimension(ivec), intent(out) :: fval
             integer, intent(out) :: ier
             integer, intent(out) :: iwarn
         end subroutine vectricub
@@ -291,21 +291,21 @@ python module fpspline
         subroutine vecherm3(ict,ivec,xvec,yvec,zvec,ivd,fval,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :pspline:../pspline/vecherm3.f
             integer, dimension(10), intent(in) :: ict
             integer, intent(hide), depend(xvec) :: ivec = len(xvec)
-            real*8, dimension(ivec), intent(in) :: xvec
-            real*8, dimension(ivec), intent(in)  :: yvec
-            real*8, dimension(ivec), intent(in)  :: zvec
+            real*4, dimension(ivec), intent(in) :: xvec
+            real*4, dimension(ivec), intent(in)  :: yvec
+            real*4, dimension(ivec), intent(in)  :: zvec
             integer, intent(hide), depend(ivec) :: ivd = ivec
             integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
-            real*8, dimension(nx*4), intent(in) :: xpkg
+            real*4, dimension(nx*4), intent(in) :: xpkg
             integer, intent(hide), depend(ypkg) :: ny = len(ypkg)/4
-            real*8, dimension(ny*4), intent(in)  :: ypkg
+            real*4, dimension(ny*4), intent(in)  :: ypkg
             integer, intent(hide), depend(zpkg) :: nz = len(zpkg)/4
-            real*8, dimension(nz*4), intent(in)  :: zpkg
-            real*8, dimension(8*nx*ny*nz), intent(c) :: fspl
+            real*4, dimension(nz*4), intent(in)  :: zpkg
+            real*4, dimension(8*nx*ny*nz), intent(c) :: fspl
             integer, intent(hide), depend(xpkg) :: inf4 = len(xpkg)/4
             integer, intent(hide), depend(xpkg) :: inf5 = len(ypkg)/4
 
-            real*8, dimension(ivec), intent(out) :: fval
+            real*4, dimension(ivec), intent(out) :: fval
             integer, intent(out) :: ier
             integer, intent(out) :: iwarn
         end subroutine vecherm3
@@ -313,25 +313,25 @@ python module fpspline
 
     interface  ! in :pspline
         subroutine gridtricub(x_newgrid,nx_new,y_newgrid,ny_new,z_newgrid,nz_new,f_new,if1,if2,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :spline:../pspline/gridtricub.f
-            real*8, dimension(nx_new), intent(in) :: x_newgrid
+            real*4, dimension(nx_new), intent(in) :: x_newgrid
             integer, intent(hide), depend(x_newgrid) :: nx_new = len(x_newgrid)
-            real*8, dimension(ny_new), intent(in) :: y_newgrid
+            real*4, dimension(ny_new), intent(in) :: y_newgrid
             integer, intent(hide), depend(y_newgrid) :: ny_new = len(y_newgrid)
-            real*8, dimension(nz_new), intent(in) :: z_newgrid
+            real*4, dimension(nz_new), intent(in) :: z_newgrid
             integer, intent(hide), depend(z_newgrid) :: nz_new = len(z_newgrid)
             integer, intent(hide), depend(nx_new) :: if1 = nx_new
             integer, intent(hide), depend(ny_new) :: if2 = ny_new
             integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
-            real*8, dimension(nx*4), intent(in) :: xpkg
+            real*4, dimension(nx*4), intent(in) :: xpkg
             integer, intent(hide), depend(ypkg) :: ny = len(ypkg)/4
-            real*8, dimension(ny*4), intent(in) :: ypkg
+            real*4, dimension(ny*4), intent(in) :: ypkg
             integer, intent(hide), depend(zpkg) :: nz = len(zpkg)/4
-            real*8, dimension(nz*4), intent(in) :: zpkg
-            real*8, dimension(8*nx*ny*nz), intent(c)  :: fspl
+            real*4, dimension(nz*4), intent(in) :: zpkg
+            real*4, dimension(8*nx*ny*nz), intent(c)  :: fspl
             integer, intent(hide), depend(xpkg) :: inf4 = len(xpkg)/4
             integer, intent(hide), depend(ypkg) :: inf5 = len(ypkg)/4
 
-            real*8, dimension(nx_new*ny_new*nz_new), intent(out) :: f_new
+            real*4, dimension(nx_new*ny_new*nz_new), intent(out) :: f_new
 
             integer, intent(out) :: ier
             integer, intent(out) :: iwarn
@@ -341,25 +341,25 @@ python module fpspline
 
     interface  ! in :pspline
         subroutine gridherm3(x_newgrid,nx_new,y_newgrid,ny_new,z_newgrid,nz_new,f_new,if1,if2,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :spline:../pspline/gridtricub.f
-            real*8, dimension(nx_new), intent(in) :: x_newgrid
+            real*4, dimension(nx_new), intent(in) :: x_newgrid
             integer, intent(hide), depend(x_newgrid) :: nx_new = len(x_newgrid)
-            real*8, dimension(ny_new), intent(in) :: y_newgrid
+            real*4, dimension(ny_new), intent(in) :: y_newgrid
             integer, intent(hide), depend(y_newgrid) :: ny_new = len(y_newgrid)
-            real*8, dimension(nz_new), intent(in) :: z_newgrid
+            real*4, dimension(nz_new), intent(in) :: z_newgrid
             integer, intent(hide), depend(z_newgrid) :: nz_new = len(z_newgrid)
             integer, intent(hide), depend(nx_new) :: if1 = nx_new
             integer, intent(hide), depend(ny_new) :: if2 = ny_new
             integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
-            real*8, dimension(nx*4), intent(in) :: xpkg
+            real*4, dimension(nx*4), intent(in) :: xpkg
             integer, intent(hide), depend(ypkg) :: ny = len(ypkg)/4
-            real*8, dimension(ny*4), intent(in) :: ypkg
+            real*4, dimension(ny*4), intent(in) :: ypkg
             integer, intent(hide), depend(zpkg) :: nz = len(zpkg)/4
-            real*8, dimension(nz*4), intent(in) :: zpkg
-            real*8, dimension(8*nx*ny*nz), intent(c)  :: fspl
+            real*4, dimension(nz*4), intent(in) :: zpkg
+            real*4, dimension(8*nx*ny*nz), intent(c)  :: fspl
             integer, intent(hide), depend(xpkg) :: inf4 = len(xpkg)/4
             integer, intent(hide), depend(ypkg) :: inf5 = len(ypkg)/4
 
-            real*8, dimension(nx_new, ny_new, nz_new), intent(out) :: f_new
+            real*4, dimension(nx_new, ny_new, nz_new), intent(out) :: f_new
             integer, intent(out) :: ier
             integer, intent(out) :: iwarn
           end subroutine gridherm3
@@ -368,48 +368,137 @@ python module fpspline
 
     interface ! in :pspline
         subroutine evtricub(xget,yget,zget,x,nx,y,ny,z,nz,ilinx,iliny,ilinz,f,inf2,inf3,ict,fval,ier) ! in :pspline:../pspline/evtricub.f
-            real*8, intent(in) :: xget
-            real*8, intent(in) :: yget
-            real*8, intent(in) :: zget
-            real*8, dimension(nx), intent(in) :: x
+            real*4, intent(in) :: xget
+            real*4, intent(in) :: yget
+            real*4, intent(in) :: zget
+            real*4, dimension(nx), intent(in) :: x
             integer, intent(hide), depend(x) :: nx = len(x)
-            real*8, dimension(ny), intent(in)  :: y
+            real*4, dimension(ny), intent(in)  :: y
             integer, intent(hide), depend(y) :: ny = len(y)
-            real*8, dimension(nz), intent(in) :: z
+            real*4, dimension(nz), intent(in) :: z
             integer, intent(hide), depend(z) :: nz = len(z)
             integer, intent(in) :: ilinx
             integer, intent(in) :: iliny
             integer, intent(in) :: ilinz
-            real*8, dimension(8*nx*ny*nz), intent(c) :: f
+            real*4, dimension(8*nx*ny*nz), intent(c) :: f
             integer, intent(hide), depend(x) :: inf2 = len(x)
             integer, intent(hide), depend(y) :: inf3 = len(y)
             integer, dimension(10), intent(in) :: ict
-            real*8, intent(out) :: fval
+            real*4, intent(out) :: fval
             integer, intent(out) :: ier
         end subroutine evtricub
     end interface
 
     interface  ! in :pspline
         subroutine herm3ev(xget,yget,zget,x,nx,y,ny,z,nz,ilinx,iliny,ilinz,f,inf2,inf3,ict,fval,ier) ! in :pspline:../pspline/evtricub.f
-            real*8, intent(in) :: xget
-            real*8, intent(in) :: yget
-            real*8, intent(in) :: zget
-            real*8, dimension(nx), intent(in) :: x
+            real*4, intent(in) :: xget
+            real*4, intent(in) :: yget
+            real*4, intent(in) :: zget
+            real*4, dimension(nx), intent(in) :: x
             integer, intent(hide), depend(x) :: nx = len(x)
-            real*8, dimension(ny), intent(in)  :: y
+            real*4, dimension(ny), intent(in)  :: y
             integer, intent(hide), depend(y) :: ny = len(y)
-            real*8, dimension(nz), intent(in) :: z
+            real*4, dimension(nz), intent(in) :: z
             integer, intent(hide), depend(z) :: nz = len(z)
             integer, intent(in) :: ilinx
             integer, intent(in) :: iliny
             integer, intent(in) :: ilinz
-            real*8, dimension(8*nx*ny*nz), intent(c) :: f
+            real*4, dimension(8*nx*ny*nz), intent(c) :: f
             integer, intent(hide), depend(x) :: inf2 = len(x)
             integer, intent(hide), depend(y) :: inf3 = len(y)
             integer, dimension(10), intent(in) :: ict
-            real*8, intent(out) :: fval
+            real*4, intent(out) :: fval
             integer, intent(out) :: ier
         end subroutine herm3ev
     end interface
+
+!................bicubic........................................................................
+
+    interface  ! in :pspline
+        subroutine mkbicub(x,nx,y,ny, f,nf2,ibcxmin,bcxmin,ibcxmax,bcxmax,ibcymin,bcymin,ibcymax,bcymax,ilinx,iliny,ier) ! in :pspline:../pspline/mkbicub.f
+
+            integer, intent(hide), depend(x) :: nx = len(x)
+            integer, intent(hide), depend(y) :: ny = len(y)
+            integer, intent(hide), depend(nx) :: nf2=nx
+
+            real*4, dimension(nx), intent(in) :: x
+            real*4, dimension(ny), intent(in) :: y
+            real*4, dimension(4*nx*ny), intent(c) :: f
+
+            integer, intent(in) :: ibcxmin
+            real*4, dimension(ny), intent(in) :: bcxmin
+            integer, intent(in) :: ibcxmax
+            real*4, dimension(ny), intent(in) :: bcxmax
+
+            integer, intent(in) :: ibcymin
+            real*4, dimension(nx), intent(in) :: bcymin
+            integer, intent(in) :: ibcymax
+            real*4, dimension(nx), intent(in) :: bcymax
+
+            integer, intent(out) :: ilinx
+            integer, intent(out) :: iliny
+            integer, intent(out) :: ier
+        end subroutine mkbicub
+    end interface 
+
+    interface ! in :pspline
+        subroutine evbicub(xget,yget,x,nx,y,ny,ilinx,iliny,f,inf2,ict,fval,ier) ! in :pspline:../pspline/evbicub.f
+            real*4, intent(in) :: xget
+            real*4, intent(in) :: yget
+            real*4, dimension(nx), intent(in) :: x
+            integer, intent(hide), depend(x) :: nx = len(x)
+            real*4, dimension(ny), intent(in)  :: y
+            integer, intent(hide), depend(y) :: ny = len(y)
+            integer, intent(in) :: ilinx
+            integer, intent(in) :: iliny
+            real*4, dimension(4*nx*ny), intent(c) :: f
+            integer, intent(hide), depend(x) :: inf2 = len(x)
+            integer, dimension(6), intent(in) :: ict
+            real*4, intent(out) :: fval
+            integer, intent(out) :: ier
+        end subroutine evbicub
+    end interface
+
+    interface  ! in :pspline
+        subroutine gridbicub(x_newgrid,nx_new,y_newgrid,ny_new,f_new,if1,nx,xpkg,ny,ypkg,fspl,inf4,iwarn,ier) ! in :spline:../pspline/gridbicub.f
+            real*4, dimension(nx_new), intent(in) :: x_newgrid
+            integer, intent(hide), depend(x_newgrid) :: nx_new = len(x_newgrid)
+            real*4, dimension(ny_new), intent(in) :: y_newgrid
+            integer, intent(hide), depend(y_newgrid) :: ny_new = len(y_newgrid)
+            integer, intent(hide), depend(nx_new) :: if1 = nx_new
+            integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
+            real*4, dimension(nx*4), intent(in) :: xpkg
+            integer, intent(hide), depend(ypkg) :: ny = len(ypkg)/4
+            real*4, dimension(ny*4), intent(in) :: ypkg
+            real*4, dimension(4*nx*ny), intent(c)  :: fspl
+            integer, intent(hide), depend(xpkg) :: inf4 = len(xpkg)/4
+
+            real*4, dimension(nx_new*ny_new), intent(out) :: f_new
+
+            integer, intent(out) :: ier
+            integer, intent(out) :: iwarn
+        end subroutine gridbicub
+    end interface 
+
+    interface  ! in :pspline
+        subroutine vecbicub(ict,ivec,xvec,yvec,ivd,fval,nx,xpkg,ny,ypkg,fspl,inf4,iwarn,ier) ! in :pspline:../pspline/vecbicub.f
+            integer, dimension(6), intent(in) :: ict
+            integer, intent(hide), depend(xvec) :: ivec = len(xvec)
+            real*4, dimension(ivec), intent(in) :: xvec
+            real*4, dimension(ivec), intent(in)  :: yvec
+            integer, intent(hide), depend(ivec) :: ivd = ivec
+            integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
+            real*4, dimension(nx*4), intent(in) :: xpkg
+            integer, intent(hide), depend(ypkg) :: ny = len(ypkg)/4
+            real*4, dimension(ny*4), intent(in)  :: ypkg
+            real*4, dimension(4*nx*ny), intent(c) :: fspl
+            integer, intent(hide), depend(xpkg) :: inf4 = len(xpkg)/4
+
+            real*4, dimension(ivec), intent(out) :: fval
+            integer, intent(out) :: ier
+            integer, intent(out) :: iwarn
+        end subroutine vecbicub
+    end interface 
+
 
 end python module fpspline
