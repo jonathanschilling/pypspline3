@@ -33,6 +33,13 @@ LIBS += ['ifcore',]
 # to access Numpy's include files
 ##INCS += ['/home/ap/include/python2.2/']
 
+# Example 4: Portland compiler pg90 with gcc 2.96
+##LIBLOC += ['/usr/local/pgi/linux86/lib',]
+##LIBS += ['pgf90', 'pgf90_rpm1', 'pgf902', 'pgf90rtl', 'pgc', ]
+##INCS += ['/home/ap/include/python2.2/']
+
+
+
 
 
 ###############################################################################
