@@ -354,7 +354,7 @@ class pspline:
     def gradient_point(self, p1, p2):
 
         """
-        Return (df/dz, df/dy, df/dx) at point (p1, p2).
+        Return (df/dy, df/dx) at point (p1, p2).
         """
 
         iwarn = 0
@@ -371,7 +371,7 @@ class pspline:
     def gradient_cloud(self, p1, p2):
 
         """
-        Return (df/dz, df/dy, df/dx) for cloud (p1, p2).
+        Return (df/dy, df/dx) for cloud (p1, p2).
         """
 
         f1,iwarn1,ier1 = fpspline.vecbicub(ICT_F1, p1, p2, \
@@ -387,7 +387,7 @@ class pspline:
     def gradient_array(self, p1, p2):
 
         """
-        Return (df/dz, df/dy, df/dx) for grid-array (p1, p2).
+        Return (df/dy, df/dx) for grid-array (p1, p2).
         """
 
         xx1, xx2 = griddata(p1, p2)
@@ -400,7 +400,7 @@ class pspline:
     def gradient(self, p1, p2, meth='cloud'):
     
         """
-        Return (df/dz, df/dy, df/dx). See interp method for a list of possible (p1, p2) shapes.
+        Return (df/dy, df/dx). See interp method for a list of possible (p1, p2) shapes.
         
         With checks enabled.
         """

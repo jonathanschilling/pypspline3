@@ -31,15 +31,18 @@ ICT_MAP = {
     (0,1,1): N.array( [0,0,0,0,0,0,0,0,0,1] ),
     }
 
+
 def griddata(x1, x2, x3):
     
     " Given grid vectors, return grid data "
     
     n1, n2, n3 = len(x1), len(x2), len(x3)
 
-    xx1 = N.multiply.outer( N.ones( (n3,n2) ), x1 )
-    xx2 = N.multiply.outer( N.ones( (n3,) ), N.multiply.outer( x2, N.ones( (n1,) ) ) )
-    xx3 = N.multiply.outer( x3, N.ones( (n2,n1) ) )
+    xx1 = N.multiply.outer( N.ones( (n3,n2), typecode=N.Float64 ), x1 )
+    xx2 = N.multiply.outer( N.ones( (n3,), typecode=N.Float64 ), \
+                            N.multiply.outer( x2, N.ones( (n1,),
+                                                          typecode=N.Float64 ) ) )
+    xx3 = N.multiply.outer( x3, N.ones( (n2,n1), typecode=N.Float64 ) )
 
     return xx1, xx2, xx3
 
@@ -100,8 +103,8 @@ class pspline:
         self.bcval1max = b
 
         where shape(a) == shape(b) == (n3,n2) and n{2,3} = len(x{2,3}).
-
-    """
+        
+        """
 
         self.__x1 = x1
         self.__x2 = x2
@@ -277,7 +280,7 @@ class pspline:
         return N.resize(fi, (len(p3), len(p2), len(p1))), ier, iwarn
         
 
-    def interp(self, p1, p2, p3, meth = 'cloud'):
+    def interp(self, p1, p2, p3, meth='cloud'):
 
         """
         Interpolatate onto (p1, p2, p3), the coordinate-triplet which can either be a single point
@@ -303,7 +306,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.interp_point(p1, p2, p3)
         else:
-            if len(p1)==len(p2)==len(p3):
+            if len(p1)==len(p2)==len(p3) and meth=='cloud':
                 fi, ier, iwarn = self.interp_cloud(p1, p2, p3)
             else:
                 fi, ier, iwarn = self.interp_array(p1, p2, p3)
@@ -372,7 +375,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.derivative_point(i1,i2,i3, p1,p2,p3)
         else:
-            if len(p1)==len(p2)==len(p3):
+            if len(p1)==len(p2)==len(p3) and meth=='cloud':
                 fi, ier, iwarn = self.derivative_cloud(i1,i2,i3, p1,p2,p3)
             else:
                 fi, ier, iwarn = self.derivative_array(i1,i2,i3, p1,p2,p3)        
@@ -446,6 +449,9 @@ class pspline:
     def gradient(self, p1, p2, p3, meth='cloud'):
     
         """
+        Return (df/dz, df/dy, df/dx) at point (p1, p2, p3).See interp method for a list of possible (p1, p2, p3) shapes.
+
+        With error checks.
         """
 
         if self.__isReady != 1:
@@ -457,7 +463,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.gradient_point(p1, p2, p3)
         else:
-            if len(p1)==len(p2)==len(p3):
+            if len(p1)==len(p2)==len(p3) and meth=='cloud':
                 fi, ier, iwarn = self.gradient_cloud(p1, p2, p3)
             else:
                 fi, ier, iwarn = self.gradient_array(p1, p2, p3)        
@@ -550,12 +556,12 @@ class pspline:
         self.setup(f)
         
 
-#################################################################################################
+###############################################################################
 if __name__ == '__main__':
 
     import sys
 
-    eps = 1.e-10
+    eps = 1.e-6
 
     n1, n2, n3 = 11, 21, 31
     bcs1 = (0,0)
@@ -564,9 +570,12 @@ if __name__ == '__main__':
     x1min, x1max = 0., 1.
     x2min, x2max = 0., 1.
     x3min, x3max = 0., 1. # 2*N.pi
-    x1 = N.arange(x1min, x1max+eps, (x1max-x1min)/float(n1-1))
-    x2 = N.arange(x2min, x2max+eps, (x2max-x2min)/float(n2-1))
-    x3 = N.arange(x3min, x3max+eps, (x3max-x3min)/float(n3-1))
+    x1 = N.arange(x1min, x1max+eps, (x1max-x1min)/float(n1-1),
+                  typecode=N.Float64)
+    x2 = N.arange(x2min, x2max+eps, (x2max-x2min)/float(n2-1),
+                  typecode=N.Float64)
+    x3 = N.arange(x3min, x3max+eps, (x3max-x3min)/float(n3-1),
+                  typecode=N.Float64)
     tic =  time.time()
     xx1, xx2, xx3 = griddata(x1, x2, x3)
     toc =  time.time()
@@ -581,7 +590,7 @@ if __name__ == '__main__':
     tic = time.time()
     spl = pspline(x1, x2, x3)
     # may set BCs if not-a-knot 
-    spl.setup(f)
+    spl.setup(f.astype(N.Float64))
     toc = time.time()
     print "init/setup: %d original grid nodes time->%10.1f secs" % (n1*n2*n3, toc-tic)
 

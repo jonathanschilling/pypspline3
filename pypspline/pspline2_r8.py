@@ -244,7 +244,7 @@ class pspline:
         return N.resize(fi, (len(p2), len(p1))), ier, iwarn
         
 
-    def interp(self, p1, p2, meth = 'cloud'):
+    def interp(self, p1, p2, meth='cloud'):
 
         """
         Interpolatate onto (p1, p2), the coordinate-doublet which can either be a single point
@@ -270,7 +270,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.interp_point(p1, p2)
         else:
-            if len(p1)==len(p2):
+            if len(p1)==len(p2) and meth=='cloud':
                 fi, ier, iwarn = self.interp_cloud(p1, p2)
             else:
                 fi, ier, iwarn = self.interp_array(p1, p2)
@@ -338,7 +338,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.derivative_point(i1,i2, p1,p2)
         else:
-            if len(p1)==len(p2):
+            if len(p1)==len(p2) and meth=='cloud':
                 fi, ier, iwarn = self.derivative_cloud(i1,i2, p1,p2)
             else:
                 fi, ier, iwarn = self.derivative_array(i1,i2, p1,p2)        
@@ -354,7 +354,7 @@ class pspline:
     def gradient_point(self, p1, p2):
 
         """
-        Return (df/dz, df/dy, df/dx) at point (p1, p2).
+        Return (df/dy, df/dx) at point (p1, p2).
         """
 
         iwarn = 0
@@ -371,7 +371,7 @@ class pspline:
     def gradient_cloud(self, p1, p2):
 
         """
-        Return (df/dz, df/dy, df/dx) for cloud (p1, p2).
+        Return (df/dy, df/dx) for cloud (p1, p2).
         """
 
         f1,iwarn1,ier1 = fpspline.r8vecbicub(ICT_F1, p1, p2, \
@@ -387,7 +387,7 @@ class pspline:
     def gradient_array(self, p1, p2):
 
         """
-        Return (df/dz, df/dy, df/dx) for grid-array (p1, p2).
+        Return (df/dy, df/dx) for grid-array (p1, p2).
         """
 
         xx1, xx2 = griddata(p1, p2)
@@ -400,6 +400,9 @@ class pspline:
     def gradient(self, p1, p2, meth='cloud'):
     
         """
+        Return (df/dy, df/dx). See interp method for a list of possible (p1, p2) shapes.
+        
+        With checks enabled.
         """
 
         if self.__isReady != 1:
@@ -411,7 +414,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.gradient_point(p1, p2)
         else:
-            if len(p1)==len(p2):
+            if len(p1)==len(p2) and meth=='cloud':
                 fi, ier, iwarn = self.gradient_cloud(p1, p2)
             else:
                 fi, ier, iwarn = self.gradient_array(p1, p2)        

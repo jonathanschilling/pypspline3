@@ -280,7 +280,7 @@ class pspline:
         return N.resize(fi, (len(p3), len(p2), len(p1))), ier, iwarn
         
 
-    def interp(self, p1, p2, p3, meth = 'cloud'):
+    def interp(self, p1, p2, p3, meth='cloud'):
 
         """
         Interpolatate onto (p1, p2, p3), the coordinate-triplet which can either be a single point
@@ -306,7 +306,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.interp_point(p1, p2, p3)
         else:
-            if len(p1)==len(p2)==len(p3):
+            if len(p1)==len(p2)==len(p3) and meth=='cloud':
                 fi, ier, iwarn = self.interp_cloud(p1, p2, p3)
             else:
                 fi, ier, iwarn = self.interp_array(p1, p2, p3)
@@ -375,7 +375,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.derivative_point(i1,i2,i3, p1,p2,p3)
         else:
-            if len(p1)==len(p2)==len(p3):
+            if len(p1)==len(p2)==len(p3) and meth=='cloud':
                 fi, ier, iwarn = self.derivative_cloud(i1,i2,i3, p1,p2,p3)
             else:
                 fi, ier, iwarn = self.derivative_array(i1,i2,i3, p1,p2,p3)        
@@ -449,6 +449,9 @@ class pspline:
     def gradient(self, p1, p2, p3, meth='cloud'):
     
         """
+        Return (df/dz, df/dy, df/dx) at point (p1, p2, p3).See interp method for a list of possible (p1, p2, p3) shapes.
+
+        With error checks.
         """
 
         if self.__isReady != 1:
@@ -460,7 +463,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.gradient_point(p1, p2, p3)
         else:
-            if len(p1)==len(p2)==len(p3):
+            if len(p1)==len(p2)==len(p3) and meth=='cloud':
                 fi, ier, iwarn = self.gradient_cloud(p1, p2, p3)
             else:
                 fi, ier, iwarn = self.gradient_array(p1, p2, p3)        
