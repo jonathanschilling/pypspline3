@@ -11,7 +11,7 @@ INCS = ['include']
 # f2py macros (see f2py doc)
 MACROS = [] # [('F2PY_REPORT_ATEXIT', '1'),]
 
-# if you plspline in another directory than ../LINUX/lib, change the line below
+# if pspline is in another directory than ../LINUX/lib, change the line below
 LIBLOC = ['../LINUX/lib',] # location of libpspline.a, etc.
 
 # the following are Fortran libraries that the C compiler must link with
