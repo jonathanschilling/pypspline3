@@ -66,7 +66,7 @@ class pspline3_r8:
         More general boundary conditions can be applied by setting bcs{1,2,3}=(bmin, bmax)
         where bmin/bmax can take values from 0 to 7, as described in http://w3.pppl.gov/NTCC/PSPLINE/.
         The boundary conditions (if inhomogeneous) must then be applied by setting the class members
-        self.bcval{1,2,3}min and/or self.bcval{1,2,3}max explicitely *prior* to calling self.setup(f).
+        self.bcval{1,2,3}min and/or self.bcval{1,2,3}max explicitly *prior* to calling self.setup(f).
         
         1 -- match slope
         2 -- match 2nd derivative
@@ -89,6 +89,8 @@ class pspline3_r8:
         self.__n1 = len(x1)
         self.__n2 = len(x2)
         self.__n3 = len(x3)
+
+        n3, n2, n1 = self.__n3, self.__n2, self.__n1
 
         # BC types
         # use these to set the boundary conditions,
@@ -288,7 +290,7 @@ class pspline3_r8:
         
 
         if ier:
-            raise "pspline3_r8::interp error"
+            raise "pspline3_r8::interp error ier=%d"%ier
         if iwarn:
             warnings.warn('pspline3_r8::interp abscissae are out of bound!')
     

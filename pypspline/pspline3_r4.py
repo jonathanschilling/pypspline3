@@ -92,6 +92,8 @@ class pspline3_r4:
         self.__n2 = len(x2)
         self.__n3 = len(x3)
 
+        n3, n2, n1 = self.__n3, self.__n2, self.__n1
+
         # BC types
         # use these to set the boundary conditions,
         # e.g. ibctype1=(1,0) sets the 1st derivative to the left
@@ -290,7 +292,7 @@ class pspline3_r4:
         
 
         if ier:
-            raise "pspline3_r4::interp error"
+            raise "pspline3_r4::interp error ier=%d"%ier
         if iwarn:
             warnings.warn('pspline3_r4::interp abscissae are out of bound!')
     
