@@ -57,6 +57,7 @@ fpspline = Extension('fpspline',
                                'fortranobject.c',])
 
 setup (name = 'pypspline',
+       extra_path = 'pypspline',
        version = '0.1',
        description = 'Spline interpolation in 1 to 3 dimensions',
        author_email = 'Alexander.Pletzer@noaa.gov',
