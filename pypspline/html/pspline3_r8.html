@@ -1,44 +1,48 @@
 
 <!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html><head><title>Python: module pspline3_r8</title>
-</head><body bgcolor="#f0f0f8">
+<style type="text/css"><!--
+TT { font-family: lucidatypewriter, lucida console, courier }
+--></style></head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>pspline3_r8</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ap/ntcc/pypspline/pypspline/pspline3_r8.py">/home/ap/ntcc/pypspline/pypspline/pspline3_r8.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ap/pypspline/pypspline/pspline3_r8.py">/home/ap/pypspline/pypspline/pspline3_r8.py</a></font></td></tr></table>
     <p><tt>3-D&nbsp;spline&nbsp;in&nbsp;real*8&nbsp;precision</tt></p>
-<p>
+
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="Numeric.html">Numeric</a><br>
-<a href="pypspline.fpspline.html">pypspline.fpspline</a><br>
+<a href="fpspline.html">fpspline</a><br>
 </td><td width="25%" valign=top><a href="time.html">time</a><br>
 <a href="types.html">types</a><br>
 </td><td width="25%" valign=top><a href="warnings.html">warnings</a><br>
-</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
     
-<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
 <td width="100%"><dl>
 <dt><font face="helvetica, arial"><a href="pspline3_r8.html#pspline">pspline</a>
 </font></dt></dl>
- <p>
+ 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="pspline">class <strong>pspline</strong></a></font></td></tr>
     
-<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="pspline-__init__"><strong>__init__</strong></a>(self, x1, x2, x3, bcs1<font color="#909090">=None</font>, bcs2<font color="#909090">=None</font>, bcs3<font color="#909090">=None</font>)</dt><dd><tt>Constructor.<br>
 &nbsp;<br>
@@ -86,30 +90,42 @@ and<br>
 &nbsp;<br>
 self.<strong>bcval1max</strong>&nbsp;=&nbsp;b<br>
 &nbsp;<br>
-where&nbsp;shape(a)&nbsp;==&nbsp;shape(b)&nbsp;==&nbsp;(n3,n2)&nbsp;and&nbsp;n{2,3}&nbsp;=&nbsp;len(x{2,3}).</tt></dd></dl>
+where&nbsp;shape(a)&nbsp;==&nbsp;shape(b)&nbsp;==&nbsp;(n3,n2)&nbsp;and&nbsp;n{2,3}&nbsp;=&nbsp;len(x{2,3}).<br>
+&nbsp;<br>
+The&nbsp;returned&nbsp;value&nbsp;is&nbsp;a&nbsp;spline&nbsp;object.</tt></dd></dl>
 
 <dl><dt><a name="pspline-derivative"><strong>derivative</strong></a>(self, i1, i2, i3, p1, p2, p3, meth<font color="#909090">='cloud'</font>)</dt><dd><tt>Compute&nbsp;the&nbsp;derivative&nbsp;d^i1&nbsp;d^i2&nbsp;d^i3&nbsp;f/dx1^i1&nbsp;dx2^i2&nbsp;dx3^i3&nbsp;at&nbsp;(p1,&nbsp;p2,&nbsp;p3).&nbsp;Must&nbsp;have<br>
 i{1,2,3}&gt;=0&nbsp;and&nbsp;i1&nbsp;+&nbsp;i2&nbsp;+&nbsp;i3&nbsp;&lt;=2.&nbsp;See&nbsp;interp&nbsp;method&nbsp;for&nbsp;a&nbsp;list&nbsp;of&nbsp;possible&nbsp;(p1,&nbsp;p2,&nbsp;p3)&nbsp;shapes.<br>
 With&nbsp;checks&nbsp;enabled.</tt></dd></dl>
 
 <dl><dt><a name="pspline-derivative_array"><strong>derivative_array</strong></a>(self, i1, i2, i3, p1, p2, p3)</dt><dd><tt>Compute&nbsp;the&nbsp;derivative&nbsp;d^i1&nbsp;d^i2&nbsp;d^i3&nbsp;f/dx1^i1&nbsp;dx2^i2&nbsp;dx3^i3&nbsp;for&nbsp;a&nbsp;grid-array&nbsp;(p1,&nbsp;p2,&nbsp;p3).&nbsp;Must&nbsp;have<br>
-i{1,2,3}&gt;=0&nbsp;and&nbsp;i1&nbsp;+&nbsp;i2&nbsp;+&nbsp;i3&nbsp;&lt;=2.</tt></dd></dl>
+i{1,2,3}&gt;=0&nbsp;and&nbsp;i1&nbsp;+&nbsp;i2&nbsp;+&nbsp;i3&nbsp;&lt;=2.&nbsp;<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;interpolated&nbsp;function,&nbsp;an&nbsp;error&nbsp;flag&nbsp;&nbsp;(=0&nbsp;if&nbsp;ok)&nbsp;and&nbsp;a&nbsp;warning&nbsp;flag&nbsp;(=0&nbsp;if&nbsp;ok).</tt></dd></dl>
 
 <dl><dt><a name="pspline-derivative_cloud"><strong>derivative_cloud</strong></a>(self, i1, i2, i3, p1, p2, p3)</dt><dd><tt>Compute&nbsp;the&nbsp;derivative&nbsp;d^i1&nbsp;d^i2&nbsp;d^i3&nbsp;f/dx1^i1&nbsp;dx2^i2&nbsp;dx3^i3&nbsp;for&nbsp;a&nbsp;cloud&nbsp;(p1,&nbsp;p2,&nbsp;p3).&nbsp;Must&nbsp;have<br>
-i{1,2,3}&gt;=0&nbsp;and&nbsp;i1&nbsp;+&nbsp;i2&nbsp;+&nbsp;i3&nbsp;&lt;=2.</tt></dd></dl>
+i{1,2,3}&gt;=0&nbsp;and&nbsp;i1&nbsp;+&nbsp;i2&nbsp;+&nbsp;i3&nbsp;&lt;=2.&nbsp;<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;interpolated&nbsp;function,&nbsp;an&nbsp;error&nbsp;flag&nbsp;&nbsp;(=0&nbsp;if&nbsp;ok)&nbsp;and&nbsp;a&nbsp;warning&nbsp;flag&nbsp;(=0&nbsp;if&nbsp;ok).</tt></dd></dl>
 
 <dl><dt><a name="pspline-derivative_point"><strong>derivative_point</strong></a>(self, i1, i2, i3, p1, p2, p3)</dt><dd><tt>Compute&nbsp;a&nbsp;single&nbsp;point&nbsp;derivative&nbsp;d^i1&nbsp;d^i2&nbsp;d^i3&nbsp;f/dx1^i1&nbsp;dx2^i2&nbsp;dx3^i3&nbsp;at&nbsp;(p1,&nbsp;p2,&nbsp;p3).&nbsp;Must&nbsp;have<br>
-i{1,2,3}&gt;=0&nbsp;and&nbsp;i1&nbsp;+&nbsp;i2&nbsp;+&nbsp;i3&nbsp;&lt;=2.</tt></dd></dl>
+i{1,2,3}&gt;=0&nbsp;and&nbsp;i1&nbsp;+&nbsp;i2&nbsp;+&nbsp;i3&nbsp;&lt;=2.<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;interpolated&nbsp;function,&nbsp;an&nbsp;error&nbsp;flag&nbsp;&nbsp;(=0&nbsp;if&nbsp;ok)&nbsp;and&nbsp;a&nbsp;warning&nbsp;flag&nbsp;(=0&nbsp;if&nbsp;ok).</tt></dd></dl>
 
-<dl><dt><a name="pspline-gradient"><strong>gradient</strong></a>(self, p1, p2, p3, meth<font color="#909090">='cloud'</font>)</dt><dd><tt>Return&nbsp;(df/dz,&nbsp;df/dy,&nbsp;df/dx)&nbsp;at&nbsp;point&nbsp;(p1,&nbsp;p2,&nbsp;p3).See&nbsp;interp&nbsp;method&nbsp;for&nbsp;a&nbsp;list&nbsp;of&nbsp;possible&nbsp;(p1,&nbsp;p2,&nbsp;p3)&nbsp;shapes.<br>
+<dl><dt><a name="pspline-gradient"><strong>gradient</strong></a>(self, p1, p2, p3, meth<font color="#909090">='cloud'</font>)</dt><dd><tt>Return&nbsp;(df/dz,&nbsp;df/dy,&nbsp;df/dx)&nbsp;at&nbsp;point&nbsp;(p1,&nbsp;p2,&nbsp;p3).&nbsp;See&nbsp;interp&nbsp;method&nbsp;for&nbsp;a&nbsp;list&nbsp;of<br>
+possible&nbsp;(p1,&nbsp;p2,&nbsp;p3)&nbsp;shapes.<br>
 &nbsp;<br>
 With&nbsp;error&nbsp;checks.</tt></dd></dl>
 
-<dl><dt><a name="pspline-gradient_array"><strong>gradient_array</strong></a>(self, p1, p2, p3)</dt><dd><tt>Return&nbsp;(df/dz,&nbsp;df/dy,&nbsp;df/dx)&nbsp;for&nbsp;grid-array&nbsp;(p1,&nbsp;p2,&nbsp;p3).</tt></dd></dl>
+<dl><dt><a name="pspline-gradient_array"><strong>gradient_array</strong></a>(self, p1, p2, p3)</dt><dd><tt>Return&nbsp;(df/dz,&nbsp;df/dy,&nbsp;df/dx)&nbsp;for&nbsp;grid-array&nbsp;(p1,&nbsp;p2,&nbsp;p3),&nbsp;an&nbsp;error&nbsp;flag&nbsp;&nbsp;(=0&nbsp;if&nbsp;ok)<br>
+and&nbsp;a&nbsp;warning&nbsp;flag&nbsp;(=0&nbsp;if&nbsp;ok).</tt></dd></dl>
 
-<dl><dt><a name="pspline-gradient_cloud"><strong>gradient_cloud</strong></a>(self, p1, p2, p3)</dt><dd><tt>Return&nbsp;(df/dz,&nbsp;df/dy,&nbsp;df/dx)&nbsp;for&nbsp;cloud&nbsp;(p1,&nbsp;p2,&nbsp;p3).</tt></dd></dl>
+<dl><dt><a name="pspline-gradient_cloud"><strong>gradient_cloud</strong></a>(self, p1, p2, p3)</dt><dd><tt>Return&nbsp;(df/dz,&nbsp;df/dy,&nbsp;df/dx)&nbsp;for&nbsp;cloud&nbsp;(p1,&nbsp;p2,&nbsp;p3),&nbsp;an&nbsp;error&nbsp;flag&nbsp;&nbsp;(=0&nbsp;if&nbsp;ok)<br>
+and&nbsp;a&nbsp;warning&nbsp;flag&nbsp;(=0&nbsp;if&nbsp;ok).</tt></dd></dl>
 
-<dl><dt><a name="pspline-gradient_point"><strong>gradient_point</strong></a>(self, p1, p2, p3)</dt><dd><tt>Return&nbsp;(df/dz,&nbsp;df/dy,&nbsp;df/dx)&nbsp;at&nbsp;point&nbsp;(p1,&nbsp;p2,&nbsp;p3).</tt></dd></dl>
+<dl><dt><a name="pspline-gradient_point"><strong>gradient_point</strong></a>(self, p1, p2, p3)</dt><dd><tt>Return&nbsp;(df/dz,&nbsp;df/dy,&nbsp;df/dx)&nbsp;at&nbsp;point&nbsp;(p1,&nbsp;p2,&nbsp;p3),&nbsp;an&nbsp;error&nbsp;flag&nbsp;&nbsp;(=0&nbsp;if&nbsp;ok)<br>
+and&nbsp;a&nbsp;warning&nbsp;flag&nbsp;(=0&nbsp;if&nbsp;ok).</tt></dd></dl>
 
 <dl><dt><a name="pspline-interp"><strong>interp</strong></a>(self, p1, p2, p3, meth<font color="#909090">='cloud'</font>)</dt><dd><tt>Interpolatate&nbsp;onto&nbsp;(p1,&nbsp;p2,&nbsp;p3),&nbsp;the&nbsp;coordinate-triplet&nbsp;which&nbsp;can&nbsp;either&nbsp;be&nbsp;a&nbsp;single&nbsp;point<br>
 (point&nbsp;interpolation),&nbsp;3&nbsp;arrays&nbsp;of&nbsp;identical&nbsp;length&nbsp;(cloud&nbsp;interpolation),&nbsp;or&nbsp;3&nbsp;arrays<br>
@@ -133,19 +149,41 @@ the&nbsp;same&nbsp;length.&nbsp;With&nbsp;checks&nbsp;enabled.</tt></dd></dl>
 <dl><dt><a name="pspline-save"><strong>save</strong></a>(self, filename)</dt><dd><tt>Save&nbsp;state&nbsp;in&nbsp;NetCDF&nbsp;file</tt></dd></dl>
 
 <dl><dt><a name="pspline-setup"><strong>setup</strong></a>(self, f)</dt><dd><tt>Set&nbsp;up&nbsp;(compute)&nbsp;cubic&nbsp;spline&nbsp;coefficients.<br>
-See&nbsp;__init__&nbsp;for&nbsp;comment&nbsp;about&nbsp;boundary&nbsp;conditions.</tt></dd></dl>
+See&nbsp;__init__&nbsp;for&nbsp;comment&nbsp;about&nbsp;boundary&nbsp;conditions.&nbsp;<br>
+&nbsp;<br>
+Input&nbsp;is&nbsp;f[iz,&nbsp;iy,&nbsp;ix],&nbsp;a&nbsp;rank-3&nbsp;array&nbsp;for&nbsp;the&nbsp;function&nbsp;values.<br>
+The&nbsp;x-index&nbsp;varies&nbsp;fastest,&nbsp;then&nbsp;the&nbsp;y-index.</tt></dd></dl>
 
-</td></tr></table></td></tr></table><p>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'pspline3_r8'<dd><tt>str(object)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Return&nbsp;a&nbsp;nice&nbsp;string&nbsp;representation&nbsp;of&nbsp;the&nbsp;object.<br>
+If&nbsp;the&nbsp;argument&nbsp;is&nbsp;a&nbsp;string,&nbsp;the&nbsp;return&nbsp;value&nbsp;is&nbsp;the&nbsp;same&nbsp;object.</tt></dl>
+
+</td></tr></table></td></tr></table>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt><a name="-griddata"><strong>griddata</strong></a>(x1, x2, x3)</dt><dd><tt>&nbsp;Given&nbsp;grid&nbsp;vectors,&nbsp;return&nbsp;grid&nbsp;data</tt></dd></dl>
+</td></tr></table>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>ICT_F1</strong> = array('<built-in method typecode of array object at 0x4070e200>', [0, 1, 0, 0, 0, ...])<br>
-<strong>ICT_F2</strong> = array('<built-in method typecode of array object at 0x4070e228>', [0, 0, 1, 0, 0, ...])<br>
-<strong>ICT_F3</strong> = array('<built-in method typecode of array object at 0x4070e250>', [0, 0, 0, 1, 0, ...])<br>
-<strong>ICT_FVAL</strong> = array('<built-in method typecode of array object at 0x4070e1d8>', [1, 0, 0, 0, 0, ...])<br>
-<strong>ICT_GRAD</strong> = array('<built-in method typecode of array object at 0x4070e278>', [0, 1, 1, 1, 0, ...])<br>
-<strong>ICT_MAP</strong> = {(0, 0, 0): array('<built-in method typecode of array object at 0x4070e2a0>', [1, 0, 0, 0, 0, ...]), (0, 0, 1): array('<built-in method typecode of array object at 0x4070e340>', [0, 0, 0, 1, 0, ...]), (0, 0, 2): array('<built-in method typecode of array object at 0x4070e430>', [0, 0, 0, 0, 0, ...]), (0, 1, 0): array('<built-in method typecode of array object at 0x4070e2f0>', [0, 0, 1, 0, 0, ...]), (0, 1, 1): array('<built-in method typecode of array object at 0x4070e520>', [0, 0, 0, 0, 0, ...]), (0, 2, 0): array('<built-in method typecode of array object at 0x4070e3e0>', [0, 0, 0, 0, 0, ...]), (1, 0, 0): array('<built-in method typecode of array object at 0x4070e2c8>', [0, 1, 0, 0, 0, ...]), (1, 0, 1): array('<built-in method typecode of array object at 0x4070e4d0>', [0, 0, 0, 0, 0, ...]), (1, 1, 0): array('<built-in method typecode of array object at 0x4070e480>', [0, 0, 0, 0, 0, ...]), (2, 0, 0): array('<built-in method typecode of array object at 0x4070e390>', [0, 0, 0, 0, 1, ...])}</td></tr></table>
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<td width="100%"><strong>ICT_F1</strong> = array([0, 1, 0, 0, 0, 0, 0, 0, 0, 0])<br>
+<strong>ICT_F2</strong> = array([0, 0, 1, 0, 0, 0, 0, 0, 0, 0])<br>
+<strong>ICT_F3</strong> = array([0, 0, 0, 1, 0, 0, 0, 0, 0, 0])<br>
+<strong>ICT_FVAL</strong> = array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0])<br>
+<strong>ICT_GRAD</strong> = array([0, 1, 1, 1, 0, 0, 0, 0, 0, 0])<br>
+<strong>ICT_MAP</strong> = {(0, 0, 0): array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0]), (0, 0, 1): array([0, 0, 0, 1, 0, 0, 0, 0, 0, 0]), (0, 0, 2): array([0, 0, 0, 0, 0, 0, 1, 0, 0, 0]), (0, 1, 0): array([0, 0, 1, 0, 0, 0, 0, 0, 0, 0]), (0, 1, 1): array([0, 0, 0, 0, 0, 0, 0, 0, 0, 1]), (0, 2, 0): array([0, 0, 0, 0, 0, 1, 0, 0, 0, 0]), (1, 0, 0): array([0, 1, 0, 0, 0, 0, 0, 0, 0, 0]), (1, 0, 1): array([0, 0, 0, 0, 0, 0, 0, 0, 1, 0]), (1, 1, 0): array([0, 0, 0, 0, 0, 0, 0, 1, 0, 0]), (2, 0, 0): array([0, 0, 0, 0, 1, 0, 0, 0, 0, 0])}<br>
+<strong>__file__</strong> = './pspline3_r8.pyc'<br>
+<strong>__name__</strong> = 'pspline3_r8'</td></tr></table>
 </body></html>
