@@ -51,7 +51,7 @@ $ cd pypspline
 
 If you have a recent Python version installed on your system, you should not have to re-generate fpsplinemodule.c. 
 
-Edit the top lines of the setup.py file. In particular, you will need to determine the Fortran libraries that need to be linked with, which are compiler dependent. Pypspline has been successfully built on Linux using the Intel, Lahey-Fujitsu and Portland Group compilers. 
+Edit the top lines of the setup.py file. In particular, you will need to determine the Fortran libraries to provide to the C compiler, which are system dependent. Pypspline has been successfully built on Linux using the Intel, Lahey-Fujitsu and Portland Group compilers. 
 
 Then type
 
