@@ -2,7 +2,7 @@
 
 PYTHON=python2
 rm -rf tests.log
-for f in `ls tests/*.py`; do
+for f in `ls test/*.py`; do
     echo "--- testing $f ---"
     cat >> tests.log <<EOF
 --- testing $f ---   

@@ -3,7 +3,7 @@
 # $Id$
 
 LIBS = ['pspline', 'ezcdf', 'portlib',]
-INCS = ['./', ]
+INCS = ['include']
 
 # the following should be edited to reflect your settings
 ###############################################################################
@@ -48,18 +48,19 @@ LIBS += ['ifcore',]
 
 from distutils.core import setup, Extension
 
-fpspline = Extension('fpspline',
+fpspline = Extension('pypspline.fpspline',
                     define_macros = MACROS,
                     include_dirs = INCS,
                     library_dirs = LIBLOC,
                     libraries = LIBS,
-                    sources = ['fpsplinemodule.c',
-                               'fortranobject.c',])
+                    sources = ['fpspline/fpsplinemodule.c',
+                               'fpspline/fortranobject.c',])
 
 setup (name = 'pypspline',
        extra_path = 'pypspline',
-       version = '0.1',
+       version = '0.12',
        description = 'Spline interpolation in 1 to 3 dimensions',
+       author = 'Alexander Pletzer',
        author_email = 'Alexander.Pletzer@noaa.gov',
        url = 'http://pypspline.sourceforge.net',
        long_description = '''
@@ -67,14 +68,7 @@ PyPSPLINE a python interface to the fortran spline library PSPLINE for
 interpolating and computing derivatives of functions in 1 to 3
 dimensions with control over boundary conditions.
 ''',
-       ext_modules = [fpspline],
-       py_modules = ['pspline3_r8',
-                     'pspline3_r4',
-                     'pspline2_r8',
-                     'pspline2_r4',
-                     'pspline1_r8',
-                     'pspline1_r4',
-                     'opendx',
-                     ]
+       packages = ['pypspline',],
+       ext_modules = [fpspline]
        )
 

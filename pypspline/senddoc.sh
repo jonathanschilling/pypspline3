@@ -1,5 +1,13 @@
 #!/usr/bin/env sh
 
+cd pypspline
+for f in `ls *.py`; do
+    f2=`echo $f | awk -F'.' '{print $1}'`
+    pydoc -w $f2
+done
+rm __init__.html
+cp *.html ../html
+cd ..
 cd html
 tar cvfz pypspline_html.tgz *.htm *.html
 scp pypspline_html.tgz pletzer@pypspline.sf.net:/home/groups/p/py/pypspline/htdocs
