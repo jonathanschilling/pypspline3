@@ -151,8 +151,8 @@ class pspline:
         self.__ilin1, ifail = \
                       fpspline.mkspline(self.__x1, \
                                        self.__fspl.flat, \
-                                       self.__ibctype1[0], self.bcval1min.flat, \
-                                       self.__ibctype1[1], self.bcval1max.flat, \
+                                       self.__ibctype1[0], self.bcval1min, \
+                                       self.__ibctype1[1], self.bcval1max, \
                                        )
         
         if ifail != 0 :
@@ -192,7 +192,7 @@ class pspline:
         In 1-D, this is the same as interp_cloud.
         """
 
-        fi, iwarn,ier = fpspline.vecspline(p1, \
+        fi, iwarn,ier = fpspline.vecspline(ICT_FVAL, p1, \
                                          self.__x1pkg, \
                                          self.__fspl.flat)
 
@@ -453,7 +453,7 @@ if __name__ == '__main__':
     toc = time.time()
     error /= nint
     error = N.sqrt(error)
-    print "derivative_point df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+    print "derivative_point d^2f/dx^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
           (nint, error, ier, iwarn, toc-tic)
 
     # array d^2f/dx^2
@@ -462,7 +462,7 @@ if __name__ == '__main__':
     fi, ier, iwarn = spl.derivative_array(2, x1)
     toc = time.time()
     error = N.sum(N.sum(N.sum((fi-fexact)**2)))/nint
-    print "derivative_array df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+    print "derivative_array d^2f/dx^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
           (nint, error, ier, iwarn, toc-tic)
 
     

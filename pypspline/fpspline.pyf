@@ -500,5 +500,68 @@ python module fpspline
         end subroutine vecbicub
     end interface 
 
+!................1-d spline........................................................................
+
+    interface  ! in :pspline
+        subroutine mkspline(x,nx,f,ibcxmin,bcxmin,ibcxmax,bcxmax,ilinx,ier) ! in :pspline:../pspline/mkspline.f
+
+            integer, intent(hide), depend(x) :: nx = len(x)
+
+            real*4, dimension(nx), intent(in) :: x
+            real*4, dimension(2*nx), intent(c) :: f
+
+            integer, intent(in) :: ibcxmin
+            real*4, intent(in) :: bcxmin
+            integer, intent(in) :: ibcxmax
+            real*4, intent(in) :: bcxmax
+
+            integer, intent(out) :: ilinx
+            integer, intent(out) :: ier
+        end subroutine mkspline
+    end interface 
+
+    interface ! in :pspline
+        subroutine evspline(xget,x,nx,ilinx,f,ict,fval,ier) ! in :pspline:../pspline/evspline.f
+            real*4, intent(in) :: xget
+            real*4, dimension(nx), intent(in) :: x
+            integer, intent(hide), depend(x) :: nx = len(x)
+            integer, intent(in) :: ilinx
+            real*4, dimension(2*nx), intent(c) :: f
+            integer, dimension(3), intent(in) :: ict
+            real*4, intent(out) :: fval
+            integer, intent(out) :: ier
+        end subroutine evspline
+    end interface
+
+    interface  ! in :pspline
+        subroutine gridspline(x_newgrid,nx_new,f_new,nx,xpkg,fspl,iwarn,ier) ! in :spline:../pspline/gridspline.f
+            real*4, dimension(nx_new), intent(in) :: x_newgrid
+            integer, intent(hide), depend(x_newgrid) :: nx_new = len(x_newgrid)
+            integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
+            real*4, dimension(nx*4), intent(in) :: xpkg
+            real*4, dimension(2*nx), intent(c)  :: fspl
+
+            real*4, dimension(nx_new), intent(out) :: f_new
+
+            integer, intent(out) :: ier
+            integer, intent(out) :: iwarn
+        end subroutine gridspline
+    end interface 
+
+    interface  ! in :pspline
+        subroutine vecspline(ict,ivec,xvec,ivd,fval,nx,xpkg,fspl,iwarn,ier) ! in :pspline:../pspline/vecspline.f
+            integer, dimension(3), intent(in) :: ict
+            integer, intent(hide), depend(xvec) :: ivec = len(xvec)
+            real*4, dimension(ivec), intent(in) :: xvec
+            integer, intent(hide), depend(ivec) :: ivd = ivec
+            integer, intent(hide), depend(xpkg) :: nx = len(xpkg)/4
+            real*4, dimension(nx*4), intent(in) :: xpkg
+            real*4, dimension(2*nx), intent(c) :: fspl
+
+            real*4, dimension(ivec), intent(out) :: fval
+            integer, intent(out) :: ier
+            integer, intent(out) :: iwarn
+        end subroutine vecspline
+    end interface 
 
 end python module fpspline
