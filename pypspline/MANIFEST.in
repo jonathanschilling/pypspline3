@@ -1,1 +1,1 @@
-include include/*.h OpenDX/*.net *.sh html/*.html*
+include include/*.h OpenDX/*.net *.sh html/*.html* fpspline/*.pyf
