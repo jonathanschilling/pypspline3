@@ -187,8 +187,8 @@ class pspline:
     def setup(self, f):
 
         """
-        Set up (compute) cubic spline coefficients. See self.__init__.doc for comment about
-        bonudary conditions. 
+        Set up (compute) cubic spline coefficients.
+        See self.__init__.doc for comment about boundary conditions. 
         """
 
         if N.shape(f) != (self.__n3, self.__n2, self.__n1):

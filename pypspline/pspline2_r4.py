@@ -3,7 +3,7 @@
 # $Id$
 
 """
-3-D spline in real*4 precision
+2-D spline in real*4 precision
 """
 
 import Numeric as N
@@ -81,7 +81,7 @@ class pspline:
 
         For example, if one wishes to apply df/dx = a(x2) on the left and
 
-        d^2f/dx^2 = b(x1,x2)
+        d^2f/dx^2 = b(x2)
 
         on the right of x1, use
 
@@ -161,8 +161,8 @@ class pspline:
     def setup(self, f):
 
         """
-        Set up (compute) cubic spline coefficients. See self.__init__.doc for comment about
-        bonudary conditions. 
+        Set up (compute) cubic spline coefficients.
+        See self.__init__.doc for comment about boundary conditions. 
         """
 
         if N.shape(f) != (self.__n2, self.__n1):
@@ -222,7 +222,7 @@ class pspline:
     def interp_cloud(self, p1, p2):
 
         """
-        Cloud interpolation for all (p1[:], p2[:]). Assume len(p1)==len(p2)==len(p3).
+        Cloud interpolation for all (p1[:], p2[:]). Assume len(p1)==len(p2).
         """
 
         fi,iwarn,ier = fpspline.vecbicub(ICT_FVAL, p1, p2, \
@@ -234,7 +234,7 @@ class pspline:
     def interp_array(self, p1, p2):
 
         """
-        Array interpolation for all (p1[i1], p2[i2]), i{1,2}=0:len( p{1,2,3} )
+        Array interpolation for all (p1[i1], p2[i2]), i{1,2}=0:len( p{1,2} )
         """
 
         fi, iwarn,ier = fpspline.gridbicub(p1, p2, \
