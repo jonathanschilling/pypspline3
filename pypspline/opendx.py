@@ -3,7 +3,7 @@
 # $Id$
 
 """
-Save in field in openDx file format. 
+Save field in openDx file format. 
 """
 
 import time, sys

@@ -18,14 +18,14 @@ LIBLOC = ['../LINUX/lib',] # location of libpspline.a, etc.
 #
 # Example 1: Intel fortran compiler ifort version 8.0 with gcc 3.3.2
 # For the Intel compiler ifort version 8.0 these are:
-LIBLOC += ['/opt/intel_fc_80/lib/',]
-LIBS += ['ifcore',]
+##LIBLOC += ['/opt/intel_fc_80/lib/',]
+##LIBS += ['ifcore',]
 
 # Example 2: Intel fortran compiler ifort version 8.0 with gcc 2.96, and
-##LIBLOC += ['/usr/local/intel/compiler80/intel_fc_80/lib/',]
-##LIBS += ['ifcore', 'cxa', 'unwind',]
+LIBLOC += ['/usr/local/intel/compiler80/intel_fc_80/lib/',]
+LIBS += ['ifcore', 'cxa', 'unwind',]
 # to access Numpy's include files
-##INCS += ['/home/ap/include/python2.2/']
+INCS += ['/home/ap/include/python2.2/']
 
 # Example 3: LaheyFujitsu fortran compiler
 ##LIBLOC += ['/usr/local/lf95/lib/',]
@@ -71,6 +71,7 @@ dimensions with control over boundary conditions.
                      'pspline2_r4',
                      'pspline1_r8',
                      'pspline1_r4',
+                     'opendx',
                      ]
        )
 
