@@ -12,7 +12,7 @@
 <li> 1-D interpolation using not-a-knot boundary conditions:
 <plaintext>
 import Numeric as N
-from pspline1_r8 import pspline
+from pypspline.pspline1_r8 import pspline
 eps = 1.e-10
 
 # original data
@@ -42,7 +42,7 @@ yppi= spl.derivative(2, xi)
 <li> 2-D interpolation using periodic boundary conditions:
 <plaintext>
 import Numeric as N
-from pspline2_r8 import pspline, griddata
+from pypspline.pspline2_r8 import pspline, griddata
 eps = 1.e-10
 
 # original data
@@ -76,7 +76,7 @@ fyyi= spl.derivative(0,2, xi, yi)
 <li> 3-D interpolation with mixed slope/second derivative conditions:
 <plaintext>
 import Numeric as N
-from pspline3_r8 import pspline, griddata
+from pypspline.pspline3_r8 import pspline, griddata
 eps = 1.e-10
 
 # original data
@@ -120,7 +120,7 @@ fi  = spl.interp(xi, yi, zi)
     <address><a href="mailto:Alexander.Pletzer@noaa.gov">Alexander Pletzer</a></address>
 <!-- Created: Wed Mar 17 10:36:30 EST 2004 -->
 <!-- hhmts start -->
-Last modified: Thu Mar 18 21:34:41 EST 2004
+Last modified: Thu Apr  1 08:48:17 EST 2004
 <!-- hhmts end -->
 
 <p>
