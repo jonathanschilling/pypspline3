@@ -17,15 +17,14 @@ LIBLOC = ['../LINUX/lib',] # location of libpspline.a, etc.
 # the following are Fortran libraries that the C compiler must link with
 #
 # Example 1: Intel fortran compiler ifort version 8.0 with gcc 3.3.2
-# For the Intel compiler ifort version 8.0 these are:
-##LIBLOC += ['/opt/intel_fc_80/lib/',]
-##LIBS += ['ifcore',]
+LIBLOC += ['/opt/intel_fc_80/lib/',]
+LIBS += ['ifcore',]
 
 # Example 2: Intel fortran compiler ifort version 8.0 with gcc 2.96, and
-LIBLOC += ['/usr/local/intel/compiler80/intel_fc_80/lib/',]
-LIBS += ['ifcore', 'cxa', 'unwind',]
+##LIBLOC += ['/usr/local/intel/compiler80/intel_fc_80/lib/']
+##LIBS += ['ifcore', 'cxa', 'unwind',]
 # to access Numpy's include files
-INCS += ['/home/ap/include/python2.2/']
+##INCS += ['/home/ap/include/python2.2/']
 
 # Example 3: LaheyFujitsu fortran compiler
 ##LIBLOC += ['/usr/local/lf95/lib/',]
@@ -38,7 +37,10 @@ INCS += ['/home/ap/include/python2.2/']
 ##LIBS += ['pgf90', 'pgf90_rpm1', 'pgf902', 'pgf90rtl', 'pgc', ]
 ##INCS += ['/home/ap/include/python2.2/']
 
-
+# Example 5: On IRIX64 using the native compilers 
+##LIBLOC = ['../SGI/lib',] # libpspline.a, etc.
+##LIBLOC += ['/usr/local/lib', '/usr/lib64/']
+##LIBS += ['netcdf', 'fortran']
 
 
 
