@@ -1,54 +1,64 @@
 PyPSPLINE
 =========
 
-Sat Mar 13 08:31:22 EST 2004 (Alexander_dot_Pletzer_at_noaa.gov)
+# $Id
+
+Created Sat Mar 13 08:31:22 EST 2004 (Alexander.Pletzer@noaa.gov)
 
 PyPSPLINE is a Python interface to the Fortran spline library PSPLINE. 
 
 1) Prerequisites
+----------------
 
 Python (tested for 2.2 and 2.3): http://python.org
 NetCDF http://www.unidata.ucar.edu/packages/netcdf/
-PSPLINE: http://w3.pppl.gov/rib/repositories/NTCC/catalog/Asset/pspline.html
 NumPy: http://numpy.org/
 [optionally f2py: http://cens.ioc.ee/projects/f2py2e/]
 
-A Fortran and C compiler
+A Fortran 90 and a C compiler.
+
+I assume the platform to be UNIX. If you manage to build PPSLINE/pypspline on Windows, let me know. 
 
 2) Building PSPLINE
+-------------------
 
 You will need to build PSPLINE first. Download the code from 
 
-wget http://w3.pppl.gov/rib/repositories/NTCC/files/pspline.tar.gz
-tar xvfz pspline.tar.gz
+$ wget http://w3.pppl.gov/rib/repositories/NTCC/files/pspline.tar.gz
+$ tar xvfz pspline.tar.gz
 
-You should get 4 directories: pspline, ezcdf, portlib and share. Be sure to set
+You should get the directories pspline, ezcdf, portlib, include, fpreproc and share. Be sure to set
 
-export FORTRAN_VARIANT = <your_compiler> 
+$ export FORTRAN_VARIANT=<your_compiler> 
 
-which can be Intel, LaheyFujitsu, Portland, etc. Depending on the location of your netCDF library you
-may also have to edit share/Make.flags. Then type 
+which can be Intel, LaheyFujitsu, Portland, etc. If you're using an unsupported compiler you may want to add an entry to the file share/Make.flags. If NetCDF is not in the standard location (/usr/local/) you may need to edit share/Make.local. 
 
-gmake all.
+$ gmake all
 
 This will create a directory
 
 LINUX/lib 
 
-or similarly SUN/lib, SGI/lib, etc. on other architectures.
+or SUN/lib, SGI/lib, ... depending on your platform.
 
 3) Building PyPSPLINE
 
-I recommend to create a directory 
+I recommend to download pyspline *after* PSPLINE in a directory adjacent to pspline, ezcdf, etc (i.e. there should be no pypspline directory at his level when building PSPLINE). 
 
-mkdir pypspline/
+Go to this directory
 
-adjacent to LINUX/. Then type
+$ cd pypspline
 
-cd pypspline
-gmake all
+If you have a recent Python version installed on your system, you should not have to re-generate fpsplinemodule.c. 
 
-This will create fpsplinemodule.c. Edit the top lines of the setup.py file and then type
+Edit the top lines of the setup.py file. In particular, you will need to determine the Fortran libraries that need to be linked with, which are compiler dependent. Pypspline has been successfully built on Linux using the Intel, Lahey-Fujitsu and Portland Group compilers. 
 
-python setup.py install
+Then type
 
+$ python setup.py install
+
+or if you don't have root permission
+
+$ python setup.py install --prefix=<path>
+
+Note: on some systems python is called python2. 
