@@ -10,7 +10,11 @@
 A <a href="http://python.org">Python</a> interface to the Fortran spline interpolation library <a href="http://w3.pppl.gov/rib/repositories/NTCC/catalog/Asset/pspline.html">PSPLINE</a>. 
 
 <p>
-PyPpspline is Python module for interpolating and computing derivatives of fields in up to three dimensions. Boundary conditions, which are by defaults of type not-a-knot, can be periodic, or prescribe the normal first or second derivative at the boundary. Function value and derivatives can be computed on isolated points (point interpolation), on a list of scattered points (cloud interpolation) or on a structured grid (array interpolation).
+PyPpspline is Python module for interpolating and computing derivatives of fields in up to three dimensions. Boundary conditions can be of type not-a-knot, periodic, or be expressed in terms of first or second order derivatives. Function value and derivatives can be computed on isolated points (point interpolation), on a list of scattered points (cloud interpolation) or on a structured grid (array interpolation).
+</p>
+
+<p>
+PyPspline uses <a href="http://cens.ioc.ee/projects/f2py2e/">f2py</a> generated code.
 </p>
 
 <ul>
@@ -28,9 +32,18 @@ PyPpspline is Python module for interpolating and computing derivatives of field
 
 <li> <a href="http://sourceforge.net/projects/pypspline/">Download</a> </li>
 
-<li> Documentation: TO ADD </li>
+<li> Documentation:
+	<ul>
+	  <li> <a href="pspline1_r4.html">1-D spline (Float32)</a> </li>
+	  <li> <a href="pspline1_r8.html">1-D spline (Float64)</a> </li>
+	  <li> <a href="pspline2_r4.html">2-D spline (Float32)</a> </li>
+	  <li> <a href="pspline2_r8.html">2-D spline (Float64)</a> </li>
+	  <li> <a href="pspline3_r4.html">3-D spline (Float32)</a> </li>
+	  <li> <a href="pspline3_r8.html">3-D spline (Float64)</a> </li>	  
+	</ul>
+</li>
 
-<li> Examples: TO ADD </li>
+<li> <a href="examples.htm">Examples</a></li>
 
 </ul>
 
@@ -38,7 +51,7 @@ PyPpspline is Python module for interpolating and computing derivatives of field
     <address><a href="mailto:Alexander.Pletzer@noaa.gov">Alexander Pletzer</a></address>
 <!-- Created: Wed Mar 17 10:36:30 EST 2004 -->
 <!-- hhmts start -->
-Last modified: Wed Mar 17 11:28:21 EST 2004
+Last modified: Thu Mar 18 21:32:44 EST 2004
 <!-- hhmts end -->
 
 <p>
