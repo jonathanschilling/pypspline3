@@ -3,7 +3,7 @@
 # $Id$
 
 import Numeric as N
-from pspline1_r4 import pspline
+from pspline1_r8 import pspline
 EPS = 1.e-10
 
 def linspace(xmin, xmax, nx):
@@ -77,7 +77,7 @@ if __name__=='__main__':
     x1 = linspace(0., 1., n1)
     spl = pspline(x1)
     ff = x1**3
-    spl.setup(ff.astype(N.Float32))
+    spl.setup(ff.astype(N.Float64))
 
     # new grid
     x1 = linspace(0., 1., n1-1)
