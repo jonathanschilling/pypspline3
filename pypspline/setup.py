@@ -67,6 +67,10 @@ dimensions with control over boundary conditions.
        ext_modules = [fpspline],
        py_modules = ['pspline3_r8',
                      'pspline3_r4',
+                     'pspline2_r8',
+                     'pspline2_r4',
+                     'pspline1_r8',
+                     'pspline1_r4',
                      ]
        )
 

@@ -198,7 +198,7 @@ class pspline:
         return fi, ier, iwarn
         
 
-    def interp(self, p1, *meth):
+    def interp(self, p1, meth=None):
 
         """
         Interpolatate onto p1, the coordinate which can either be a single point
@@ -207,11 +207,10 @@ class pspline:
         The returned value is a single float for point interpolation,
         it is a rank-1 array of length len(p1) for cloud/array interpolation.
 
-        The *meth argument is not used here.
-
-        the same length. With checks enabled.
-
+        The meth argument has no effect, its purpose is to provide compatibility
+        with higher order spline methods.
         
+        With checks enabled.
         """
 
         if self.__isReady != 1:
@@ -220,7 +219,7 @@ class pspline:
         if type(p1)==types.FloatType:
             fi, ier, iwarn = self.interp_point(p1)
         else:
-            fi, ier, iwarn = self.interp_cloud(p1, p2)        
+            fi, ier, iwarn = self.interp_cloud(p1)        
 
         if ier:
             raise "pspline1_r8::interp error ier=%d"%ier
@@ -267,11 +266,15 @@ class pspline:
                                          self.__fspl.flat)
         return fi, ier, iwarn
 
-    def derivative(self, i1, p1, *meth):
+    def derivative(self, i1, p1, meth=None):
     
         """
         Compute the derivative d^i1 f/dx1^i1 at p1. Must have
         i1>=0 and i1<=2. See interp method for a list of possible p1 shapes.
+
+        The meth argument has no effect, its purpose is to provide compatibility
+        with higher order spline methods.
+        
         With checks enabled.
         """
 
