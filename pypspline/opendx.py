@@ -7,6 +7,7 @@ Save field in openDx file format.
 """
 
 import time, sys
+import Numeric as N
 from Scientific.IO.NetCDF import NetCDFFile
 script_name = sys.argv[0]
 
@@ -19,6 +20,7 @@ def scalarField3_array_netcdf(x1, x2, x3, field, name):
     ndims = 3
 
     # dimensions
+    n1, n2, n3 = len(x1), len(x2), len(x3)
     nc.createDimension('nx', n1)
     nc.createDimension('ny', n2)
     nc.createDimension('nz', n3)
@@ -82,6 +84,7 @@ def scalarField2_array_netcdf(x1, x2, field, name):
     ndims = 2
 
     # dimensions
+    n1, n2 = len(x1), len(x2)
     nc.createDimension('nx', n1)
     nc.createDimension('ny', n2)
     nc.createDimension('ndims', ndims)
@@ -141,6 +144,7 @@ def vectorField3_array_netcdf(x1, x2, x3, field1, field2, field3, name):
     ndims = 3
 
     # dimensions
+    n1, n2, n3 = len(x1), len(x2), len(x3)
     nc.createDimension('nx', n1)
     nc.createDimension('ny', n2)
     nc.createDimension('nz', n3)
@@ -208,6 +212,7 @@ def vectorField2_array_netcdf(x1, x2, field1, field2, name):
     ndims = 2
 
     # dimensions
+    n1, n2 = len(x1), len(x2)
     nc.createDimension('nx', n1)
     nc.createDimension('ny', n2)
     nc.createDimension('ndims', ndims)
