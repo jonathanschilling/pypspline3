@@ -78,6 +78,8 @@ class pspline:
 
         self.bcval1max = b
 
+        The returned value is a spline object.
+
         """
 
         self.__x1 = x1
@@ -124,7 +126,9 @@ class pspline:
 
         """
         Set up (compute) cubic spline coefficients.
-        See __init__ for comment about boundary conditions. 
+        See __init__ for comment about boundary conditions.
+
+        Input is f[ix], a rank-1 array for the function values.
         """
 
         if N.shape(f) != (self.__n1,):
@@ -177,6 +181,8 @@ class pspline:
 
         """
         Cloud interpolation for all p1[:].
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         fi,iwarn,ier = fpspline.vecspline(ICT_FVAL, p1, \
@@ -189,6 +195,8 @@ class pspline:
         """
         Array interpolation for all p1[i1], i1=0:len( p1 ).
         In 1-D, this is the same as interp_cloud.
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         fi, iwarn,ier = fpspline.vecspline(ICT_FVAL, p1, \
@@ -233,6 +241,8 @@ class pspline:
         """
         Compute a single point derivative d^i1 f/dx1^i1 at p1. Must have
         i1>=0 and i1<=2. 
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         iwarn = 0
@@ -247,6 +257,8 @@ class pspline:
         """
         Compute the derivative d^i1 f/dx1^i1 for a cloud p1. Must have
         i1>=0 and i1<=2.
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         fi,iwarn,ier = fpspline.vecspline(ICT_MAP[i1], p1, \
@@ -259,6 +271,8 @@ class pspline:
         """
         Compute the derivative d^i1 f/dx1^i1 for a grid-array p1. Must have
         i1>=0 and i1<=2. Same as derivative_cloud in 1-D.
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         fi,iwarn,ier = fpspline.vecspline(ICT_MAP[i1], p1, \

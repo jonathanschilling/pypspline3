@@ -31,7 +31,7 @@ You should get the directories pspline, ezcdf, portlib, include, fpreproc and sh
 
 $ export FORTRAN_VARIANT=<your_compiler> 
 
-which can be Intel, LaheyFujitsu, Portland, etc. If you're using an unsupported compiler you may want to add an entry to the file share/Make.flags. If NetCDF is not in the standard location (/usr/local/) you may need to edit share/Make.local. 
+which can be Intel, LaheyFujitsu, Portland, SUN, IRIX64, etc. If you're using an unsupported compiler you may want to add an entry to the file share/Make.flags. If NetCDF is not in the standard location (/usr/local/) you may need to edit share/Make.local.
 
 $ gmake all
 
@@ -43,7 +43,7 @@ or SUN/lib, SGI/lib, ... depending on your platform.
 
 3) Building PyPSPLINE
 
-I recommend to download pyspline *after* PSPLINE in a directory adjacent to pspline, ezcdf, etc (i.e. there should be no pypspline directory at his level when building PSPLINE). 
+I recommend downloading pyspline *after* PSPLINE in a directory adjacent to pspline, ezcdf, etc (i.e. there should be no pypspline directory at his level when building PSPLINE). 
 
 Go to this directory
 

@@ -95,6 +95,8 @@ class pspline:
         self.bcval1max = b
 
         where shape(a) == shape(b) == (n2,) and n2 = len(x2).
+
+        The returned value is a spline object.
         
         """
 
@@ -161,7 +163,10 @@ class pspline:
 
         """
         Set up (compute) cubic spline coefficients.
-        See __init__ for comment about boundary conditions. 
+        See __init__ for comment about boundary conditions.
+
+        Input is f[iy, ix], a rank-2 matrix for the function values. The x-index
+        varies fastest.        
         """
 
         if N.shape(f) != (self.__n2, self.__n1):
@@ -209,6 +214,8 @@ class pspline:
 
         """
         Point interpolation at (p1, p2).
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         iwarn = 0
@@ -222,6 +229,8 @@ class pspline:
 
         """
         Cloud interpolation for all (p1[:], p2[:]). Assume len(p1)==len(p2).
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         fi,iwarn,ier = fpspline.vecbicub(ICT_FVAL, p1, p2, \
@@ -234,6 +243,8 @@ class pspline:
 
         """
         Array interpolation for all (p1[i1], p2[i2]), i{1,2}=0:len( p{1,2} )
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         fi, iwarn,ier = fpspline.gridbicub(p1, p2, \
@@ -288,6 +299,8 @@ class pspline:
         """
         Compute a single point derivative d^i1 d^i2 f/dx1^i1 dx2^i2 at (p1, p2). Must have
         i{1,2}>=0 and i1 + i2 <=2. 
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         iwarn = 0
@@ -302,6 +315,8 @@ class pspline:
         """
         Compute the derivative d^i1 d^i2 f/dx1^i1 dx2^i2 for a cloud (p1, p2). Must have
         i{1,2}>=0 and i1 + i2 <=2. 
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         fi,iwarn,ier = fpspline.vecbicub(ICT_MAP[(i1,i2)], p1, p2, \
@@ -315,6 +330,8 @@ class pspline:
         """
         Compute the derivative d^i1 d^i2 f/dx1^i1 dx2^i2 for a grid-array (p1, p2). Must have
         i{1,2}>=0 and i1 + i2 <=2. 
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         xx1, xx2 = griddata(p1, p2)
@@ -354,7 +371,8 @@ class pspline:
     def gradient_point(self, p1, p2):
 
         """
-        Return (df/dy, df/dx) at point (p1, p2).
+        Return (df/dy, df/dx) at point (p1, p2), an error flag  (=0 if ok)
+        and a warning flag (=0 if ok).
         """
 
         iwarn = 0
@@ -371,7 +389,8 @@ class pspline:
     def gradient_cloud(self, p1, p2):
 
         """
-        Return (df/dy, df/dx) for cloud (p1, p2).
+        Return (df/dy, df/dx) for cloud (p1, p2), an error flag  (=0 if ok)
+        and a warning flag (=0 if ok).
         """
 
         f1,iwarn1,ier1 = fpspline.vecbicub(ICT_F1, p1, p2, \

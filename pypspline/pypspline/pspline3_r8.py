@@ -103,6 +103,8 @@ class pspline:
         self.bcval1max = b
 
         where shape(a) == shape(b) == (n3,n2) and n{2,3} = len(x{2,3}).
+
+        The returned value is a spline object.
         
         """
 
@@ -188,6 +190,9 @@ class pspline:
         """
         Set up (compute) cubic spline coefficients.
         See __init__ for comment about boundary conditions. 
+
+        Input is f[iz, iy, ix], a rank-3 array for the function values.
+        The x-index varies fastest, then the y-index.        
         """
 
         if N.shape(f) != (self.__n3, self.__n2, self.__n1):
@@ -293,7 +298,6 @@ class pspline:
 
         Use meth='array' to enforce array interpolation when p1, p2 and p3 happen to have
         the same length. With checks enabled.
-
         
         """
 
@@ -323,7 +327,9 @@ class pspline:
 
         """
         Compute a single point derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 at (p1, p2, p3). Must have
-        i{1,2,3}>=0 and i1 + i2 + i3 <=2. 
+        i{1,2,3}>=0 and i1 + i2 + i3 <=2.
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         iwarn = 0
@@ -338,6 +344,8 @@ class pspline:
         """
         Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 for a cloud (p1, p2, p3). Must have
         i{1,2,3}>=0 and i1 + i2 + i3 <=2. 
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         fi,iwarn,ier = fpspline.r8vectricub(ICT_MAP[(i1,i2,i3)], p1, p2, p3, \
@@ -352,6 +360,8 @@ class pspline:
         """
         Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 for a grid-array (p1, p2, p3). Must have
         i{1,2,3}>=0 and i1 + i2 + i3 <=2. 
+
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
         xx1, xx2, xx3 = griddata(p1, p2, p3)
@@ -391,7 +401,8 @@ class pspline:
     def gradient_point(self, p1, p2, p3):
 
         """
-        Return (df/dz, df/dy, df/dx) at point (p1, p2, p3).
+        Return (df/dz, df/dy, df/dx) at point (p1, p2, p3), an error flag  (=0 if ok)
+        and a warning flag (=0 if ok).
         """
 
         iwarn = 0
@@ -412,7 +423,8 @@ class pspline:
     def gradient_cloud(self, p1, p2, p3):
 
         """
-        Return (df/dz, df/dy, df/dx) for cloud (p1, p2, p3).
+        Return (df/dz, df/dy, df/dx) for cloud (p1, p2, p3), an error flag  (=0 if ok)
+        and a warning flag (=0 if ok).
         """
 
         f1,iwarn1,ier1 = fpspline.r8vectricub(ICT_F1, p1, p2, p3, \
@@ -435,7 +447,8 @@ class pspline:
     def gradient_array(self, p1, p2, p3):
 
         """
-        Return (df/dz, df/dy, df/dx) for grid-array (p1, p2, p3).
+        Return (df/dz, df/dy, df/dx) for grid-array (p1, p2, p3), an error flag  (=0 if ok)
+        and a warning flag (=0 if ok).
         """
 
         xx1, xx2, xx3 = griddata(p1, p2, p3)
@@ -449,7 +462,8 @@ class pspline:
     def gradient(self, p1, p2, p3, meth='cloud'):
     
         """
-        Return (df/dz, df/dy, df/dx) at point (p1, p2, p3).See interp method for a list of possible (p1, p2, p3) shapes.
+        Return (df/dz, df/dy, df/dx) at point (p1, p2, p3). See interp method for a list of
+        possible (p1, p2, p3) shapes.
 
         With error checks.
         """
