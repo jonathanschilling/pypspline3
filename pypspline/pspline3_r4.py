@@ -62,7 +62,7 @@ class pspline:
         x1, x2, x3: original grid arrays
         
         bcs1, bcs2, bcs3: boundary conditions. Use bcs{1,2,3}=1 to apply
-        periodic boundary conditions (bcs1,2,3 defaults to None for
+        periodic boundary conditions (bcs{1,2,3} defaults to None for
         not-a-knot boundary conditions, this should be fine in most cases.
 
         More general boundary conditions can be applied by setting
@@ -323,7 +323,7 @@ class pspline:
     def derivative_point(self, i1, i2, i3, p1, p2, p3):
 
         """
-        Compute a single point derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^3 at (p1, p2, p3). Must have
+        Compute a single point derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 at (p1, p2, p3). Must have
         i{1,2,3}>=0 and i1 + i2 + i3 <=2. 
         """
 
@@ -337,7 +337,7 @@ class pspline:
     def derivative_cloud(self, i1, i2, i3, p1, p2, p3):
 
         """
-        Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^3 for a cloud (p1, p2, p3). Must have
+        Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 for a cloud (p1, p2, p3). Must have
         i{1,2,3}>=0 and i1 + i2 + i3 <=2. 
         """
 
@@ -351,7 +351,7 @@ class pspline:
     def derivative_array(self, i1, i2, i3, p1, p2, p3):
 
         """
-        Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^3 for a grid-array (p1, p2, p3). Must have
+        Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 for a grid-array (p1, p2, p3). Must have
         i{1,2,3}>=0 and i1 + i2 + i3 <=2. 
         """
 
@@ -362,7 +362,7 @@ class pspline:
     def derivative(self, i1, i2, i3, p1, p2, p3, meth='cloud'):
     
         """
-        Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^3 at (p1, p2, p3). Must have
+        Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 at (p1, p2, p3). Must have
         i{1,2,3}>=0 and i1 + i2 + i3 <=2. See interp method for a list of possible (p1, p2, p3) shapes.
         With checks enabled.
         """
@@ -431,7 +431,7 @@ class pspline:
                                          self.__x2pkg, \
                                          self.__x3pkg, \
                                          self.__fspl.flat)
-        return f1, f2, f3, ier1+ier2+ier3, iwarn1+iwarn2+iwarn2
+        return f1, f2, f3, ier1+ier2+ier3, iwarn1+iwarn2+iwarn3
     
     def gradient_array(self, p1, p2, p3):
 
@@ -561,10 +561,10 @@ if __name__ == '__main__':
 
     eps = 1.e-6
 
-    n1, n2, n3 = 11, 21, 31 #100, 110, 120 #11, 21, 31
+    n1, n2, n3 = 11, 21, 31
     bcs1 = (0,0)
     bcs2 = (0,0)   # not-a-knot
-    bcs3 = (0,0)   # (-1,-1) # periodic
+    bcs3 = (0,0)   #
     x1min, x1max = 0., 1.
     x2min, x2max = 0., 1.
     x3min, x3max = 0., 1. # 2*N.pi
