@@ -50,7 +50,7 @@ def griddata(x1, x2, x3):
 ###############################################################################
     
 
-class pspline3_r4:
+class pspline:
 
 
     def __init__(self, x1, x2, x3,
@@ -586,7 +586,7 @@ if __name__ == '__main__':
     print "function evaluations: time->%10.1f secs" % (toc-tic)
 
     tic = time.time()
-    spl = pspline3_r4(x1, x2, x3)
+    spl = pspline(x1, x2, x3)
     # may set BCs if not-a-knot 
     spl.setup(f.astype(N.Float32))
     toc = time.time()
