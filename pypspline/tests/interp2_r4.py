@@ -88,34 +88,6 @@ def arrayDy(spl, x1, x2, ff):
     error = N.sqrt(N.sum(N.sum(N.sum( (ff - fi)**2 )))/float(mtot))
     return error
 
-
-def pointDz(spl, x1, x2, ff):
-    error = 0
-    m2, m1 = N.shape(ff)
-    mtot = len(ff)
-    for i2 in range(m2):
-        for i1 in range(m1):
-            fi = spl.derivative(0,0,1, x1[i1], x2[i2])
-            error += (fi - ff[i2,i1])**2
-    error /= float(mtot)
-    error = N.sqrt(error)
-    return error
-
-def cloudDz(spl, xx1, xx2, ff):
-    error = 0
-    mtot = len(ff)
-    fi = spl.derivative(0,0,1, xx1.flat, xx2.flat)
-    error = N.sqrt(N.sum( (ff.flat - fi)**2 )/float(mtot))
-    return error
-    
-def arrayDz(spl, x1, x2, ff):
-    error = 0
-    mtot = len(ff)
-    fi = spl.derivative(0,0,1, x1, x2, meth='array')
-    error = N.sqrt(N.sum(N.sum(N.sum( (ff - fi)**2 )))/float(mtot))
-    return error
-
-
 def pointDxx(spl, x1, x2, ff):
     error = 0
     m2, m1 = N.shape(ff)
@@ -194,31 +166,6 @@ def arrayDyy(spl, x1, x2, ff):
     error = N.sqrt(N.sum(N.sum(N.sum( (ff - fi)**2 )))/float(mtot))
     return error
 
-def pointDyz(spl, x1, x2, ff):
-    error = 0
-    m2, m1 = N.shape(ff)
-    mtot = len(ff)
-    for i2 in range(m2):
-        for i1 in range(m1):
-            fi = spl.derivative(0,1,1, x1[i1], x2[i2])
-            error += (fi - ff[i2,i1])**2
-    error /= float(mtot)
-    error = N.sqrt(error)
-    return error
-
-def cloudDyz(spl, xx1, xx2, ff):
-    error = 0
-    mtot = len(ff)
-    fi = spl.derivative(0,1,1, xx1.flat, xx2.flat)
-    error = N.sqrt(N.sum( (ff.flat - fi)**2 )/float(mtot))
-    return error
-
-def arrayDyz(spl, x1, x2, ff):
-    error = 0
-    mtot = len(ff)
-    fi = spl.derivative(0,1,1, x1, x2, meth='array')
-    error = N.sqrt(N.sum(N.sum(N.sum( (ff - fi)**2 )))/float(mtot))
-    return error
 
     
 ##################################################################
