@@ -7,7 +7,7 @@
 """
 
 import Numeric as N
-from pypspline import fpspline
+import fpspline
 import warnings, types, time
 
 # to get the function value

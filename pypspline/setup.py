@@ -17,14 +17,14 @@ LIBLOC = ['../LINUX/lib',] # location of libpspline.a, etc.
 # the following are Fortran libraries that the C compiler must link with
 #
 # Example 1: Intel fortran compiler ifort version 8.0 with gcc 3.3.2
-##LIBLOC += ['/opt/intel_fc_80/lib/',]
-##LIBS += ['ifcore',]
+LIBLOC += ['/opt/intel_fc_80/lib/',]
+LIBS += ['ifcore',]
 
 # Example 2: Intel fortran compiler ifort version 8.0 with gcc 2.96, and
-LIBLOC += ['/usr/local/intel/compiler80/intel_fc_80/lib/']
-LIBS += ['ifcore', 'cxa', 'unwind',]
+##LIBLOC += ['/usr/local/intel/compiler80/intel_fc_80/lib/']
+##LIBS += ['ifcore', 'cxa', 'unwind',]
 # to access Numpy's include files
-INCS += ['/home/ap/include/python2.2/']
+##INCS += ['/home/ap/include/python2.2/']
 
 # Example 3: LaheyFujitsu fortran compiler
 ##LIBLOC += ['/usr/local/lf95/lib/',]
@@ -59,7 +59,7 @@ fpspline = Extension('fpspline',
 
 setup (name = 'pypspline',
        extra_path = 'pypspline',
-       version = '0.12',
+       version = '0.13',
        description = 'Spline interpolation in 1 to 3 dimensions',
        author = 'Alexander Pletzer',
        author_email = 'Alexander.Pletzer@noaa.gov',
