@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# $Id$
+
 LIBS = ['pspline', 'ezcdf', 'portlib',]
 
 # the following should be edited to reflect your settings
@@ -10,7 +12,7 @@ MACROS = [('F2PY_REPORT_ATEXIT', '1'),]
 # if you plspline in another directory than ../LINUX/lib, change the line below
 LIBLOC = ['../LINUX/lib',] # location of libpspline.a, libezcdf.a & libportlib.a
 
-# the following are Fortran libraries that must be linked with C
+# the following are Fortran libraries that the C compiler must link with
 # For the Intel compiler ifort version 8.0 these are:
 LIBLOC += ['/opt/intel_fc_80/lib/',]
 LIBS += ['ifcore',]
