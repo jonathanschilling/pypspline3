@@ -3,7 +3,7 @@ PyPSPLINE
 
 # $Id$
 
-Created Sat Mar 13 08:31:22 EST 2004 (alexander@goklia.net)
+Created Sat Mar 13 08:31:22 EST 2004 (alexander@gokliya.net)
 
 PyPSPLINE is a Python interface to the Fortran spline library PSPLINE. 
 
