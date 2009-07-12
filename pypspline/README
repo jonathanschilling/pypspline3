@@ -3,7 +3,7 @@ PyPSPLINE
 
 # $Id$
 
-Created Sat Mar 13 08:31:22 EST 2004 (Alexander.Pletzer@noaa.gov)
+Created Sat Mar 13 08:31:22 EST 2004 (alexander@goklia.net)
 
 PyPSPLINE is a Python interface to the Fortran spline library PSPLINE. 
 
@@ -35,21 +35,21 @@ if using bash shell, or
 
 $ setenv FORTRAN_VARIANT <your_compiler>
 
-if using csh. Here, <your_compiler> can be Intel, LaheyFujitsu, Portland, SUN, IRIX64, etc.
-
-On Linux (either i686 or ia64) I recommend the Intel Fortran compiler. You may be able to download a free i686 version for non-commercial applications from the Intel web site.
+if using csh. Here, <your_compiler> can be GCC, Intel, LaheyFujitsu, Portland, SUN, IRIX64, etc, gfortran
+works fine on Linux. 
 
 If you're using an unsupported compiler you may want to add an entry to the file share/Make.flags. 
 
-If NetCDF is not in the standard location (/usr/local/) you may need to edit share/Make.local.
+If NetCDF is not in the standard location (/usr/local/) you may need to edit share/Make.local or specify
+via the NETCDF_DIR variable. Example:
 
-$ gmake all
+$ gmake all FORTRAN_VARIANT=GCC NETCDF_DIR=/home/research/pletzer/software/netcdf
 
 This will create a directory
 
 LINUX/lib 
 
-or SUN/lib, SGI/lib, ... depending on your platform. Compilers are not dicriminated so you will need to compile in different directories if you want to support several compilers, say on Linux. This is also true if you need to support both i686 and ia64.
+or SUN/lib, SGI/lib, ... depending on your platform. Compilers are not discriminated so you will need to compile in different directories if you want to support several compilers, say on Linux. This is also true if you need to support both i686 and ia64.
 
 3) Building PyPSPLINE
 
