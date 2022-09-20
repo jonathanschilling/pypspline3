@@ -5,7 +5,6 @@
 """
 
 import numpy as _np
-import types as _types
 
 import pspline_wrapped as fpspline
 
@@ -161,6 +160,28 @@ class pspline:
 
         return fi[0], ier, iwarn
 
+    def interp_cloud(self, p1):
+
+        """
+        Cloud interpolation for all p1[:].
+        In 1-D, this is the same as interp_array.
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
+        """
+
+        nEval = len(p1)
+
+        fi = _np.zeros(nEval)
+
+        iwarn = 0
+        ier = 0
+        fpspline.vecspline(ICT_FVAL,
+                           nEval, p1,
+                           nEval, fi,
+                           self.__n1, self.__x1pkg,
+                           self.__fspl, iwarn, ier)
+
+        return fi, ier, iwarn
+
     def interp_array(self, p1):
 
         """
@@ -198,7 +219,7 @@ class pspline:
         if self.__isReady != 1:
             raise 'pspline1_r4::interp: spline coefficients were not set up!'
 
-        if type(p1) == _types.FloatType:
+        if type(p1) == _np.float64:
             fi, ier, iwarn = self.interp_point(p1)
         else:
             fi, ier, iwarn = self.interp_cloud(p1)
@@ -218,6 +239,7 @@ class pspline:
         Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
+        ier = 0
         iwarn = 0
 
         fi = _np.zeros(1)
@@ -289,7 +311,7 @@ class pspline:
         if self.__isReady != 1:
             raise 'pspline1_r4::derivative: spline coefficients were not set up!'
 
-        if type(p1) == _types.FloatType:
+        if type(p1) == _np.float64:
             fi, ier, iwarn = self.derivative_point(i1,p1)
         else:
             fi, ier, iwarn = self.derivative_cloud(i1,p1)
