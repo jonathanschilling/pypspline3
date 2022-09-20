@@ -268,6 +268,7 @@ class pspline:
                           self.__ilin1, self.__ilin2, self.__ilin3,
                           self.__fspl, self.__n1, self.__n2,
                           ICT_FVAL, fi, ier)
+
         return fi[0], ier, iwarn
 
     def interp_cloud(self, p1, p2, p3):
@@ -337,8 +338,6 @@ class pspline:
 
         Use meth='array' to enforce array interpolation when p1, p2 and p3 happen to have
         the same length. With checks enabled.
-
-
         """
 
         if self.__isReady != 1:
@@ -365,16 +364,24 @@ class pspline:
     def derivative_point(self, i1, i2, i3, p1, p2, p3):
 
         """
-        Compute a single point derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 at (p1, p2, p3). Must have
-        i{1,2,3}>=0 and i1 + i2 + i3 <=2.
+        Compute a single point derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 at (p1, p2, p3).
+        Must have i{1,2,3}>=0 and i1 + i2 + i3 <=2.
         """
 
+        ier = 0
         iwarn = 0
-        fi,ier = fpspline.evtricub(p1, p2, p3, \
-                                    self.__x1, self.__x2, self.__x3, \
-                                    self.__ilin1, self.__ilin2, self.__ilin3, \
-                                    self.__fspl.flat, ICT_MAP[(i1,i2,i3)])
-        return fi, ier, iwarn
+
+        fi = _np.zeros(1)
+
+        fpspline.evtricub(p1, p2, p3,
+                          self.__x1, self.__n1,
+                          self.__x2, self.__n2,
+                          self.__x3, self.__n3,
+                          self.__ilin1, self.__ilin2, self.__ilin3,
+                          self.__fspl, self.__n1, self.__n2,
+                          ICT_MAP[(i1,i2,i3)], fi, ier)
+
+        return fi[0], ier, iwarn
 
     def derivative_cloud(self, i1, i2, i3, p1, p2, p3):
 
@@ -383,11 +390,27 @@ class pspline:
         i{1,2,3}>=0 and i1 + i2 + i3 <=2.
         """
 
-        fi,iwarn,ier = fpspline.vectricub(ICT_MAP[(i1,i2,i3)], p1, p2, p3, \
-                                         self.__x1pkg, \
-                                         self.__x2pkg, \
-                                         self.__x3pkg, \
-                                         self.__fspl.flat)
+        nEval = len(p1)
+        if nEval != len(p2):
+            raise RuntimeError("p1 and p2 must have equal length, but have %d and %d"%
+                               (nEval, len(p2)))
+        if nEval != len(p3):
+            raise RuntimeError("p1 and p3 must have equal length, but have %d and %d"%
+                               (nEval, len(p3)))
+
+        fi = _np.zeros(nEval)
+
+        iwarn = 0
+        ier = 0
+
+        fpspline.vectricub(ICT_MAP[(i1,i2,i3)], nEval, p1, p2, p3,
+                           nEval, fi,
+                           self.__n1, self.__x1pkg,
+                           self.__n2, self.__x2pkg,
+                           self.__n3, self.__x3pkg,
+                           self.__fspl, self.__n1, self.__n2,
+                           iwarn,ier)
+
         return fi, ier, iwarn
 
     def derivative_array(self, i1, i2, i3, p1, p2, p3):
@@ -397,9 +420,14 @@ class pspline:
         i{1,2,3}>=0 and i1 + i2 + i3 <=2.
         """
 
+        n1 = len(p1)
+        n2 = len(p2)
+        n3 = len(p3)
+
         xx1, xx2, xx3 = griddata(p1, p2, p3)
-        fi,iwarn,ier = self.derivative_cloud(i1, i2, i3, xx1.flat, xx2.flat, xx3.flat)
-        return _np.resize(fi, (len(p3), len(p2), len(p1))), ier, iwarn
+        fi,iwarn,ier = self.derivative_cloud(i1, i2, i3,
+                                             xx1.flatten(), xx2.flatten(), xx3.flatten())
+        return fi.reshape([n1, n2, n3], order='F').T, ier, iwarn
 
     def derivative(self, i1, i2, i3, p1, p2, p3, meth='cloud'):
 
@@ -415,7 +443,7 @@ class pspline:
         if type(p1)!=type(p2) or type(p1)!=type(p3) or type(p2)!=type(p3):
             raise "pspline3_r4::derivative: types (p1, p2, p3) don't match"
 
-        if type(p1)==types.FloatType:
+        if type(p1)==np.float64:
             fi, ier, iwarn = self.derivative_point(i1,i2,i3, p1,p2,p3)
         else:
             if len(p1)==len(p2)==len(p3) and meth=='cloud':
@@ -429,7 +457,6 @@ class pspline:
             warnings.warn('pspline3_r4::derivative abscissae are out of bound!')
 
         return fi
-
 
     def gradient_point(self, p1, p2, p3):
 
@@ -607,4 +634,121 @@ if __name__ == '__main__':
     toc = time.time()
     error = _np.sum((fi-fcexact)**2)/nint
     print("interp_cloud: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    ## df/dx
+
+    fexact = 3*xx1**2
+
+    # point df/dx
+
+    tic = time.time()
+    error = 0
+    for i3 in range(n3):
+        for i2 in range(n2):
+            for i1 in range(n1):
+                fi, ier, iwarn = spl.derivative_point(1, 0, 0, x1[i1], x2[i2], x3[i3])
+                error += (fi - fexact[i3,i2,i1])**2
+    toc = time.time()
+    error /= nint
+    error = _np.sqrt(error)
+    print("derivative_point df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # array df/dx
+
+    tic = time.time()
+    fi, ier, iwarn = spl.derivative_array(1, 0, 0, x1, x2, x3)
+    toc = time.time()
+    error = _np.sum(_np.sum(_np.sum((fi-fexact)**2)))/nint
+    print("derivative_array df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # cloud df/dx
+
+    fcexact = 3*xc1**2
+
+    tic = time.time()
+    fi, ier, iwarn = spl.derivative_cloud(1, 0, 0, xc1, xc2, xc3)
+    toc = time.time()
+    error = _np.sum((fi-fcexact)**2)/nint
+    print("derivative_cloud df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    ## d^2f/dy^2
+
+    fexact = 12*xx2
+
+    # point d^2f/dy^2
+
+    error = 0
+    tic = time.time()
+    for i3 in range(n3):
+        for i2 in range(n2):
+            for i1 in range(n1):
+                fi, ier, iwarn = spl.derivative_point(0,2,0, x1[i1], x2[i2], x3[i3])
+                error += (fi - fexact[i3,i2,i1])**2
+    toc = time.time()
+    error /= nint
+    error = _np.sqrt(error)
+    print("derivative_point d^2f/dy^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # array d^2f/dy^2
+
+    tic = time.time()
+    fi, ier, iwarn = spl.derivative_array(0,2,0, x1, x2, x3)
+    toc = time.time()
+    error = _np.sum(_np.sum(_np.sum((fi-fexact)**2)))/nint
+    print("derivative_array d^2f/dy^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # cloud d^2f/dy^2
+
+    fcexact = 12*xc2
+
+    tic = time.time()
+    fi, ier, iwarn = spl.derivative_cloud(0,2,0, xc1, xc2, xc3)
+    toc = time.time()
+    error = _np.sum((fi-fcexact)**2)/nint
+    print("derivative_cloud d^2f/dy^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    ## d^2f/dydz
+
+    fexact = 6*xx3
+
+    # point d^2f/dydz
+
+    error = 0
+    tic = time.time()
+    for i3 in range(n3):
+        for i2 in range(n2):
+            for i1 in range(n1):
+                fi, ier, iwarn = spl.derivative_point(0,1,1, x1[i1], x2[i2], x3[i3])
+                error += (fi - fexact[i3,i2,i1])**2
+    toc = time.time()
+    error /= nint
+    error = _np.sqrt(error)
+    print("derivative_point d^2f/dydz: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # array d^2f/dydz
+
+    tic = time.time()
+    fi, ier, iwarn = spl.derivative_array(0,1,1, x1, x2, x3)
+    toc = time.time()
+    error = _np.sum(_np.sum(_np.sum((fi-fexact)**2)))/nint
+    print("derivative_array d^2f/dydz: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # cloud d^2f/dydz
+
+    fcexact = 6*xc3
+
+    tic = time.time()
+    fi, ier, iwarn = spl.derivative_cloud(0,1,1, xc1, xc2, xc3)
+    toc = time.time()
+    error = _np.sum((fi-fcexact)**2)/nint
+    print("derivative_cloud d^2f/dydz: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
           (nint, error, ier, iwarn, toc-tic))
