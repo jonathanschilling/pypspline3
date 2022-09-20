@@ -29,7 +29,7 @@ ICT_MAP = {
     (1,1,0): _np.array( [0,0,0,0,0,0,0,1,0,0], dtype=_np.int32 ),
     (1,0,1): _np.array( [0,0,0,0,0,0,0,0,1,0], dtype=_np.int32 ),
     (0,1,1): _np.array( [0,0,0,0,0,0,0,0,0,1], dtype=_np.int32 ),
-    }
+}
 
 def griddata(x1, x2, x3):
 
@@ -251,6 +251,25 @@ class pspline:
 
         self.__isReady = 1
 
+    def interp_point(self, p1, p2, p3):
+
+        """
+        Point interpolation at (p1, p2, p3).
+        """
+        ier = 0
+        iwarn = 0
+
+        fi = _np.zeros(1)
+
+        fpspline.evtricub(p1, p2, p3,
+                          self.__x1, self.__n1,
+                          self.__x2, self.__n2,
+                          self.__x3, self.__n3,
+                          self.__ilin1, self.__ilin2, self.__ilin3,
+                          self.__fspl, self.__n1, self.__n2,
+                          ICT_FVAL, fi, ier)
+        return fi[0], ier, iwarn
+
 
 
 
@@ -291,3 +310,30 @@ if __name__ == '__main__':
     toc = time.time()
     print("init/setup: %d original grid nodes time->%10.1f secs" %
           (n1*n2*n3, toc-tic))
+
+    # save/load skipped for now
+
+    # new mesh
+    n1, n2, n3 = 2*n2-1, 2*n2, 2*n2+1 # 3*n2-1, 3*n2, 3*n2+1
+    x1 = _np.arange(x1min, x1max+eps, (x1max-x1min)/float(n1-1))
+    x2 = _np.arange(x2min, x2max+eps, (x2max-x2min)/float(n2-1))
+    x3 = _np.arange(x3min, x3max+eps, (x3max-x3min)/float(n3-1))
+    xx1, xx2, xx3 = griddata(x1, x2, x3)
+    fexact = xx1**3 + 2*xx2**3 + 3*xx2*xx3**2
+
+    # point interpolation
+
+    nint = n1*n2*n3
+
+    error = 0
+    tic = time.time()
+    for i3 in range(n3):
+        for i2 in range(n2):
+            for i1 in range(n1):
+                fi, ier, iwarn = spl.interp_point(x1[i1], x2[i2], x3[i3])
+                error += (fi - fexact[i3,i2,i1])**2
+    toc = time.time()
+    error /= nint
+    error = _np.sqrt(error)
+    print("interp_point: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
