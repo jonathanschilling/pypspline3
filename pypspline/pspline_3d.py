@@ -270,6 +270,253 @@ class pspline:
                           ICT_FVAL, fi, ier)
         return fi[0], ier, iwarn
 
+    def interp_cloud(self, p1, p2, p3):
+
+        """
+        Cloud interpolation for all (p1[:], p2[:], p3[:]). Assume len(p1)==len(p2)==len(p3).
+        """
+
+        nEval = len(p1)
+        if nEval != len(p2):
+            raise RuntimeError("p1 and p2 must have equal length, but have %d and %d"%
+                               (nEval, len(p2)))
+        if nEval != len(p3):
+            raise RuntimeError("p1 and p3 must have equal length, but have %d and %d"%
+                               (nEval, len(p3)))
+
+        fi = _np.zeros(nEval)
+
+        iwarn = 0
+        ier = 0
+
+        fpspline.vectricub(ICT_FVAL, nEval, p1, p2, p3,
+                           nEval, fi,
+                           self.__n1, self.__x1pkg,
+                           self.__n2, self.__x2pkg,
+                           self.__n3, self.__x3pkg,
+                           self.__fspl, self.__n1, self.__n2,
+                           iwarn,ier)
+
+        return fi, ier, iwarn
+
+    def interp_array(self, p1, p2, p3):
+
+        """
+        Array interpolation for all (p1[i1], p2[i2], p3[i3]), i{1,2,3}=0:len( p{1,2,3} )
+        """
+
+        n1 = len(p1)
+        n2 = len(p2)
+        n3 = len(p3)
+
+        fi = _np.zeros([n1, n2, n3], order="F")
+
+        ier = 0
+        iwarn = 0
+
+        fpspline.gridtricub(p1, n1, p2, n2, p3, n3,
+                            fi, n1, n2,
+                            self.__n1, self.__x1pkg,
+                            self.__n2, self.__x2pkg,
+                            self.__n3, self.__x3pkg,
+                            self.__fspl, self.__n1, self.__n2,
+                            iwarn, ier)
+
+        return fi.reshape([n1, n2, n3], order='F').T, ier, iwarn
+
+    def interp(self, p1, p2, p3, meth='cloud'):
+
+        """
+        Interpolatate onto (p1, p2, p3), the coordinate-triplet which can either be a single point
+        (point interpolation), 3 arrays of identical length (cloud interpolation), or 3 arrays
+        of possibly different lengths (array interpolation).
+
+        The returned value is a single float for point interpolation, it is a rank-1 array of
+        length len(p1)=len(p2)=len(p3) for cloud interpolation, or a rank-3 array of shape
+        (len(p3), len(p2), len(p1)) for array interpolation.
+
+        Use meth='array' to enforce array interpolation when p1, p2 and p3 happen to have
+        the same length. With checks enabled.
+
+
+        """
+
+        if self.__isReady != 1:
+            raise 'pspline3_r4::interp: spline coefficients were not set up!'
+
+        if type(p1)!=type(p2) or type(p1)!=type(p3) or type(p2)!=type(p3):
+            raise "pspline3_r4::interp: types (p1, p2, p3) don't match"
+
+        if type(p1)==np.float64:
+            fi, ier, iwarn = self.interp_point(p1, p2, p3)
+        else:
+            if len(p1)==len(p2)==len(p3) and meth=='cloud':
+                fi, ier, iwarn = self.interp_cloud(p1, p2, p3)
+            else:
+                fi, ier, iwarn = self.interp_array(p1, p2, p3)
+
+        if ier:
+            raise "pspline3_r4::interp error ier=%d"%ier
+        if iwarn:
+            warnings.warn('pspline3_r4::interp abscissae are out of bound!')
+
+        return fi
+
+    def derivative_point(self, i1, i2, i3, p1, p2, p3):
+
+        """
+        Compute a single point derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 at (p1, p2, p3). Must have
+        i{1,2,3}>=0 and i1 + i2 + i3 <=2.
+        """
+
+        iwarn = 0
+        fi,ier = fpspline.evtricub(p1, p2, p3, \
+                                    self.__x1, self.__x2, self.__x3, \
+                                    self.__ilin1, self.__ilin2, self.__ilin3, \
+                                    self.__fspl.flat, ICT_MAP[(i1,i2,i3)])
+        return fi, ier, iwarn
+
+    def derivative_cloud(self, i1, i2, i3, p1, p2, p3):
+
+        """
+        Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 for a cloud (p1, p2, p3). Must have
+        i{1,2,3}>=0 and i1 + i2 + i3 <=2.
+        """
+
+        fi,iwarn,ier = fpspline.vectricub(ICT_MAP[(i1,i2,i3)], p1, p2, p3, \
+                                         self.__x1pkg, \
+                                         self.__x2pkg, \
+                                         self.__x3pkg, \
+                                         self.__fspl.flat)
+        return fi, ier, iwarn
+
+    def derivative_array(self, i1, i2, i3, p1, p2, p3):
+
+        """
+        Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 for a grid-array (p1, p2, p3). Must have
+        i{1,2,3}>=0 and i1 + i2 + i3 <=2.
+        """
+
+        xx1, xx2, xx3 = griddata(p1, p2, p3)
+        fi,iwarn,ier = self.derivative_cloud(i1, i2, i3, xx1.flat, xx2.flat, xx3.flat)
+        return _np.resize(fi, (len(p3), len(p2), len(p1))), ier, iwarn
+
+    def derivative(self, i1, i2, i3, p1, p2, p3, meth='cloud'):
+
+        """
+        Compute the derivative d^i1 d^i2 d^i3 f/dx1^i1 dx2^i2 dx3^i3 at (p1, p2, p3). Must have
+        i{1,2,3}>=0 and i1 + i2 + i3 <=2. See interp method for a list of possible (p1, p2, p3) shapes.
+        With checks enabled.
+        """
+
+        if self.__isReady != 1:
+            raise 'pspline3_r4::derivative: spline coefficients were not set up!'
+
+        if type(p1)!=type(p2) or type(p1)!=type(p3) or type(p2)!=type(p3):
+            raise "pspline3_r4::derivative: types (p1, p2, p3) don't match"
+
+        if type(p1)==types.FloatType:
+            fi, ier, iwarn = self.derivative_point(i1,i2,i3, p1,p2,p3)
+        else:
+            if len(p1)==len(p2)==len(p3) and meth=='cloud':
+                fi, ier, iwarn = self.derivative_cloud(i1,i2,i3, p1,p2,p3)
+            else:
+                fi, ier, iwarn = self.derivative_array(i1,i2,i3, p1,p2,p3)
+
+        if ier:
+            raise "pspline3_r4::derivative error"
+        if iwarn:
+            warnings.warn('pspline3_r4::derivative abscissae are out of bound!')
+
+        return fi
+
+
+    def gradient_point(self, p1, p2, p3):
+
+        """
+        Return (df/dz, df/dy, df/dx) at point (p1, p2, p3).
+        """
+
+        iwarn = 0
+        f1,ier1 = fpspline.evtricub(p1, p2, p3, \
+                                    self.__x1, self.__x2, self.__x3, \
+                                    self.__ilin1, self.__ilin2, self.__ilin3, \
+                                    self.__fspl.flat, ICT_F1)
+        f2,ier2 = fpspline.evtricub(p1, p2, p3, \
+                                    self.__x1, self.__x2, self.__x3, \
+                                    self.__ilin1, self.__ilin2, self.__ilin3, \
+                                    self.__fspl.flat, ICT_F2)
+        f3,ier3 = fpspline.evtricub(p1, p2, p3, \
+                                    self.__x1, self.__x2, self.__x3, \
+                                    self.__ilin1, self.__ilin2, self.__ilin3, \
+                                    self.__fspl.flat, ICT_F3)
+        return f1, f2, f3, ier1+ier2+ier3, iwarn
+
+    def gradient_cloud(self, p1, p2, p3):
+
+        """
+        Return (df/dz, df/dy, df/dx) for cloud (p1, p2, p3).
+        """
+
+        f1,iwarn1,ier1 = fpspline.vectricub(ICT_F1, p1, p2, p3, \
+                                         self.__x1pkg, \
+                                         self.__x2pkg, \
+                                         self.__x3pkg, \
+                                         self.__fspl.flat)
+        f2,iwarn2,ier2 = fpspline.vectricub(ICT_F2, p1, p2, p3, \
+                                         self.__x1pkg, \
+                                         self.__x2pkg, \
+                                         self.__x3pkg, \
+                                         self.__fspl.flat)
+        f3,iwarn3,ier3 = fpspline.vectricub(ICT_F3, p1, p2, p3, \
+                                         self.__x1pkg, \
+                                         self.__x2pkg, \
+                                         self.__x3pkg, \
+                                         self.__fspl.flat)
+        return f1, f2, f3, ier1+ier2+ier3, iwarn1+iwarn2+iwarn3
+
+    def gradient_array(self, p1, p2, p3):
+
+        """
+        Return (df/dz, df/dy, df/dx) for grid-array (p1, p2, p3).
+        """
+
+        xx1, xx2, xx3 = griddata(p1, p2, p3)
+        f1, f2, f3, iwarn,ier = self.gradient_cloud(xx1.flat, xx2.flat, xx3.flat)
+        n1, n2, n3 = len(p1), len(p2), len(p3)
+        return _np.resize(f1, (n3,n2,n1)), \
+               _np.resize(f2, (n3,n2,n1)), \
+               _np.resize(f3, (n3,n2,n1)), \
+               ier, iwarn
+
+    def gradient(self, p1, p2, p3, meth='cloud'):
+
+        """
+        Return (df/dz, df/dy, df/dx) at point (p1, p2, p3).See interp method for a list of possible (p1, p2, p3) shapes.
+
+        With error checks.
+        """
+
+        if self.__isReady != 1:
+            raise 'pspline3_r4::gradient: spline coefficients were not set up!'
+
+        if type(p1)!=type(p2) or type(p1)!=type(p3) or type(p2)!=type(p3):
+            raise "pspline3_r4::gradient: types (p1, p2, p3) don't match"
+
+        if type(p1)==types.FloatType:
+            fi, ier, iwarn = self.gradient_point(p1, p2, p3)
+        else:
+            if len(p1)==len(p2)==len(p3) and meth=='cloud':
+                fi, ier, iwarn = self.gradient_cloud(p1, p2, p3)
+            else:
+                fi, ier, iwarn = self.gradient_array(p1, p2, p3)
+
+        if ier:
+            raise "pspline3_r4::gradient error"
+        if iwarn:
+            warnings.warn('pspline3_r4::gradient abscissae are out of bound!')
+
+        return fi
 
 
 
@@ -336,4 +583,28 @@ if __name__ == '__main__':
     error /= nint
     error = _np.sqrt(error)
     print("interp_point: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # array interpolation
+
+    tic = time.time()
+    fi, ier, iwarn = spl.interp_array(x1, x2, x3)
+    toc = time.time()
+    error = _np.sum(_np.sum(_np.sum((fi-fexact)**2)))/nint
+    print("interp_array: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # cloud interpolation
+
+    n = n1*n2*n3
+    xc1 = _np.arange(x1min, x1max+eps, (x1max-x1min)/float(n-1))
+    xc2 = _np.arange(x2min, x2max+eps, (x2max-x2min)/float(n-1))
+    xc3 = _np.arange(x3min, x3max+eps, (x3max-x3min)/float(n-1))
+    fcexact = xc1**3 + 2*xc2**3 + 3*xc2*xc3**2
+
+    tic = time.time()
+    fi, ier, iwarn = spl.interp_cloud(xc1, xc2, xc3)
+    toc = time.time()
+    error = _np.sum((fi-fcexact)**2)/nint
+    print("interp_cloud: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
           (nint, error, ier, iwarn, toc-tic))
