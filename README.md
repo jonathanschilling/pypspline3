@@ -1,15 +1,12 @@
 # PyPSPLINE
-
-Created Sat Mar 13 08:31:22 EST 2004 (alexander@gokliya.net)
-
 PyPSPLINE is a Python interface to the Fortran spline library PSPLINE. 
 
 ## Prerequisites
 
-Python (tested for 2.2 and 2.3): http://python.org
-NetCDF http://www.unidata.ucar.edu/packages/netcdf/
-NumPy: http://numpy.org/
-[optionally f2py: http://cens.ioc.ee/projects/f2py2e/]
+* Python (tested for 2.2 and 2.3): http://python.org
+* NetCDF http://www.unidata.ucar.edu/packages/netcdf/
+* NumPy: http://numpy.org/
+* [optionally f2py: http://cens.ioc.ee/projects/f2py2e/]
 
 A Fortran 90 and a C compiler.
 
@@ -87,6 +84,8 @@ python setup.py install --prefix=<path>
 Note: on some systems `python` is called `python2`.
 
 ## Migration from CVS
+
+Created Sat Mar 13 08:31:22 EST 2004 (alexander@gokliya.net)
 
 The old [PyPSPLINE CVS repository](https://sourceforge.net/projects/pypspline/) was migrated to this Git repository.
 One needs the `cvs` and `cvs2svn` packages to do this on Arch Linux.
