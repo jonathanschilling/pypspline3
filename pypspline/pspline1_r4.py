@@ -6,20 +6,20 @@
 1-D spline in real*4 precision
 """
 
-import Numeric as N
+import numpy as np
 import fpspline
 import warnings, types, time
 
 # to get the function value
-ICT_FVAL = N.array( [1,0,0] )
+ICT_FVAL = np.array( [1,0,0] )
 # 1st derivatives
-ICT_F1   = N.array( [0,1] )
-ICT_GRAD = N.array( [0,1] )
+ICT_F1   = np.array( [0,1] )
+ICT_GRAD = np.array( [0,1] )
 # generic derivatives
 ICT_MAP = {
-    0: N.array( [1,0,0] ),
-    1: N.array( [0,1,0] ),
-    2: N.array( [0,0,1] ),
+    0: np.array( [1,0,0] ),
+    1: np.array( [0,1,0] ),
+    2: np.array( [0,0,1] ),
     }
 
 ###############################################################################
@@ -109,7 +109,7 @@ class pspline:
         self.bcval1max = 0
 
         # Compact cubic coefficient arrays
-        self.__fspl = N.zeros( (n1,2,), N.Float32 )
+        self.__fspl = np.zeros( (n1,2,), np.float32 )
 
         # storage
         self.__x1pkg = None
@@ -120,8 +120,6 @@ class pspline:
         # will turn out to be 1 for nearly uniform mesh
         self.__ilin1 = 0
         
-                
-
     def setup(self, f):
 
         """
@@ -131,9 +129,9 @@ class pspline:
         Input is f[ix], a rank-1 array for the function values.
         """
 
-        if N.shape(f) != (self.__n1,):
+        if np.shape(f) != (self.__n1,):
             raise 'pspline1_r4::setup shape error. Got shape(f)=%s should be %s' % \
-                  ( str(N.shape(f)), str((self.__n1,)) )
+                  ( str(np.shape(f)), str((self.__n1,)) )
 
         # default values for genxpg
         imsg=0
@@ -144,7 +142,7 @@ class pspline:
         iper=0        
         if self.__ibctype1[0]==-1 or self.__ibctype1[1]==-1: iper=1
         self.__x1pkg, ifail = fpspline.genxpkg(self.__x1, iper)
-        if ifail!=0:
+        if ifail != 0:
             raise 'pspline1_r4::setup failed to compute x1pkg'
         
         self.__isReady = 0
@@ -310,58 +308,58 @@ class pspline:
 
 
 
-    def save(self, filename):
-
-        """
-        Save state in NetCDF file 
-        """
-
-        from Scientific.IO.NetCDF import NetCDFFile
-
-        ncf = NetCDFFile(filename, mode='w')
-
-        ncf.title = "pspline1_r4.save(..) file created on %s" % time.asctime()
-
-        ncf.createDimension('_1', 1)
-        ncf.createDimension('_2', 2)
-        ncf.createDimension('n1', self.__n1)
-        isHermite = ncf.createVariable('isHermite', N.Int, ('_1',)) 
-        isReady = ncf.createVariable('isReady', N.Int, ('_1',))
-        ibctype1 = ncf.createVariable('ibctype1', N.Int, ('_2',))
-        x1 = ncf.createVariable('x1', N.Float32, ('n1',))
-        bcval1min = ncf.createVariable('bcval1min',  N.Float32, ('_1',))
-        bcval1max = ncf.createVariable('bcval1max',  N.Float32, ('_1',))
-        f = ncf.createVariable('f',  N.Float32, ('n1',))
-        isHermite.assignValue(0)
-        isReady.assignValue(self.__isReady)
-        ibctype1.assignValue(self.__ibctype1)
-        x1.assignValue(self.__x1)
-        bcval1min.assignValue(self.bcval1min)
-        bcval1max.assignValue(self.bcval1max)
-        f.assignValue(self.__fspl[:,0])
-        ncf.close()
-
-    def load(self, filename):
-
-        """
-        Save state in NetCDF file 
-        """
-
-        from Scientific.IO.NetCDF import NetCDFFile
-
-        ncf = NetCDFFile(filename, mode='r')
-        
-        if ncf.variables['isHermite'][:][0] !=0:
-            raise 'pspline1_r4::load incompatible interpolation method'
-
-        self.__ibctype1 = tuple(ncf.variables['ibctype1'][:])
-        self.__x1 = ncf.variables['x1'][:]
-        self.bcval1min = ncf.variables['bcval1min'][:]
-        self.bcval1max = ncf.variables['bcval1max'][:]
-        f = ncf.variables['f'][:]
-        ncf.close()
-
-        self.setup(f)
+##    def save(self, filename):
+##
+##        """
+##        Save state in NetCDF file 
+##        """
+##
+##        from Scientific.IO.NetCDF import NetCDFFile
+##
+##        ncf = NetCDFFile(filename, mode='w')
+##
+##        ncf.title = "pspline1_r4.save(..) file created on %s" % time.asctime()
+##
+##        ncf.createDimension('_1', 1)
+##        ncf.createDimension('_2', 2)
+##        ncf.createDimension('n1', self.__n1)
+##        isHermite = ncf.createVariable('isHermite', N.Int, ('_1',)) 
+##        isReady = ncf.createVariable('isReady', N.Int, ('_1',))
+##        ibctype1 = ncf.createVariable('ibctype1', N.Int, ('_2',))
+##        x1 = ncf.createVariable('x1', N.Float32, ('n1',))
+##        bcval1min = ncf.createVariable('bcval1min',  N.Float32, ('_1',))
+##        bcval1max = ncf.createVariable('bcval1max',  N.Float32, ('_1',))
+##        f = ncf.createVariable('f',  N.Float32, ('n1',))
+##        isHermite.assignValue(0)
+##        isReady.assignValue(self.__isReady)
+##        ibctype1.assignValue(self.__ibctype1)
+##        x1.assignValue(self.__x1)
+##        bcval1min.assignValue(self.bcval1min)
+##        bcval1max.assignValue(self.bcval1max)
+##        f.assignValue(self.__fspl[:,0])
+##        ncf.close()
+##
+##    def load(self, filename):
+##
+##        """
+##        Save state in NetCDF file 
+##        """
+##
+##        from Scientific.IO.NetCDF import NetCDFFile
+##
+##        ncf = NetCDFFile(filename, mode='r')
+##        
+##        if ncf.variables['isHermite'][:][0] !=0:
+##            raise 'pspline1_r4::load incompatible interpolation method'
+##
+##        self.__ibctype1 = tuple(ncf.variables['ibctype1'][:])
+##        self.__x1 = ncf.variables['x1'][:]
+##        self.bcval1min = ncf.variables['bcval1min'][:]
+##        self.bcval1max = ncf.variables['bcval1max'][:]
+##        f = ncf.variables['f'][:]
+##        ncf.close()
+##
+##        self.setup(f)
         
 
 ###############################################################################
@@ -374,34 +372,34 @@ if __name__ == '__main__':
     n1 = 11
     bcs1 = (0,0)
     x1min, x1max = 0., 1.
-    x1 = N.arange(x1min, x1max+eps, (x1max-x1min)/float(n1-1),
-                  typecode=N.Float32)
+    x1 = np.arange(x1min, x1max+eps, (x1max-x1min)/float(n1-1),
+                  dtype=np.float32)
 
     tic =  time.time()
     #########
     f = x1**3
     #########
     toc = time.time()
-    print "function evaluations: time->%10.1f secs" % (toc-tic)
+    print("function evaluations: time->%10.1f secs" % (toc-tic))
 
     tic = time.time()
     spl = pspline(x1)
     # may set BCs if not-a-knot 
-    spl.setup(f.astype(N.Float32))
+    spl.setup(f.astype(np.float32))
     toc = time.time()
-    print "init/setup: %d original grid nodes time->%10.1f secs" % \
-          (n1, toc-tic)
+    print("init/setup: %d original grid nodes time->%10.1f secs" % \
+          (n1, toc-tic))
 
-    # save/load
-    tic = time.time()
-    spl.save('spl.nc')
-    spl.load('spl.nc')
-    toc = time.time()
-    print "save/load: time->%10.1f secs" % (toc-tic)
+##    # save/load
+##    tic = time.time()
+##    spl.save('spl.nc')
+##    spl.load('spl.nc')
+##    toc = time.time()
+##    print "save/load: time->%10.1f secs" % (toc-tic)
 
     # new mesh
     n1 = 2*n1-1
-    x1 = N.arange(x1min, x1max+eps, (x1max-x1min)/float(n1-1))
+    x1 = np.arange(x1min, x1max+eps, (x1max-x1min)/float(n1-1))
     fexact = x1**3
 
     # point interpolation
@@ -415,18 +413,18 @@ if __name__ == '__main__':
         error += (fi - fexact[i1])**2
     toc = time.time()
     error /= nint
-    error = N.sqrt(error)
-    print "interp_point: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
-          (nint, error, ier, iwarn, toc-tic)
+    error = np.sqrt(error)
+    print("interp_point: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
 
     # array interpolation
 
     tic = time.time()
     fi, ier, iwarn = spl.interp_array(x1)
     toc = time.time()
-    error = N.sum(N.sum(N.sum((fi-fexact)**2)))/nint
-    print "interp_array: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
-          (nint, error, ier, iwarn, toc-tic)
+    error = np.sum(np.sum(np.sum((fi-fexact)**2)))/nint
+    print("interp_array: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
 
     
     ## df/dx
@@ -442,18 +440,18 @@ if __name__ == '__main__':
         error += (fi - fexact[i1])**2
     toc = time.time()
     error /= nint
-    error = N.sqrt(error)
-    print "derivative_point df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
-          (nint, error, ier, iwarn, toc-tic)
+    error = np.sqrt(error)
+    print("derivative_point df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
 
     # array df/dx
 
     tic = time.time()
     fi, ier, iwarn = spl.derivative_array(1, x1)
     toc = time.time()
-    error = N.sum(N.sum(N.sum((fi-fexact)**2)))/nint
-    print "derivative_array df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
-          (nint, error, ier, iwarn, toc-tic)
+    error = np.sum(np.sum(np.sum((fi-fexact)**2)))/nint
+    print("derivative_array df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
 
     ## d^2f/dx^2
     
@@ -468,18 +466,18 @@ if __name__ == '__main__':
         error += (fi - fexact[i1])**2
     toc = time.time()
     error /= nint
-    error = N.sqrt(error)
-    print "derivative_point d^2f/dx^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
-          (nint, error, ier, iwarn, toc-tic)
+    error = np.sqrt(error)
+    print("derivative_point d^2f/dx^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
 
     # array d^2f/dx^2
 
     tic = time.time()
     fi, ier, iwarn = spl.derivative_array(2, x1)
     toc = time.time()
-    error = N.sum(N.sum(N.sum((fi-fexact)**2)))/nint
-    print "derivative_array d^2f/dx^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
-          (nint, error, ier, iwarn, toc-tic)
+    error = np.sum(np.sum(np.sum((fi-fexact)**2)))/nint
+    print("derivative_array d^2f/dx^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
 
     
     
