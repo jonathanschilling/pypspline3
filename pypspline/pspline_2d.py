@@ -283,8 +283,6 @@ class pspline:
 
         Use meth='array' to enforce array interpolation when p1 and p2 happen to have
         the same length. With checks enabled.
-
-
         """
 
         if self.__isReady != 1:
@@ -359,6 +357,9 @@ class pspline:
         Compute the derivative d^i1 d^i2 f/dx1^i1 dx2^i2 for a grid-array (p1, p2). Must have
         i{1,2}>=0 and i1 + i2 <=2.
         """
+
+        n1 = len(p1)
+        n2 = len(p2)
 
         xx1, xx2 = griddata(p1, p2)
         fi,iwarn,ier = self.derivative_cloud(i1, i2, xx1.flatten(), xx2.flatten())

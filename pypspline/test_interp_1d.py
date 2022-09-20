@@ -2,64 +2,64 @@
 
 # $Id: test_interp1_r4.py,v 1.1 2004/03/30 16:33:20 pletzer Exp $
 
-import numpy as np
+import numpy as _np
 from pspline_1d import pspline
 EPS = 1.e-10
 
 def pointVal(spl, x1, ff):
     error = 0
-    m1 = np.shape(ff)[0]
+    m1 = _np.shape(ff)[0]
     mtot = len(ff)
     for i1 in range(m1):
         fi = spl.interp(x1[i1])
         error += (fi - ff[i1])**2
     error /= float(mtot)
-    error = np.sqrt(error)
+    error = _np.sqrt(error)
     return error
 
 def arrayVal(spl, x1, ff):
     error = 0
     mtot = len(ff)
     fi = spl.interp(x1, meth='array')
-    error = np.sqrt(np.sum( (ff - fi)**2 )/float(mtot))
+    error = _np.sqrt(_np.sum( (ff - fi)**2 )/float(mtot))
     return error
 
 def pointDx(spl, x1, ff):
     error = 0
-    m1 = np.shape(ff)[0]
+    m1 = _np.shape(ff)[0]
     mtot = len(ff)
     for i1 in range(m1):
         fi = spl.derivative(1, x1[i1])
         error += (fi - ff[i1])**2
     error /= float(mtot)
-    error = np.sqrt(error)
+    error = _np.sqrt(error)
     return error
 
 def arrayDx(spl, x1, ff):
     error = 0
     mtot = len(ff)
     fi = spl.derivative(1, x1, meth='array')
-    error = np.sqrt(np.sum( (ff - fi)**2 )/float(mtot))
+    error = _np.sqrt(_np.sum( (ff - fi)**2 )/float(mtot))
     return error
 
 
 
 def pointDxx(spl, x1, ff):
     error = 0
-    m1 = np.shape(ff)[0]
+    m1 = _np.shape(ff)[0]
     mtot = len(ff)
     for i1 in range(m1):
         fi = spl.derivative(2, x1[i1])
         error += (fi - ff[i1])**2
     error /= float(mtot)
-    error = np.sqrt(error)
+    error = _np.sqrt(error)
     return error
 
 def arrayDxx(spl, x1, ff):
     error = 0
     mtot = len(ff)
     fi = spl.derivative(2, x1, meth='array')
-    error = np.sqrt(np.sum( (ff - fi)**2 )/float(mtot))
+    error = _np.sqrt(_np.sum( (ff - fi)**2 )/float(mtot))
     return error
 
 
@@ -71,13 +71,13 @@ if __name__=='__main__':
 
     # original grid
     n1, n2 = 11, 21
-    x1 = np.linspace(0., 1., n1)
+    x1 = _np.linspace(0., 1., n1)
     spl = pspline(x1)
     ff = x1**3
     spl.setup(ff)
 
     # new grid
-    x1 = np.linspace(0., 1., n1-1)
+    x1 = _np.linspace(0., 1., n1-1)
     ff = x1**3
     fx = 3*x1**2
     fxx= 3*2*x1
