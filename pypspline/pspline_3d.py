@@ -465,18 +465,37 @@ class pspline:
         """
 
         iwarn = 0
-        f1,ier1 = fpspline.evtricub(p1, p2, p3, \
-                                    self.__x1, self.__x2, self.__x3, \
-                                    self.__ilin1, self.__ilin2, self.__ilin3, \
-                                    self.__fspl.flat, ICT_F1)
-        f2,ier2 = fpspline.evtricub(p1, p2, p3, \
-                                    self.__x1, self.__x2, self.__x3, \
-                                    self.__ilin1, self.__ilin2, self.__ilin3, \
-                                    self.__fspl.flat, ICT_F2)
-        f3,ier3 = fpspline.evtricub(p1, p2, p3, \
-                                    self.__x1, self.__x2, self.__x3, \
-                                    self.__ilin1, self.__ilin2, self.__ilin3, \
-                                    self.__fspl.flat, ICT_F3)
+
+        ier1 = 0
+        f1 = _np.zeros(1)
+        fpspline.evtricub(p1, p2, p3,
+                          self.__x1, self.__n1,
+                          self.__x2, self.__n2,
+                          self.__x3, self.__n3,
+                          self.__ilin1, self.__ilin2, self.__ilin3,
+                          self.__fspl, self.__n1, self.__n2,
+                          ICT_F1, f1, ier1)
+
+        ier2 = 0
+        f2 = _np.zeros(1)
+        fpspline.evtricub(p1, p2, p3,
+                          self.__x1, self.__n1,
+                          self.__x2, self.__n2,
+                          self.__x3, self.__n3,
+                          self.__ilin1, self.__ilin2, self.__ilin3,
+                          self.__fspl, self.__n1, self.__n2,
+                          ICT_F2, f2, ier2)
+
+        ier3 = 0
+        f3 = _np.zeros(1)
+        fpspline.evtricub(p1, p2, p3,
+                          self.__x1, self.__n1,
+                          self.__x2, self.__n2,
+                          self.__x3, self.__n3,
+                          self.__ilin1, self.__ilin2, self.__ilin3,
+                          self.__fspl, self.__n1, self.__n2,
+                          ICT_F3, f3, ier3)
+
         return f1, f2, f3, ier1+ier2+ier3, iwarn
 
     def gradient_cloud(self, p1, p2, p3):
@@ -485,21 +504,47 @@ class pspline:
         Return (df/dz, df/dy, df/dx) for cloud (p1, p2, p3).
         """
 
-        f1,iwarn1,ier1 = fpspline.vectricub(ICT_F1, p1, p2, p3, \
-                                         self.__x1pkg, \
-                                         self.__x2pkg, \
-                                         self.__x3pkg, \
-                                         self.__fspl.flat)
-        f2,iwarn2,ier2 = fpspline.vectricub(ICT_F2, p1, p2, p3, \
-                                         self.__x1pkg, \
-                                         self.__x2pkg, \
-                                         self.__x3pkg, \
-                                         self.__fspl.flat)
-        f3,iwarn3,ier3 = fpspline.vectricub(ICT_F3, p1, p2, p3, \
-                                         self.__x1pkg, \
-                                         self.__x2pkg, \
-                                         self.__x3pkg, \
-                                         self.__fspl.flat)
+        nEval = len(p1)
+        if nEval != len(p2):
+            raise RuntimeError("p1 and p2 must have equal length, but have %d and %d"%
+                               (nEval, len(p2)))
+        if nEval != len(p3):
+            raise RuntimeError("p1 and p3 must have equal length, but have %d and %d"%
+                               (nEval, len(p3)))
+
+        f1 = _np.zeros(nEval)
+        iwarn1 = 0
+        ier1 = 0
+        fpspline.vectricub(ICT_F1, nEval, p1, p2, p3,
+                           nEval, f1,
+                           self.__n1, self.__x1pkg,
+                           self.__n2, self.__x2pkg,
+                           self.__n3, self.__x3pkg,
+                           self.__fspl, self.__n1, self.__n2,
+                           iwarn1, ier1)
+
+        f2 = _np.zeros(nEval)
+        iwarn2 = 0
+        ier2 = 0
+        fpspline.vectricub(ICT_F2, nEval, p1, p2, p3,
+                           nEval, f2,
+                           self.__n1, self.__x1pkg,
+                           self.__n2, self.__x2pkg,
+                           self.__n3, self.__x3pkg,
+                           self.__fspl, self.__n1, self.__n2,
+                           iwarn2, ier2)
+
+        f3 = _np.zeros(nEval)
+        iwarn3 = 0
+        ier3 = 0
+        fpspline.vectricub(ICT_F3, nEval, p1, p2, p3,
+                           nEval, f3,
+                           self.__n1, self.__x1pkg,
+                           self.__n2, self.__x2pkg,
+                           self.__n3, self.__x3pkg,
+                           self.__fspl, self.__n1, self.__n2,
+                           iwarn3, ier3)
+
         return f1, f2, f3, ier1+ier2+ier3, iwarn1+iwarn2+iwarn3
 
     def gradient_array(self, p1, p2, p3):
@@ -509,11 +554,13 @@ class pspline:
         """
 
         xx1, xx2, xx3 = griddata(p1, p2, p3)
-        f1, f2, f3, iwarn,ier = self.gradient_cloud(xx1.flat, xx2.flat, xx3.flat)
+        f1, f2, f3, iwarn,ier = self.gradient_cloud(xx1.flatten(),
+                                                    xx2.flatten(),
+                                                    xx3.flatten())
         n1, n2, n3 = len(p1), len(p2), len(p3)
-        return _np.resize(f1, (n3,n2,n1)), \
-               _np.resize(f2, (n3,n2,n1)), \
-               _np.resize(f3, (n3,n2,n1)), \
+        return f1.reshape([n1, n2, n3], order='F').T, \
+               f2.reshape([n1, n2, n3], order='F').T, \
+               f3.reshape([n1, n2, n3], order='F').T, \
                ier, iwarn
 
     def gradient(self, p1, p2, p3, meth='cloud'):
@@ -530,7 +577,7 @@ class pspline:
         if type(p1)!=type(p2) or type(p1)!=type(p3) or type(p2)!=type(p3):
             raise "pspline3_r4::gradient: types (p1, p2, p3) don't match"
 
-        if type(p1)==types.FloatType:
+        if type(p1)==np.float64:
             fi, ier, iwarn = self.gradient_point(p1, p2, p3)
         else:
             if len(p1)==len(p2)==len(p3) and meth=='cloud':
@@ -544,10 +591,6 @@ class pspline:
             warnings.warn('pspline3_r4::gradient abscissae are out of bound!')
 
         return fi
-
-
-
-
 
 ###############################################################################
 if __name__ == '__main__':
@@ -751,4 +794,51 @@ if __name__ == '__main__':
     toc = time.time()
     error = _np.sum((fi-fcexact)**2)/nint
     print("derivative_cloud d^2f/dydz: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    ## gradients
+
+    f1exact = 3*xx1**2
+    f2exact = 6*xx2**2 + 3*xx3**2
+    f3exact = 6*xx2*xx3
+
+    # point
+
+    error = 0
+    tic = time.time()
+    for i3 in range(n3):
+        for i2 in range(n2):
+            for i1 in range(n1):
+                f1,f2,f3, ier, iwarn = spl.gradient_point(x1[i1], x2[i2], x3[i3])
+                error += ( \
+                    (f1 - f1exact[i3,i2,i1])**2 +
+                    (f2 - f2exact[i3,i2,i1])**2 + \
+                    (f3 - f3exact[i3,i2,i1])**2
+                    )/3
+    toc = time.time()
+    error /= nint
+    error = _np.sqrt(error)
+    print("gradient_point: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # array
+
+    tic = time.time()
+    f1,f2,f3, ier, iwarn = spl.gradient_array(x1, x2, x3)
+    toc = time.time()
+    error = _np.sum(_np.sum(_np.sum(((f1-f1exact)**2 + (f2-f2exact)**2 + (f3-f3exact)**2)/3)))/nint
+    print("gradient_array: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
+          (nint, error, ier, iwarn, toc-tic))
+
+    # cloud
+
+    f1cexact = 3*xc1**2
+    f2cexact = 6*xc2**2 + 3*xc3**2
+    f3cexact = 6*xc2*xc3
+
+    tic = time.time()
+    f1,f2,f3, ier, iwarn = spl.gradient_cloud(xc1, xc2, xc3)
+    toc = time.time()
+    error = _np.sum(((f1-f1cexact)**2 + (f2-f2cexact)**2 + (f3-f3cexact)**2)/3)/nint
+    print("gradient_cloud: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" %
           (nint, error, ier, iwarn, toc-tic))
