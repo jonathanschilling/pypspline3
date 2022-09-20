@@ -1,5 +1,6 @@
 src/f90wrap_*.f90
 obj/
 pypspline/*pspline_wrapped*
-
+.f2py_f2cmap
+f90wrap_toplevel.f90
 *__pycache__
