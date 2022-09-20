@@ -1,5 +1,5 @@
 # PyPSPLINE
-PyPSPLINE is a Python interface to the Fortran spline library PSPLINE. 
+PyPSPLINE is a Python interface to the Fortran spline library [PSPLINE](https://w3.pppl.gov/ntcc/PSPLINE/).
 
 ## Prerequisites
 
