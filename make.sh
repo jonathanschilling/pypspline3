@@ -15,5 +15,6 @@ f90wrap -m pspline_wrapped -k kind_map src/*.f90
 
 f2py -c -m _pspline_wrapped -DF2PY_REPORT_ON_ARRAY_COPY=1 f90wrap_toplevel.f90 obj/*.o
 
-mv *pspline_wrapped* pypspline/
+# for later, when import setup is fixed
+#mv *pspline_wrapped* pypspline/
 

@@ -5,18 +5,20 @@
 """
 
 import numpy as _np
+import types as _types
+
 import pspline_wrapped as fpspline
 
 # to get the function value
-ICT_FVAL = _np.array( [1,0,0], dtype=int)
+ICT_FVAL = _np.array( [1,0,0], dtype=_np.int32)
 # 1st derivatives
-ICT_F1   = _np.array( [0,1], dtype=int)
-ICT_GRAD = _np.array( [0,1], dtype=int)
+ICT_F1   = _np.array( [0,1], dtype=_np.int32)
+ICT_GRAD = _np.array( [0,1], dtype=_np.int32)
 # generic derivatives
 ICT_MAP = {
-    0: _np.array( [1,0,0], dtype=int),
-    1: _np.array( [0,1,0], dtype=int),
-    2: _np.array( [0,0,1], dtype=int),
+    0: _np.array( [1,0,0], dtype=_np.int32),
+    1: _np.array( [0,1,0], dtype=_np.int32),
+    2: _np.array( [0,0,1], dtype=_np.int32),
 }
 
 class pspline:
@@ -181,8 +183,123 @@ class pspline:
 
         return fi, ier, iwarn
 
+    def interp(self, p1, meth=None):
 
+        """
+        Interpolatate onto p1, the coordinate which can either be a single point
+        (point interpolation) or an array  (cloud/array interpolation).
+        The returned value is a single float for point interpolation,
+        it is a rank-1 array of length len(p1) for cloud/array interpolation.
+        The meth argument has no effect, its purpose is to provide compatibility
+        with higher order spline methods.
+        With checks enabled.
+        """
 
+        if self.__isReady != 1:
+            raise 'pspline1_r4::interp: spline coefficients were not set up!'
+
+        if type(p1) == _types.FloatType:
+            fi, ier, iwarn = self.interp_point(p1)
+        else:
+            fi, ier, iwarn = self.interp_cloud(p1)
+
+        if ier:
+            raise "pspline1_r4::interp error ier=%d"%ier
+        if iwarn:
+            warnings.warn('pspline1_r4::interp abscissae are out of bound!')
+
+        return fi
+
+    def derivative_point(self, i1, p1):
+
+        """
+        Compute a single point derivative d^i1 f/dx1^i1 at p1.
+        Must have i1>=0 and i1<=2.
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
+        """
+
+        iwarn = 0
+
+        fi = _np.zeros(1)
+        fpspline.evspline(p1,
+                          self.__x1, self.__n1,
+                          self.__ilin1, self.__fspl, ICT_MAP[i1],
+                          fi, ier)
+
+        return fi[0], ier, iwarn
+
+    def derivative_cloud(self, i1, p1):
+
+        """
+        Compute the derivative d^i1 f/dx1^i1 for a cloud p1.
+        Must have i1>=0 and i1<=2.
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
+        """
+
+        nEval = len(p1)
+
+        ier = 0
+        iwarn = 0
+
+        fi = _np.zeros(nEval)
+
+        fpspline.vecspline(ICT_MAP[i1],
+                           nEval, p1,
+                           nEval, fi,
+                           self.__n1, self.__x1pkg,
+                           self.__fspl, iwarn, ier)
+
+        return fi, ier, iwarn
+
+    def derivative_array(self, i1, p1):
+
+        """
+        Compute the derivative d^i1 f/dx1^i1 for a grid-array p1. Must have
+        i1>=0 and i1<=2. Same as derivative_cloud in 1-D.
+        Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
+        """
+
+        nEval = len(p1)
+
+        ier = 0
+        iwarn = 0
+
+        fi = _np.zeros(nEval)
+
+        fpspline.vecspline(ICT_MAP[i1],
+                           nEval, p1,
+                           nEval, fi,
+                           self.__n1, self.__x1pkg,
+                           self.__fspl, iwarn, ier)
+
+        return fi, ier, iwarn
+
+    def derivative(self, i1, p1, meth=None):
+
+        """
+        Compute the derivative d^i1 f/dx1^i1 at p1. Must have
+        i1>=0 and i1<=2. See interp method for a list of possible p1 shapes.
+
+        The meth argument has no effect, its purpose is to provide compatibility
+        with higher order spline methods.
+
+        With checks enabled.
+        """
+
+        if self.__isReady != 1:
+            raise 'pspline1_r4::derivative: spline coefficients were not set up!'
+
+        if type(p1) == _types.FloatType:
+            fi, ier, iwarn = self.derivative_point(i1,p1)
+        else:
+            fi, ier, iwarn = self.derivative_cloud(i1,p1)
+
+        if ier:
+            raise "pspline1_r4::derivative error"
+        if iwarn:
+            warnings.warn('pspline1_r4::derivative abscissae are out of bound!')
+
+        return fi
 
 if __name__ == '__main__':
 
@@ -248,4 +365,56 @@ if __name__ == '__main__':
     toc = time.time()
     error = _np.sum(_np.sum(_np.sum((fi-fexact)**2)))/nint
     print("interp_array: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
+
+    ## df/dx
+
+    fexact = 3*x2**2
+
+    # point df/dx
+
+    tic = time.time()
+    error = 0
+    for i1 in range(n1):
+        fi, ier, iwarn = spl.derivative_point(1, x2[i1])
+        error += (fi - fexact[i1])**2
+    toc = time.time()
+    error /= nint
+    error = _np.sqrt(error)
+    print("derivative_point df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
+
+    # array df/dx
+
+    tic = time.time()
+    fi, ier, iwarn = spl.derivative_array(1, x2)
+    toc = time.time()
+    error = _np.sum(_np.sum(_np.sum((fi-fexact)**2)))/nint
+    print("derivative_array df/dx: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
+
+    ## d^2f/dx^2
+
+    fexact = 3*2*x2
+
+    # point d^2f/dx^2
+
+    tic = time.time()
+    error = 0
+    for i1 in range(n1):
+        fi, ier, iwarn = spl.derivative_point(2, x2[i1])
+        error += (fi - fexact[i1])**2
+    toc = time.time()
+    error /= nint
+    error = _np.sqrt(error)
+    print("derivative_point d^2f/dx^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
+          (nint, error, ier, iwarn, toc-tic))
+
+    # array d^2f/dx^2
+
+    tic = time.time()
+    fi, ier, iwarn = spl.derivative_array(2, x2)
+    toc = time.time()
+    error = _np.sum(_np.sum(_np.sum((fi-fexact)**2)))/nint
+    print("derivative_array d^2f/dx^2: %d evaluations (error=%g) ier=%d iwarn=%d time->%10.1f secs" % \
           (nint, error, ier, iwarn, toc-tic))
