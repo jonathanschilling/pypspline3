@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-1-D spline in real*4 precision
+2-D spline in float64 precision
 """
 
 import numpy as _np
