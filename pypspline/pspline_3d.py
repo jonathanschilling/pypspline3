@@ -346,7 +346,7 @@ class pspline:
         if type(p1)!=type(p2) or type(p1)!=type(p3) or type(p2)!=type(p3):
             raise "pspline3_r4::interp: types (p1, p2, p3) don't match"
 
-        if type(p1)==np.float64:
+        if type(p1)==_np.float64:
             fi, ier, iwarn = self.interp_point(p1, p2, p3)
         else:
             if len(p1)==len(p2)==len(p3) and meth=='cloud':
@@ -443,7 +443,7 @@ class pspline:
         if type(p1)!=type(p2) or type(p1)!=type(p3) or type(p2)!=type(p3):
             raise "pspline3_r4::derivative: types (p1, p2, p3) don't match"
 
-        if type(p1)==np.float64:
+        if type(p1)==_np.float64:
             fi, ier, iwarn = self.derivative_point(i1,i2,i3, p1,p2,p3)
         else:
             if len(p1)==len(p2)==len(p3) and meth=='cloud':
