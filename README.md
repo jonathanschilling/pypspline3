@@ -29,7 +29,7 @@ export FORTRAN_VARIANT=<your_compiler>
 
 if using `bash` shell, or
 
-```bash
+```csh
 setenv FORTRAN_VARIANT <your_compiler>
 ```
 
