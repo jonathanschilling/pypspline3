@@ -151,14 +151,14 @@ python module fpspline ! in
         subroutine mktricub(x,nx,y,ny,z,nz,f,nf2,nf3,ibcxmin,bcxmin,ibcxmax,bcxmax,inb1x,ibcymin,bcymin,ibcymax,bcymax,inb1y,ibczmin,bczmin,ibczmax,bczmax,inb1z,ilinx,iliny,ilinz,ier) ! in :fpspline:src/mktricub.f90
             use iso_c_binding, only: fp=>c_double
 
-            integer, intent(hide) :: nx = len(x)
-            integer, intent(hide) :: ny = len(y)
-            integer, intent(hide) :: nz = len(z)
-            integer, intent(hide) :: inb1x = ny
-            integer, intent(hide) :: inb1y = nx
-            integer, intent(hide) :: inb1z = nx
-            integer, intent(hide) :: nf2 = nx
-            integer, intent(hide) :: nf3 = ny
+            integer, intent(hide), depend(x) :: nx = len(x)
+            integer, intent(hide), depend(y) :: ny = len(y)
+            integer, intent(hide), depend(z) :: nz = len(z)
+            integer, intent(hide), depend(ny) :: inb1x = ny
+            integer, intent(hide), depend(nx) :: inb1y = nx
+            integer, intent(hide), depend(nx) :: inb1z = nx
+            integer, intent(hide), depend(nx) :: nf2 = nx
+            integer, intent(hide), depend(ny) :: nf3 = ny
 
             real(kind=fp) dimension(nx), intent(in) :: x
             real(kind=fp) dimension(ny), intent(in) :: y

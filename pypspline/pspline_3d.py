@@ -187,12 +187,6 @@ class pspline:
             raise 'pspline3_r4::setup shape error. Got shape(f)=%s should be %s' % \
                   ( str(_np.shape(f)), str((self.__n3, self.__n2, self.__n1)) )
 
-        # default values for genxpg
-        imsg=0
-        itol=0        # range tolerance option
-        ztol=5.e-7    # range tolerance, if itol is set
-        ialg=-3       # algorithm selection code
-
         iper=0
         if self.__ibctype1[0]==-1 or self.__ibctype1[1]==-1: iper=1
         self.__x1pkg, ifail = fpspline.genxpkg(self.__x1, iper)
