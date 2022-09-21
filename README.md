@@ -8,6 +8,9 @@ Internal documentation of the underlying Fortran routines can be found in the [P
 at [F77_standard_software](https://w3.pppl.gov/~pshare/help/body_pspline_hlp.html#outfile24.html) --> [Compact_Splines](https://w3.pppl.gov/~pshare/help/body_pspline_hlp.html#outfile30.html) .
 
 ## Usage
+
+To get this package, `pip install pypspline3` should be enough.
+
 The use of this package is demonstrated in a few scripts in the [`demo`](demo/) folder:
 
 * [`demo/demo_pspline_1d.py`](demo/demo_pspline_1d.py)
