@@ -9,7 +9,7 @@ import sys, time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from pypspline.pspline_1d import pspline
+from pypspline3.pspline_1d import pspline
 
 eps = 1.e-6
 

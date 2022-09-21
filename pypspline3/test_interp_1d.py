@@ -3,7 +3,7 @@
 # $Id: test_interp1_r4.py,v 1.1 2004/03/30 16:33:20 pletzer Exp $
 
 import numpy as _np
-from pypspline.pspline_1d import pspline
+from pypspline3.pspline_1d import pspline
 
 import pytest
 

@@ -8,7 +8,7 @@ import sys, time
 
 import numpy as _np
 
-from pypspline.pspline_3d import pspline, griddata
+from pypspline3.pspline_3d import pspline, griddata
 
 eps = 1.e-6
 

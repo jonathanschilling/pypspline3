@@ -3,7 +3,7 @@
 # $Id: test_bound2_r4.py,v 1.1 2004/03/30 16:33:19 pletzer Exp $
 
 import numpy as _np
-from pypspline.pspline_2d import pspline, griddata
+from pypspline3.pspline_2d import pspline, griddata
 
 import pytest
 
