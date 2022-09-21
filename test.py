@@ -1,5 +1,6 @@
 
 from pypspline.pspline_1d import pspline
+import numpy as _np
 
 import sys, time
 
