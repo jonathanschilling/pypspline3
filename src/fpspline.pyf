@@ -6,14 +6,14 @@ python module fpspline ! in
 
         subroutine genxpkg(nx,x,xpkg,iper,imsg,itol,ztol,ialg,ier) ! in :fpspline:src/genxpkg.f90
             use iso_c_binding, only: fp=>c_double
-            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
-            real(kind=fp) dimension(nx) :: x
-            real(kind=fp) dimension(nx,4),intent(out),depend(nx) :: xpkg
-            integer, intent(in), optional :: iper = 0
-            integer, intent(in), optional :: imsg = 0
-            integer, intent(in), optional :: itol = 0
-            real(kind=fp), intent(in), optional :: ztol = 5.0e-7
-            integer, intent(in), optional :: ialg = -3
+            integer, intent(hide) :: nx
+            real(kind=fp) dimension(nx),   intent(in)  :: x
+            real(kind=fp) dimension(nx,4), intent(out) :: xpkg
+            integer, intent(in) :: iper
+            integer, intent(in) :: imsg = 0
+            integer, intent(in) :: itol = 0
+            real(kind=fp), intent(in) :: ztol = 5.0e-7
+            integer, intent(in) :: ialg = -3
             integer, intent(out) :: ier
         end subroutine genxpkg
 
@@ -138,102 +138,114 @@ python module fpspline ! in
 
         subroutine mktricub(x,nx,y,ny,z,nz,f,nf2,nf3,ibcxmin,bcxmin,ibcxmax,bcxmax,inb1x,ibcymin,bcymin,ibcymax,bcymax,inb1y,ibczmin,bczmin,ibczmax,bczmax,inb1z,ilinx,iliny,ilinz,ier) ! in :fpspline:src/mktricub.f90
             use iso_c_binding, only: fp=>c_double
-            real(kind=fp) dimension(nx) :: x
-            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
-            real(kind=fp) dimension(ny) :: y
-            integer, optional,check(shape(y, 0) == ny),depend(y) :: ny=shape(y, 0)
-            real(kind=fp) dimension(nz) :: z
-            integer, optional,check(shape(z, 0) == nz),depend(z) :: nz=shape(z, 0)
-            real(kind=fp) dimension(8,nf2,nf3,nz),depend(nz) :: f
-            integer, optional,check(shape(f, 1) == nf2),depend(f) :: nf2=shape(f, 1)
-            integer, optional,check(shape(f, 2) == nf3),depend(f) :: nf3=shape(f, 2)
-            integer :: ibcxmin
-            real(kind=fp) dimension(inb1x,nz),depend(nz) :: bcxmin
-            integer :: ibcxmax
-            real(kind=fp) dimension(inb1x,nz),depend(nz,inb1x) :: bcxmax
-            integer, optional,check(shape(bcxmin, 0) == inb1x),depend(bcxmin) :: inb1x=shape(bcxmin, 0)
-            integer :: ibcymin
-            real(kind=fp) dimension(inb1y,nz),depend(nz) :: bcymin
-            integer :: ibcymax
-            real(kind=fp) dimension(inb1y,nz),depend(nz,inb1y) :: bcymax
-            integer, optional,check(shape(bcymin, 0) == inb1y),depend(bcymin) :: inb1y=shape(bcymin, 0)
-            integer :: ibczmin
-            real(kind=fp) dimension(inb1z,ny),depend(ny) :: bczmin
-            integer :: ibczmax
-            real(kind=fp) dimension(inb1z,ny),depend(inb1z,ny) :: bczmax
-            integer, optional,check(shape(bczmin, 0) == inb1z),depend(bczmin) :: inb1z=shape(bczmin, 0)
-            integer :: ilinx
-            integer :: iliny
-            integer :: ilinz
-            integer :: ier
+
+            integer, intent(hide) :: nx = shape(x, 0)
+            integer, intent(hide) :: ny = shape(y, 0)
+            integer, intent(hide) :: nz = shape(z, 0)
+
+            integer, intent(hide) :: inb1x = ny
+            integer, intent(hide) :: inb1y = nx
+            integer, intent(hide) :: inb1z = nx
+
+            integer, intent(hide) :: nf2 = nx
+            integer, intent(hide) :: nf3 = ny
+
+            real(kind=fp) dimension(nx), intent(in) :: x
+            real(kind=fp) dimension(ny), intent(in) :: y
+            real(kind=fp) dimension(nz), intent(in) :: z
+            real(kind=fp) dimension(8,nf2,nf3,nz),intent(c) :: f
+
+            integer, intent(in) :: ibcxmin
+            real(kind=fp) dimension(ny,nz), intent(in) :: bcxmin
+            integer, intent(in) :: ibcxmax
+            real(kind=fp) dimension(ny,nz), intent(in) :: bcxmax
+
+            integer, intent(in) :: ibcymin
+            real(kind=fp) dimension(nx,nz), intent(in) :: bcymin
+            integer, intent(in) :: ibcymax
+            real(kind=fp) dimension(nx,nz), intent(in) :: bcymax
+
+            integer, intent(in) :: ibczmin
+            real(kind=fp) dimension(nx,ny), intent(in) :: bczmin
+            integer, intent(in) :: ibczmax
+            real(kind=fp) dimension(nx,ny), intent(in) :: bczmax
+
+            integer, intent(out) :: ilinx
+            integer, intent(out) :: iliny
+            integer, intent(out) :: ilinz
+
+            integer, intent(out) :: ier
         end subroutine mktricub
 
         subroutine evtricub(xget,yget,zget,x,nx,y,ny,z,nz,ilinx,iliny,ilinz,f,inf2,inf3,ict,fval,ier) ! in :fpspline:src/evtricub.f90
             use iso_c_binding, only: fp=>c_double
-            real(kind=fp) :: xget
-            real(kind=fp) :: yget
-            real(kind=fp) :: zget
-            real(kind=fp) dimension(nx) :: x
-            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
-            real(kind=fp) dimension(ny) :: y
-            integer, optional,check(shape(y, 0) == ny),depend(y) :: ny=shape(y, 0)
-            real(kind=fp) dimension(nz) :: z
-            integer, optional,check(shape(z, 0) == nz),depend(z) :: nz=shape(z, 0)
-            integer :: ilinx
-            integer :: iliny
-            integer :: ilinz
-            real(kind=fp) dimension(8,inf2,inf3,nz),depend(nz) :: f
-            integer, optional,check(shape(f, 1) == inf2),depend(f) :: inf2=shape(f, 1)
-            integer, optional,check(shape(f, 2) == inf3),depend(f) :: inf3=shape(f, 2)
-            integer dimension(10) :: ict
-            real(kind=fp) dimension(*) :: fval
-            integer :: ier
+            real(kind=fp), intent(in) :: xget
+            real(kind=fp), intent(in) :: yget
+            real(kind=fp), intent(in) :: zget
+            real(kind=fp) dimension(nx), intent(in) :: x
+            integer, intent(hide), depend(x) :: nx = shape(x, 0)
+            real(kind=fp) dimension(ny), intent(in) :: y
+            integer, intent(hide), depend(y) :: ny = shape(y, 0)
+            real(kind=fp) dimension(nz), intent(in) :: z
+            integer, intent(hide), depend(z) :: nz = shape(z, 0)
+            integer, intent(in) :: ilinx
+            integer, intent(in) :: iliny
+            integer, intent(in) :: ilinz
+            real(kind=fp) dimension(8,nx,ny,nz),depend(nz),intent(c) :: f
+            integer, intent(hide), depend(nx) :: inf2 = nx
+            integer, intent(hide), depend(ny) :: inf3 = ny
+            integer dimension(10), intent(in) :: ict
+            real(kind=fp) dimension(*), intent(out) :: fval
+            integer, intent(out) :: ier
         end subroutine evtricub
 
         subroutine vectricub(ict,ivec,xvec,yvec,zvec,ivd,fval,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :fpspline:src/vectricub.f90
             use iso_c_binding, only: fp=>c_double
-            integer dimension(10) :: ict
-            integer, optional,check(shape(xvec, 0) == ivec),depend(xvec) :: ivec=shape(xvec, 0)
-            real(kind=fp) dimension(ivec) :: xvec
-            real(kind=fp) dimension(ivec),depend(ivec) :: yvec
-            real(kind=fp) dimension(ivec),depend(ivec) :: zvec
-            integer, optional,check(shape(fval, 0) == ivd),depend(fval) :: ivd=shape(fval, 0)
-            real(kind=fp) dimension(ivd,*) :: fval
-            integer, optional,check(shape(xpkg, 0) == nx),depend(xpkg) :: nx=shape(xpkg, 0)
+            integer dimension(10), intent(in) :: ict
+            integer, intent(hide), depend(xvec) :: ivec = shape(xvec, 0)
+            real(kind=fp) dimension(ivec), intent(in) :: xvec
+            real(kind=fp) dimension(ivec), intent(in) :: yvec
+            real(kind=fp) dimension(ivec), intent(in) :: zvec
+            integer, intent(hide), depend(ivec) :: ivd = ivec
+            integer, intent(hide), depend(xpkg) :: nx = shape(xpkg, 0)
             real(kind=fp) dimension(nx,4) :: xpkg
-            integer, optional,check(shape(ypkg, 0) == ny),depend(ypkg) :: ny=shape(ypkg, 0)
+            integer, intent(hide), depend(ypkg) :: ny = shape(ypkg, 0)
             real(kind=fp) dimension(ny,4) :: ypkg
-            integer, optional,check(shape(zpkg, 0) == nz),depend(zpkg) :: nz=shape(zpkg, 0)
+            integer, intent(hide), depend(zpkg) :: nz = shape(zpkg, 0)
             real(kind=fp) dimension(nz,4) :: zpkg
-            real(kind=fp) dimension(8,inf4,inf5,nz),depend(nz) :: fspl
-            integer, optional,check(shape(fspl, 1) == inf4),depend(fspl) :: inf4=shape(fspl, 1)
-            integer, optional,check(shape(fspl, 2) == inf5),depend(fspl) :: inf5=shape(fspl, 2)
-            integer :: iwarn
-            integer :: ier
+            real(kind=fp) dimension(8,nx,ny,nz),depend(nx,ny,nz) :: fspl
+            integer, intent(hide), depend(nx) :: inf4 = nx
+            integer, intent(hide), depend(ny) :: inf5 = ny
+
+            real(kind=fp) dimension(ivec,*), intent(out) :: fval
+            integer, intent(out) :: ier
+            integer, intent(out) :: iwarn
         end subroutine vectricub
 
         subroutine gridtricub(x_newgrid,nx_new,y_newgrid,ny_new,z_newgrid,nz_new,f_new,if1,if2,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :fpspline:src/gridtricub.f90
             use iso_c_binding, only: fp=>c_double
             real(kind=fp) dimension(nx_new) :: x_newgrid
-            integer, optional,check(shape(x_newgrid, 0) == nx_new),depend(x_newgrid) :: nx_new=shape(x_newgrid, 0)
+            integer, intent(hide), depend(x_newgrid) :: nx_new = shape(x_newgrid, 0)
             real(kind=fp) dimension(ny_new) :: y_newgrid
-            integer, optional,check(shape(y_newgrid, 0) == ny_new),depend(y_newgrid) :: ny_new=shape(y_newgrid, 0)
+            integer, intent(hide), depend(y_newgrid) :: ny_new = shape(y_newgrid, 0)
             real(kind=fp) dimension(nz_new) :: z_newgrid
-            integer, optional,check(shape(z_newgrid, 0) == nz_new),depend(z_newgrid) :: nz_new=shape(z_newgrid, 0)
-            real(kind=fp) dimension(if1,if2,nz_new),depend(nz_new) :: f_new
-            integer, optional,check(shape(f_new, 0) == if1),depend(f_new) :: if1=shape(f_new, 0)
-            integer, optional,check(shape(f_new, 1) == if2),depend(f_new) :: if2=shape(f_new, 1)
-            integer, optional,check(shape(xpkg, 0) == nx),depend(xpkg) :: nx=shape(xpkg, 0)
+            integer, intent(hide), depend(z_newgrid) :: nz_new = shape(z_newgrid, 0)
+            integer, intent(hide), depend(nx_new) :: if1 = nx_new
+            integer, intent(hide), depend(ny_new) :: if2 = ny_new
+            integer, intent(hide), depend(xpkg) :: nx = shape(xpkg, 0)
             real(kind=fp) dimension(nx,4) :: xpkg
-            integer, optional,check(shape(ypkg, 0) == ny),depend(ypkg) :: ny=shape(ypkg, 0)
+            integer, intent(hide), depend(ypkg) :: ny = shape(ypkg, 0)
             real(kind=fp) dimension(ny,4) :: ypkg
-            integer, optional,check(shape(zpkg, 0) == nz),depend(zpkg) :: nz=shape(zpkg, 0)
+            integer, intent(hide), depend(zpkg) :: nz = shape(zpkg, 0)
             real(kind=fp) dimension(nz,4) :: zpkg
-            real(kind=fp) dimension(8,inf4,inf5,nz),depend(nz) :: fspl
-            integer, optional,check(shape(fspl, 1) == inf4),depend(fspl) :: inf4=shape(fspl, 1)
-            integer, optional,check(shape(fspl, 2) == inf5),depend(fspl) :: inf5=shape(fspl, 2)
-            integer :: iwarn
-            integer :: ier
+            real(kind=fp) dimension(8,nx,ny,nz),depend(nx,ny,nz),intent(c) :: fspl
+            integer, intent(hide), depend(nx) :: inf4 = nx
+            integer, intent(hide), depend(ny) :: inf5 = ny
+
+            real(kind=fp) dimension(nx_new,ny_new,nz_new),depend(nx_new,ny_new,nz_new),intent(out) :: f_new
+
+            integer, intent(out) :: iwarn
+            integer, intent(out) :: ier
         end subroutine gridtricub
 
     end interface
