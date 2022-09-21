@@ -5,7 +5,7 @@
 import numpy as _np
 from pypspline.pspline_2d import pspline, griddata
 
-EPS = 1.e-6
+import pytest
 
 def periodic1():
     n1, n2 = 11, 21
@@ -120,36 +120,51 @@ def secondDer2():
     ffi, ier, iwarn = spl.interp_array(x1, x2)
     return _np.sqrt(_np.sum(_np.sum( (ff-ffi)**2 ))/float(len(ff)))
 
-
 ##################################################################
+
+def test_periodic1():
+    error = periodic1()
+    print('error = %g'%error)
+    assert error < 5e-4
+
+def test_periodic2():
+    error = periodic2()
+    print('error = %g'%error)
+    assert error < 8e-4
+
+def test_allPeriodic():
+    error = allPeriodic()
+    print('error = %g'%error)
+    assert error < 5e-4
+
+def test_slope1():
+    error = slope1()
+    print('error = %g'%error)
+    assert error < 5e-4
+
+def test_slope2():
+    error = slope2()
+    print('error = %g'%error)
+    assert error < 8e-4
+
+def test_secondDer1():
+    error = secondDer1()
+    print('error = %g'%error)
+    assert error < 3.5e-3
+
+def test_secondDer2():
+    error = secondDer2()
+    print('error = %g'%error)
+    assert error < 5e-4
 
 if __name__=='__main__':
 
-    import sys
+    test_periodic1()
+    test_periodic2()
+    test_allPeriodic()
 
-    cum_error = 0
-    error = periodic1()
-    cum_error += error
-    print('error = %g'%error)
-    error = periodic2()
-    cum_error += error
-    print('error = %g'%error)
-    error = allPeriodic()
-    cum_error += error
-    print('error = %g'%error)
-    error = slope1()
-    cum_error += error
-    print('error = %g'%error)
-    error = slope2()
-    cum_error += error
-    print('error = %g'%error)
-    error = secondDer1()
-    cum_error += error
-    print('error = %g'%error)
-    error = secondDer2()
-    cum_error += error
-    print('error = %g'%error)
+    test_slope1()
+    test_slope2()
 
-    print('cumulated error = %g in %s' % (cum_error, sys.argv[0]))
-    if cum_error > 0.007:
-       print('TEST %s FAILED' %  sys.argv[0])
+    test_secondDer1()
+    test_secondDer2()

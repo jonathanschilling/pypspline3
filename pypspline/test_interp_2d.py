@@ -5,7 +5,9 @@
 import numpy as _np
 from pypspline.pspline_2d import pspline, griddata
 
-EPS = 1.e-10
+import pytest
+
+eps = _np.finfo(float).eps
 
 def pointVal(spl, x1, x2, ff):
     error = 0
@@ -164,103 +166,155 @@ def arrayDyy(spl, x1, x2, ff):
     error = _np.sqrt(_np.sum(_np.sum( (ff - fi)**2 ))/float(mtot))
     return error
 
-
-
 ##################################################################
+
+# original grid
+n1, n2 = 11, 21
+x1 = _np.linspace(0., 1., n1)
+x2 = _np.linspace(0., 1., n2)
+spl = pspline(x1, x2)
+xx1, xx2 = griddata(x1, x2)
+ff = xx1**3 + 2*xx2**3 + xx1**3 * xx2**2
+spl.setup(ff)
+
+# new grid
+x1 = _np.linspace(0., 1., n1-1)
+x2 = _np.linspace(0., 1., n2-1)
+xx1, xx2 = griddata(x1, x2)
+ff = xx1**3 + 2*xx2**3 + xx1**3 * xx2**2
+fx = 3*xx1**2 + 3*xx1**2 * xx2**2
+fy = 6*xx2**2 + 2*xx1**3 * xx2
+fxx = 6*xx1 +  6*xx1 * xx2**2
+fxy = 6 * xx1**2 * xx2
+fyy = 12*xx2 + 2*xx1**3
+
+
+def test_pointVal():
+    error = pointVal(spl, x1, x2, ff)
+    print('error = %g'%error)
+    assert error < 10*eps
+
+def test_cloudVal():
+    error = cloudVal(spl, xx1, xx2, ff)
+    print('error = %g'%error)
+    assert error < 10*eps
+
+def test_arrayVal():
+    error = arrayVal(spl, x1, x2, ff)
+    print('error = %g'%error)
+    assert error < 10*eps
+
+# -------------------------------------
+
+def test_pointDx():
+    error = pointDx(spl, x1, x2, fx)
+    print('error = %g'%error)
+    assert error < 10*10*eps
+
+def test_cloudDx():
+    error = cloudDx(spl, xx1, xx2, fx)
+    print('error = %g'%error)
+    assert error < 10*10*eps
+
+def test_arrayDx():
+    error = arrayDx(spl, x1, x2, fx)
+    print('error = %g'%error)
+    assert error < 10*10*eps
+
+
+def test_pointDy():
+    error = pointDy(spl, x1, x2, fy)
+    print('error = %g'%error)
+    assert error < 10*10*eps
+
+def test_cloudDy():
+    error = cloudDy(spl, xx1, xx2, fy)
+    print('error = %g'%error)
+    assert error < 10*10*eps
+
+def test_arrayDy():
+    error = arrayDy(spl, x1, x2, fy)
+    print('error = %g'%error)
+    assert error < 10*10*eps
+
+# -------------------------------------
+
+def test_pointDxx():
+    error = pointDxx(spl, x1, x2, fxx)
+    print('error = %g'%error)
+    assert error < 10*10*10*10*eps
+
+def test_cloudDxx():
+    error = cloudDxx(spl, xx1, xx2, fxx)
+    print('error = %g'%error)
+    assert error < 10*10*10*10*eps
+
+def test_arrayDxx():
+    error = arrayDxx(spl, x1, x2, fxx)
+    print('error = %g'%error)
+    assert error < 10*10*10*10*eps
+
+
+def test_pointDxy():
+    error = pointDxy(spl, x1, x2, fxy)
+    print('error = %g'%error)
+    assert error < 10*10*10*10*eps
+
+def test_cloudDxy():
+    error = cloudDxy(spl, xx1, xx2, fxy)
+    print('error = %g'%error)
+    assert error < 10*10*10*10*eps
+
+def test_arrayDxy():
+    error = arrayDxy(spl, x1, x2, fxy)
+    print('error = %g'%error)
+    assert error < 10*10*10*10*eps
+
+
+def test_pointDyy():
+    error = pointDyy(spl, x1, x2, fyy)
+    print('error = %g'%error)
+    assert error < 10*10*10*10*eps
+
+def test_cloudDyy():
+    error = cloudDyy(spl, xx1, xx2, fyy)
+    print('error = %g'%error)
+    assert error < 10*10*10*10*eps
+
+def test_arrayDyy():
+    error = arrayDyy(spl, x1, x2, fyy)
+    print('error = %g'%error)
+    assert error < 10*10*10*10*eps
 
 if __name__=='__main__':
 
-    import sys
-
-    # original grid
-    n1, n2 = 11, 21
-    x1 = _np.linspace(0., 1., n1)
-    x2 = _np.linspace(0., 1., n2)
-    spl = pspline(x1, x2)
-    xx1, xx2 = griddata(x1, x2)
-    ff = xx1**3 + 2*xx2**3 + xx1**3 * xx2**2
-    spl.setup(ff)
-
-    # new grid
-    x1 = _np.linspace(0., 1., n1-1)
-    x2 = _np.linspace(0., 1., n2-1)
-    xx1, xx2 = griddata(x1, x2)
-    ff = xx1**3 + 2*xx2**3 + xx1**3 * xx2**2
-    fx = 3*xx1**2 + 3*xx1**2 * xx2**2
-    fy = 6*xx2**2 + 2*xx1**3 * xx2
-    fxx = 6*xx1 +  6*xx1 * xx2**2
-    fxy = 6 * xx1**2 * xx2
-    fyy = 12*xx2 + 2*xx1**3
-
-
-    cum_error = 0
-
     print('..testing interpolation....................')
 
-    error = pointVal(spl, x1, x2, ff)
-    cum_error += error
-    print('error = %g'%error)
-    error = cloudVal(spl, xx1, xx2, ff)
-    cum_error += error
-    print('error = %g'%error)
-    error = arrayVal(spl, x1, x2, ff)
-    cum_error += error
-    print('error = %g'%error)
+    test_pointVal()
+    test_cloudVal()
+    test_arrayVal()
 
     print('..testing 1st order derivatives............')
 
-    error = pointDx(spl, x1, x2, fx)
-    cum_error += error
-    print('error = %g'%error)
-    error = cloudDx(spl, xx1, xx2, fx)
-    cum_error += error
-    print('error = %g'%error)
-    error = arrayDx(spl, x1, x2, fx)
-    cum_error += error
-    print('error = %g'%error)
+    test_pointDx()
+    test_cloudDx()
+    test_arrayDx()
 
-    error = pointDy(spl, x1, x2, fy)
-    cum_error += error
-    print('error = %g'%error)
-    error = cloudDy(spl, xx1, xx2, fy)
-    cum_error += error
-    print('error = %g'%error)
-    error = arrayDy(spl, x1, x2, fy)
-    cum_error += error
-    print('error = %g'%error)
+    test_pointDy()
+    test_cloudDy()
+    test_arrayDy()
+
 
     print('..testing 2nd order derivatives............')
 
-    error = pointDxx(spl, x1, x2, fxx)
-    cum_error += error
-    print('error = %g'%error)
-    error = cloudDxx(spl, xx1, xx2, fxx)
-    cum_error += error
-    print('error = %g'%error)
-    error = arrayDxx(spl, x1, x2, fxx)
-    cum_error += error
-    print('error = %g'%error)
+    test_pointDxx()
+    test_cloudDxx()
+    test_arrayDxx()
 
-    error = pointDxy(spl, x1, x2, fxy)
-    cum_error += error
-    print('error = %g'%error)
-    error = cloudDxy(spl, xx1, xx2, fxy)
-    cum_error += error
-    print('error = %g'%error)
-    error = arrayDxy(spl, x1, x2, fxy)
-    cum_error += error
-    print('error = %g'%error)
+    test_pointDxy()
+    test_cloudDxy()
+    test_arrayDxy()
 
-    error = pointDyy(spl, x1, x2, fyy)
-    cum_error += error
-    print('error = %g'%error)
-    error = cloudDyy(spl, xx1, xx2, fyy)
-    cum_error += error
-    print('error = %g'%error)
-    error = arrayDyy(spl, x1, x2, fyy)
-    cum_error += error
-    print('error = %g'%error)
-
-    print('cumulated error = %g in %s' % (cum_error, sys.argv[0]))
-    if cum_error > 0.30:
-       print('TEST %s FAILED' %  sys.argv[0])
+    test_pointDyy()
+    test_cloudDyy()
+    test_arrayDyy()
