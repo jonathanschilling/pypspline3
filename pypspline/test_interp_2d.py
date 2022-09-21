@@ -3,7 +3,7 @@
 # $Id: test_interp2_r4.py,v 1.1 2004/03/30 16:33:20 pletzer Exp $
 
 import numpy as _np
-from pspline_2d import pspline, griddata
+from pypspline.pspline_2d import pspline, griddata
 
 EPS = 1.e-10
 
