@@ -1,29 +1,40 @@
 # PyPSPLINE
 PyPSPLINE is a Python interface to the Fortran spline library [PSPLINE](https://w3.pppl.gov/ntcc/PSPLINE/).
 
+The routines of the `compact` F77 interface are wrapped in Python classes.
+Internal documentation of the underlying Fortran routines can be found in the [PSPLINE Help](https://w3.pppl.gov/~pshare/help/pspline.htm)
+at [F77_standard_software](https://w3.pppl.gov/~pshare/help/body_pspline_hlp.html#outfile24.html) --> [Compact_Splines](https://w3.pppl.gov/~pshare/help/body_pspline_hlp.html#outfile30.html) .
+
 ## Prerequisites
 
-* Python (tested with 3.10.7): http://python.org
+* Python 3 (tested with 3.10.7): http://python.org
 * NumPy: http://numpy.org/
-* f90wrap: https://github.com/jameskermode/f90wrap
 
 A Fortran 90 and a C compiler.
 
-I assume the platform to be UNIX. If you manage to build PSPLINE/pypspline on Windows, let me know. 
+I assume the platform to be UNIX. If you manage to build PSPLINE/pypspline on Windows, let me know.
 
 ## Building PyPSPLINE
 
-A minimal subset of PSPLINE is included in this repository.
-Is is compiled along with auto-generating the Python wrapper code by `make.sh`.
-Just run this script to compile the PSPLINE code using `gfortran`
-and generate the Python wrapper using `f90wrap` and `f2py`:
+A minimal subset of PSPLINE required for 1D, 2D and 3D spline interpolation with periodic boundary conditions
+is included in this repository.
+
+The setup relies on `numpy.disttools` as suggested in the [`f2py` documentation](https://numpy.org/doc/stable/f2py/buildtools/distutils.html).
+This will likely shift to `meson` once SciPy and NumPy have migrated as well [1](https://github.com/scipy/scipy/issues/13615).
+
+For now, the build and installation process goes as follows:
 
 ```bash
-./make.sh
+pip install --user .
 ```
-## Migration from CVS
 
-Created Sat Mar 13 08:31:22 EST 2004 (alexander@gokliya.net)
+The `f2py` signature file [`src/fpyspline.pyf`](src/fpyspline.pyf) was auto-generated using the included [`run_f2py.sh`](run_f2py.sh) script
+and then hand-adjusted to line up with the assumptions made in [the original](https://github.com/jonathanschilling/pypspline/blob/ab3a6858cb77345be1403be16061a27efdcd91a2/pypspline/fpspline/fpspline.pyf).
+
+## History
+
+This package was originally created by Alexander Pletzer
+and published on SourceForce as [`pypspline`](https://sourceforge.net/projects/pypspline/).
 
 The old [PyPSPLINE CVS repository](https://sourceforge.net/projects/pypspline/) was migrated to this Git repository.
 One needs the `cvs` and `cvs2svn` packages to do this on Arch Linux.
