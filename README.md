@@ -58,6 +58,7 @@ git checkout
 git push origin --mirror
 mv pypspline{,_old}
 mv pypspline_old/* .
+rmdir pypspline_old
 rm -r CVSROOT
 git add .
 git commit -m "one folder less"
