@@ -27,7 +27,7 @@ pspline_ext = Extension(name = 'fpspline',
 
 if __name__ == "__main__":
     from numpy.distutils.core import setup
-    setup(name = 'pspline',
+    setup(name = 'pypspline',
           version ='1.0.0',
           description       = "Princeton Spline and Hermite Cubic Interpolation Routines ",
           author            = "Jonathan Schilling",

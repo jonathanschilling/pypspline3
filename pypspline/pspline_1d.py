@@ -5,6 +5,7 @@
 """
 
 import numpy as _np
+import warnings as _warnings
 
 import fpspline
 
@@ -203,7 +204,7 @@ class pspline:
         if ier:
             raise "pspline1_r4::interp error ier=%d"%ier
         if iwarn:
-            warnings.warn('pspline1_r4::interp abscissae are out of bound!')
+            _warnings.warn('pspline1_r4::interp abscissae are out of bound!')
 
         return fi
 
@@ -271,7 +272,7 @@ class pspline:
         if ier:
             raise "pspline1_r4::derivative error"
         if iwarn:
-            warnings.warn('pspline1_r4::derivative abscissae are out of bound!')
+            _warnings.warn('pspline1_r4::derivative abscissae are out of bound!')
 
         return fi
 

@@ -7,6 +7,7 @@
 """
 
 import numpy as _np
+import warnings as _warnings
 
 import fpspline
 
@@ -295,7 +296,7 @@ class pspline:
         if ier:
             raise "pspline3_r4::interp error ier=%d"%ier
         if iwarn:
-            warnings.warn('pspline3_r4::interp abscissae are out of bound!')
+            _warnings.warn('pspline3_r4::interp abscissae are out of bound!')
 
         return fi
 
@@ -363,7 +364,7 @@ class pspline:
         if ier:
             raise "pspline3_r4::derivative error"
         if iwarn:
-            warnings.warn('pspline3_r4::derivative abscissae are out of bound!')
+            _warnings.warn('pspline3_r4::derivative abscissae are out of bound!')
 
         return fi
 
@@ -439,7 +440,7 @@ class pspline:
         if type(p1)!=type(p2) or type(p1)!=type(p3) or type(p2)!=type(p3):
             raise "pspline3_r4::gradient: types (p1, p2, p3) don't match"
 
-        if type(p1)==np.float64:
+        if type(p1)==_np.float64:
             fi, ier, iwarn = self.gradient_point(p1, p2, p3)
         else:
             if len(p1)==len(p2)==len(p3) and meth=='cloud':
@@ -450,7 +451,7 @@ class pspline:
         if ier:
             raise "pspline3_r4::gradient error"
         if iwarn:
-            warnings.warn('pspline3_r4::gradient abscissae are out of bound!')
+            _warnings.warn('pspline3_r4::gradient abscissae are out of bound!')
 
         return fi
 

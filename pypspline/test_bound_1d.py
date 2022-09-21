@@ -6,6 +6,8 @@ import numpy as np
 from pypspline.pspline_1d import pspline
 EPS = 1.e-6
 
+import pytest
+
 def periodic1():
     n1 = 11
     x1 = np.linspace(0., 2*np.pi, n1)
@@ -46,21 +48,15 @@ def secondDer1():
 
 ##################################################################
 
-if __name__=='__main__':
-
-    import sys
-
-    cum_error = 0
+def test_periodic1():
     error = periodic1()
-    cum_error += error
-    print('error = %g'%error)
-    error = slope1()
-    cum_error += error
-    print('error = %g'%error)
-    error = secondDer1()
-    cum_error += error
     print('error = %g'%error)
 
-    print('cumulated error = %g in %s' % (cum_error, sys.argv[0]))
-    if cum_error > 0.002:
-       print('TEST %s FAILED' %  sys.argv[0])
+def test_slope1():
+    error = slope1()
+    print('error = %g'%error)
+
+def test_secondDer1():
+    error = secondDer1()
+    print('error = %g'%error)
+
