@@ -22,7 +22,7 @@ A minimal subset of PSPLINE required for 1D, 2D and 3D spline interpolation with
 is included in this repository.
 
 The setup relies on `numpy.disttools` as suggested in the [`f2py` documentation](https://numpy.org/doc/stable/f2py/buildtools/distutils.html).
-This will likely shift to `meson` once SciPy and NumPy have migrated as well [1](https://github.com/scipy/scipy/issues/13615).
+This will likely shift to `meson` once [SciPy](https://github.com/scipy/scipy/issues/13615) and NumPy have migrated as well.
 
 For now, the build and installation process goes as follows:
 
