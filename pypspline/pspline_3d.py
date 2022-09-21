@@ -151,17 +151,17 @@ class pspline:
             self.__ibctype3 = (0,0)
 
         # BC values (see above)
-        self.bcval1min = _np.zeros( (n3, n2,), order='F' )
-        self.bcval1max = _np.zeros( (n3, n2,), order='F' )
+        self.bcval1min = _np.zeros( (n3, n2,) )
+        self.bcval1max = _np.zeros( (n3, n2,) )
 
-        self.bcval2min = _np.zeros( (n3, n1,), order='F' )
-        self.bcval2max = _np.zeros( (n3, n1,), order='F' )
+        self.bcval2min = _np.zeros( (n3, n1,) )
+        self.bcval2max = _np.zeros( (n3, n1,) )
 
-        self.bcval3min = _np.zeros( (n2, n1,), order='F' )
-        self.bcval3max = _np.zeros( (n2, n1,), order='F' )
+        self.bcval3min = _np.zeros( (n2, n1,) )
+        self.bcval3max = _np.zeros( (n2, n1,) )
 
         # Compact cubic coefficient arrays
-        self.__fspl = _np.zeros( (8,n1,n2,n3), order='F' )
+        self.__fspl = _np.zeros( (n3,n2,n1,8,) )
 
         # storage
         self.__x1pkg = None
@@ -194,57 +194,37 @@ class pspline:
         ialg=-3       # algorithm selection code
 
         iper=0
-        if self.__ibctype1[0]==-1 or self.__ibctype1[1]==-1:
-            iper=1
-
-        self.__x1pkg = _np.zeros([self.__n1, 4], order='F')
-
-        ifail = 0
-        fpspline.genxpkg(self.__n1, self.__x1, self.__x1pkg, iper,
-                         imsg, itol, ztol, ialg, ifail)
+        if self.__ibctype1[0]==-1 or self.__ibctype1[1]==-1: iper=1
+        self.__x1pkg, ifail = fpspline.genxpkg(self.__x1, iper)
         if ifail!=0:
             raise 'pspline3_r4::setup failed to compute x1pkg'
 
         iper=0
-        if self.__ibctype2[0]==-1 or self.__ibctype2[1]==-1:
-            iper=1
-
-        self.__x2pkg = _np.zeros([self.__n2, 4], order='F')
-
-        ifail = 0
-        fpspline.genxpkg(self.__n2, self.__x2, self.__x2pkg, iper,
-                         imsg, itol, ztol, ialg, ifail)
+        if self.__ibctype2[0]==-1 or self.__ibctype2[1]==-1: iper=1
+        self.__x2pkg, ifail = fpspline.genxpkg(self.__x2, iper)
         if ifail!=0:
             raise 'pspline3_r4::setup failed to compute x2pkg'
 
         iper=0
-        if self.__ibctype3[0]==-1 or self.__ibctype3[1]==-1:
-            iper=1
-
-        self.__x3pkg = _np.zeros([self.__n3, 4], order='F')
-
-        ifail = 0
-        fpspline.genxpkg(self.__n3, self.__x3, self.__x3pkg, iper,
-                         imsg, itol, ztol, ialg, ifail)
+        if self.__ibctype3[0]==-1 or self.__ibctype3[1]==-1: iper=1
+        self.__x3pkg, ifail = fpspline.genxpkg(self.__x3, iper)
         if ifail!=0:
             raise 'pspline3_r4::setup failed to compute x3pkg'
 
         self.__isReady = 0
 
-        self.__fspl[0,:,:,:] = f.T
+        self.__fspl[:,:,:,0] = f
 
-        fpspline.mktricub(self.__x1, self.__n1,
-                          self.__x2, self.__n2,
-                          self.__x3, self.__n3,
-                          self.__fspl, self.__n1, self.__n2,
-                          self.__ibctype1[0], self.bcval1min,
-                          self.__ibctype1[1], self.bcval1max, self.__n2,
-                          self.__ibctype2[0], self.bcval2min,
-                          self.__ibctype2[1], self.bcval2max, self.__n1,
-                          self.__ibctype3[0], self.bcval3min,
-                          self.__ibctype3[1], self.bcval3max, self.__n1,
-                          self.__ilin1, self.__ilin2, self.__ilin3,
-                          ifail)
+        self.__ilin1, self.__ilin2, self.__ilin3, ifail = \
+                      fpspline.mktricub(self.__x1, self.__x2, self.__x3,
+                                        self.__fspl.flat,
+                                        self.__ibctype1[0], self.bcval1min.flat,
+                                        self.__ibctype1[1], self.bcval1max.flat,
+                                        self.__ibctype2[0], self.bcval2min.flat,
+                                        self.__ibctype2[1], self.bcval2max.flat,
+                                        self.__ibctype3[0], self.bcval3min.flat,
+                                        self.__ibctype3[1], self.bcval3max.flat,
+                                        )
 
         if ifail != 0 :
             raise 'pspline3_r4::setup error'
@@ -256,20 +236,12 @@ class pspline:
         """
         Point interpolation at (p1, p2, p3).
         """
-        ier = 0
         iwarn = 0
-
-        fi = _np.zeros(1)
-
-        fpspline.evtricub(p1, p2, p3,
-                          self.__x1, self.__n1,
-                          self.__x2, self.__n2,
-                          self.__x3, self.__n3,
-                          self.__ilin1, self.__ilin2, self.__ilin3,
-                          self.__fspl, self.__n1, self.__n2,
-                          ICT_FVAL, fi, ier)
-
-        return fi[0], ier, iwarn
+        fi,ier = fpspline.evtricub(p1, p2, p3,
+                                   self.__x1, self.__x2, self.__x3,
+                                   self.__ilin1, self.__ilin2, self.__ilin3,
+                                   self.__fspl.flat, ICT_FVAL)
+        return fi, ier, iwarn
 
     def interp_cloud(self, p1, p2, p3):
 
@@ -277,27 +249,11 @@ class pspline:
         Cloud interpolation for all (p1[:], p2[:], p3[:]). Assume len(p1)==len(p2)==len(p3).
         """
 
-        nEval = len(p1)
-        if nEval != len(p2):
-            raise RuntimeError("p1 and p2 must have equal length, but have %d and %d"%
-                               (nEval, len(p2)))
-        if nEval != len(p3):
-            raise RuntimeError("p1 and p3 must have equal length, but have %d and %d"%
-                               (nEval, len(p3)))
-
-        fi = _np.zeros(nEval)
-
-        iwarn = 0
-        ier = 0
-
-        fpspline.vectricub(ICT_FVAL, nEval, p1, p2, p3,
-                           nEval, fi,
-                           self.__n1, self.__x1pkg,
-                           self.__n2, self.__x2pkg,
-                           self.__n3, self.__x3pkg,
-                           self.__fspl, self.__n1, self.__n2,
-                           iwarn,ier)
-
+        fi,iwarn,ier = fpspline.vectricub(ICT_FVAL, p1, p2, p3,
+                                          self.__x1pkg,
+                                          self.__x2pkg,
+                                          self.__x3pkg,
+                                          self.__fspl.flat)
         return fi, ier, iwarn
 
     def interp_array(self, p1, p2, p3):
@@ -305,25 +261,13 @@ class pspline:
         """
         Array interpolation for all (p1[i1], p2[i2], p3[i3]), i{1,2,3}=0:len( p{1,2,3} )
         """
+        fi, iwarn,ier = fpspline.gridtricub(p1, p2, p3, \
+                                            self.__x1pkg, \
+                                            self.__x2pkg, \
+                                            self.__x3pkg, \
+                                            self.__fspl.flat)
 
-        n1 = len(p1)
-        n2 = len(p2)
-        n3 = len(p3)
-
-        fi = _np.zeros([n1, n2, n3], order="F")
-
-        ier = 0
-        iwarn = 0
-
-        fpspline.gridtricub(p1, n1, p2, n2, p3, n3,
-                            fi, n1, n2,
-                            self.__n1, self.__x1pkg,
-                            self.__n2, self.__x2pkg,
-                            self.__n3, self.__x3pkg,
-                            self.__fspl, self.__n1, self.__n2,
-                            iwarn, ier)
-
-        return fi.reshape([n1, n2, n3], order='F').T, ier, iwarn
+        return _np.resize(fi, (len(p3), len(p2), len(p1))), ier, iwarn
 
     def interp(self, p1, p2, p3, meth='cloud'):
 
@@ -368,20 +312,12 @@ class pspline:
         Must have i{1,2,3}>=0 and i1 + i2 + i3 <=2.
         """
 
-        ier = 0
         iwarn = 0
-
-        fi = _np.zeros(1)
-
-        fpspline.evtricub(p1, p2, p3,
-                          self.__x1, self.__n1,
-                          self.__x2, self.__n2,
-                          self.__x3, self.__n3,
-                          self.__ilin1, self.__ilin2, self.__ilin3,
-                          self.__fspl, self.__n1, self.__n2,
-                          ICT_MAP[(i1,i2,i3)], fi, ier)
-
-        return fi[0], ier, iwarn
+        fi,ier = fpspline.evtricub(p1, p2, p3,
+                                   self.__x1, self.__x2, self.__x3,
+                                   self.__ilin1, self.__ilin2, self.__ilin3,
+                                   self.__fspl.flat, ICT_MAP[(i1,i2,i3)])
+        return fi, ier, iwarn
 
     def derivative_cloud(self, i1, i2, i3, p1, p2, p3):
 
@@ -390,27 +326,11 @@ class pspline:
         i{1,2,3}>=0 and i1 + i2 + i3 <=2.
         """
 
-        nEval = len(p1)
-        if nEval != len(p2):
-            raise RuntimeError("p1 and p2 must have equal length, but have %d and %d"%
-                               (nEval, len(p2)))
-        if nEval != len(p3):
-            raise RuntimeError("p1 and p3 must have equal length, but have %d and %d"%
-                               (nEval, len(p3)))
-
-        fi = _np.zeros(nEval)
-
-        iwarn = 0
-        ier = 0
-
-        fpspline.vectricub(ICT_MAP[(i1,i2,i3)], nEval, p1, p2, p3,
-                           nEval, fi,
-                           self.__n1, self.__x1pkg,
-                           self.__n2, self.__x2pkg,
-                           self.__n3, self.__x3pkg,
-                           self.__fspl, self.__n1, self.__n2,
-                           iwarn,ier)
-
+        fi,iwarn,ier = fpspline.vectricub(ICT_MAP[(i1,i2,i3)], p1, p2, p3,
+                                          self.__x1pkg,
+                                          self.__x2pkg,
+                                          self.__x3pkg,
+                                          self.__fspl.flat)
         return fi, ier, iwarn
 
     def derivative_array(self, i1, i2, i3, p1, p2, p3):
@@ -420,14 +340,9 @@ class pspline:
         i{1,2,3}>=0 and i1 + i2 + i3 <=2.
         """
 
-        n1 = len(p1)
-        n2 = len(p2)
-        n3 = len(p3)
-
         xx1, xx2, xx3 = griddata(p1, p2, p3)
-        fi,iwarn,ier = self.derivative_cloud(i1, i2, i3,
-                                             xx1.flatten(), xx2.flatten(), xx3.flatten())
-        return fi.reshape([n1, n2, n3], order='F').T, ier, iwarn
+        fi,iwarn,ier = self.derivative_cloud(i1, i2, i3, xx1.flat, xx2.flat, xx3.flat)
+        return _np.resize(fi, (len(p3), len(p2), len(p1))), ier, iwarn
 
     def derivative(self, i1, i2, i3, p1, p2, p3, meth='cloud'):
 
@@ -465,37 +380,18 @@ class pspline:
         """
 
         iwarn = 0
-
-        ier1 = 0
-        f1 = _np.zeros(1)
-        fpspline.evtricub(p1, p2, p3,
-                          self.__x1, self.__n1,
-                          self.__x2, self.__n2,
-                          self.__x3, self.__n3,
-                          self.__ilin1, self.__ilin2, self.__ilin3,
-                          self.__fspl, self.__n1, self.__n2,
-                          ICT_F1, f1, ier1)
-
-        ier2 = 0
-        f2 = _np.zeros(1)
-        fpspline.evtricub(p1, p2, p3,
-                          self.__x1, self.__n1,
-                          self.__x2, self.__n2,
-                          self.__x3, self.__n3,
-                          self.__ilin1, self.__ilin2, self.__ilin3,
-                          self.__fspl, self.__n1, self.__n2,
-                          ICT_F2, f2, ier2)
-
-        ier3 = 0
-        f3 = _np.zeros(1)
-        fpspline.evtricub(p1, p2, p3,
-                          self.__x1, self.__n1,
-                          self.__x2, self.__n2,
-                          self.__x3, self.__n3,
-                          self.__ilin1, self.__ilin2, self.__ilin3,
-                          self.__fspl, self.__n1, self.__n2,
-                          ICT_F3, f3, ier3)
-
+        f1,ier1 = fpspline.evtricub(p1, p2, p3,
+                                    self.__x1, self.__x2, self.__x3,
+                                    self.__ilin1, self.__ilin2, self.__ilin3,
+                                    self.__fspl.flat, ICT_F1)
+        f2,ier2 = fpspline.evtricub(p1, p2, p3,
+                                    self.__x1, self.__x2, self.__x3,
+                                    self.__ilin1, self.__ilin2, self.__ilin3,
+                                    self.__fspl.flat, ICT_F2)
+        f3,ier3 = fpspline.evtricub(p1, p2, p3,
+                                    self.__x1, self.__x2, self.__x3,
+                                    self.__ilin1, self.__ilin2, self.__ilin3,
+                                    self.__fspl.flat, ICT_F3)
         return f1, f2, f3, ier1+ier2+ier3, iwarn
 
     def gradient_cloud(self, p1, p2, p3):
@@ -504,47 +400,21 @@ class pspline:
         Return (df/dz, df/dy, df/dx) for cloud (p1, p2, p3).
         """
 
-        nEval = len(p1)
-        if nEval != len(p2):
-            raise RuntimeError("p1 and p2 must have equal length, but have %d and %d"%
-                               (nEval, len(p2)))
-        if nEval != len(p3):
-            raise RuntimeError("p1 and p3 must have equal length, but have %d and %d"%
-                               (nEval, len(p3)))
-
-        f1 = _np.zeros(nEval)
-        iwarn1 = 0
-        ier1 = 0
-        fpspline.vectricub(ICT_F1, nEval, p1, p2, p3,
-                           nEval, f1,
-                           self.__n1, self.__x1pkg,
-                           self.__n2, self.__x2pkg,
-                           self.__n3, self.__x3pkg,
-                           self.__fspl, self.__n1, self.__n2,
-                           iwarn1, ier1)
-
-        f2 = _np.zeros(nEval)
-        iwarn2 = 0
-        ier2 = 0
-        fpspline.vectricub(ICT_F2, nEval, p1, p2, p3,
-                           nEval, f2,
-                           self.__n1, self.__x1pkg,
-                           self.__n2, self.__x2pkg,
-                           self.__n3, self.__x3pkg,
-                           self.__fspl, self.__n1, self.__n2,
-                           iwarn2, ier2)
-
-        f3 = _np.zeros(nEval)
-        iwarn3 = 0
-        ier3 = 0
-        fpspline.vectricub(ICT_F3, nEval, p1, p2, p3,
-                           nEval, f3,
-                           self.__n1, self.__x1pkg,
-                           self.__n2, self.__x2pkg,
-                           self.__n3, self.__x3pkg,
-                           self.__fspl, self.__n1, self.__n2,
-                           iwarn3, ier3)
-
+        f1,iwarn1,ier1 = fpspline.vectricub(ICT_F1, p1, p2, p3,
+                                            self.__x1pkg,
+                                            self.__x2pkg,
+                                            self.__x3pkg,
+                                            self.__fspl.flat)
+        f2,iwarn2,ier2 = fpspline.vectricub(ICT_F2, p1, p2, p3,
+                                            self.__x1pkg,
+                                            self.__x2pkg,
+                                            self.__x3pkg,
+                                            self.__fspl.flat)
+        f3,iwarn3,ier3 = fpspline.vectricub(ICT_F3, p1, p2, p3,
+                                            self.__x1pkg,
+                                            self.__x2pkg,
+                                            self.__x3pkg,
+                                            self.__fspl.flat)
         return f1, f2, f3, ier1+ier2+ier3, iwarn1+iwarn2+iwarn3
 
     def gradient_array(self, p1, p2, p3):
@@ -554,13 +424,11 @@ class pspline:
         """
 
         xx1, xx2, xx3 = griddata(p1, p2, p3)
-        f1, f2, f3, iwarn,ier = self.gradient_cloud(xx1.flatten(),
-                                                    xx2.flatten(),
-                                                    xx3.flatten())
+        f1, f2, f3, iwarn,ier = self.gradient_cloud(xx1.flat, xx2.flat, xx3.flat)
         n1, n2, n3 = len(p1), len(p2), len(p3)
-        return f1.reshape([n1, n2, n3], order='F').T, \
-               f2.reshape([n1, n2, n3], order='F').T, \
-               f3.reshape([n1, n2, n3], order='F').T, \
+        return _np.resize(f1, (n3,n2,n1)), \
+               _np.resize(f2, (n3,n2,n1)), \
+               _np.resize(f3, (n3,n2,n1)), \
                ier, iwarn
 
     def gradient(self, p1, p2, p3, meth='cloud'):
