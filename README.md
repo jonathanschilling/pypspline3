@@ -1,6 +1,8 @@
 # PyPSPLINE
 PyPSPLINE is a Python interface to the Fortran spline library [PSPLINE](https://w3.pppl.gov/ntcc/PSPLINE/).
 
+![build](https://github.com/jonathanschilling/pypspline/actions/workflows/pypspline.yaml/badge.svg)
+
 The routines of the `compact` F77 interface are wrapped in Python classes.
 Internal documentation of the underlying Fortran routines can be found in the [PSPLINE Help](https://w3.pppl.gov/~pshare/help/pspline.htm)
 at [F77_standard_software](https://w3.pppl.gov/~pshare/help/body_pspline_hlp.html#outfile24.html) --> [Compact_Splines](https://w3.pppl.gov/~pshare/help/body_pspline_hlp.html#outfile30.html) .
