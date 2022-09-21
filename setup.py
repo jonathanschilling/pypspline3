@@ -1,8 +1,8 @@
 from numpy.distutils.core import Extension
 import setuptools
 
-pspline_ext = Extension(name = 'pspline_wrapped',
-                        sources = ['src/pspline_wrapped.pyf',
+pspline_ext = Extension(name = 'fpspline',
+                        sources = ['src/fpspline.pyf',
                                    'src/cspline.f90',
                                    'src/evbicub.f90',
                                    'src/evspline.f90',

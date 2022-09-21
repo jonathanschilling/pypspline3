@@ -1,10 +1,10 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module pspline_wrapped ! in
-    interface  ! in :pspline_wrapped
+python module fpspline ! in
+    interface  ! in :fpspline
 
-        subroutine genxpkg(nx,x,xpkg,iper,imsg,itol,ztol,ialg,ier) ! in :pspline_wrapped:src/genxpkg.f90
+        subroutine genxpkg(nx,x,xpkg,iper,imsg,itol,ztol,ialg,ier) ! in :fpspline:src/genxpkg.f90
             use iso_c_binding, only: fp=>c_double
             integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
             real(kind=fp) dimension(nx) :: x
@@ -12,14 +12,14 @@ python module pspline_wrapped ! in
             integer, intent(in), optional :: iper = 0
             integer, intent(in), optional :: imsg = 0
             integer, intent(in), optional :: itol = 0
-            real(kind=fp), intent(in), optional :: ztol = 5.0e-7_fp
+            real(kind=fp), intent(in), optional :: ztol = 5.0e-7
             integer, intent(in), optional :: ialg = -3
             integer, intent(out) :: ier
         end subroutine genxpkg
 
-        !--------------------------------------
+        ! -------------------------------------
 
-        subroutine mkspline(x,nx,fspl,ibcxmin,bcxmin,ibcxmax,bcxmax,ilinx,ier) ! in :pspline_wrapped:src/mkspline.f90
+        subroutine mkspline(x,nx,fspl,ibcxmin,bcxmin,ibcxmax,bcxmax,ilinx,ier) ! in :fpspline:src/mkspline.f90
             use iso_c_binding, only: fp=>c_double
             real(kind=fp) dimension(nx) :: x
             integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
@@ -32,7 +32,7 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine mkspline
 
-        subroutine evspline(xget,x,nx,ilinx,f,ict,fval,ier) ! in :pspline_wrapped:src/evspline.f90
+        subroutine evspline(xget,x,nx,ilinx,f,ict,fval,ier) ! in :fpspline:src/evspline.f90
             use iso_c_binding, only: fp=>c_double
             real(kind=fp) :: xget
             real(kind=fp) dimension(nx) :: x
@@ -44,7 +44,7 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine evspline
 
-        subroutine vecspline(ict,ivec,xvec,ivd,fval,nx,xpkg,fspl,iwarn,ier) ! in :pspline_wrapped:src/vecspline.f90
+        subroutine vecspline(ict,ivec,xvec,ivd,fval,nx,xpkg,fspl,iwarn,ier) ! in :fpspline:src/vecspline.f90
             use iso_c_binding, only: fp=>c_double
             integer dimension(3) :: ict
             integer, optional,check(shape(xvec, 0) == ivec),depend(xvec) :: ivec=shape(xvec, 0)
@@ -58,9 +58,9 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine vecspline
 
-        !--------------------------------------
+        ! -------------------------------------
 
-        subroutine mkbicub(x,nx,y,ny,f,nf2,ibcxmin,bcxmin,ibcxmax,bcxmax,ibcymin,bcymin,ibcymax,bcymax,ilinx,iliny,ier) ! in :pspline_wrapped:src/mkbicub.f90
+        subroutine mkbicub(x,nx,y,ny,f,nf2,ibcxmin,bcxmin,ibcxmax,bcxmax,ibcymin,bcymin,ibcymax,bcymax,ilinx,iliny,ier) ! in :fpspline:src/mkbicub.f90
             use iso_c_binding, only: fp=>c_double
             real(kind=fp) dimension(nx) :: x
             integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
@@ -81,7 +81,7 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine mkbicub
 
-        subroutine evbicub(xget,yget,x,nx,y,ny,ilinx,iliny,f,inf2,ict,fval,ier) ! in :pspline_wrapped:src/evbicub.f90
+        subroutine evbicub(xget,yget,x,nx,y,ny,ilinx,iliny,f,inf2,ict,fval,ier) ! in :fpspline:src/evbicub.f90
             use iso_c_binding, only: fp=>c_double
             real(kind=fp) :: xget
             real(kind=fp) :: yget
@@ -98,7 +98,7 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine evbicub
 
-        subroutine vecbicub(ict,ivec,xvec,yvec,ivd,fval,nx,xpkg,ny,ypkg,fspl,inf2,iwarn,ier) ! in :pspline_wrapped:src/vecbicub.f90
+        subroutine vecbicub(ict,ivec,xvec,yvec,ivd,fval,nx,xpkg,ny,ypkg,fspl,inf2,iwarn,ier) ! in :fpspline:src/vecbicub.f90
             use iso_c_binding, only: fp=>c_double
             integer dimension(6) :: ict
             integer, optional,check(shape(xvec, 0) == ivec),depend(xvec) :: ivec=shape(xvec, 0)
@@ -116,7 +116,7 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine vecbicub
 
-        subroutine gridbicub(x_newgrid,nx_new,y_newgrid,ny_new,f_new,if1,nx,xpkg,ny,ypkg,fspl,inf3,iwarn,ier) ! in :pspline_wrapped:src/gridbicub.f90
+        subroutine gridbicub(x_newgrid,nx_new,y_newgrid,ny_new,f_new,if1,nx,xpkg,ny,ypkg,fspl,inf3,iwarn,ier) ! in :fpspline:src/gridbicub.f90
             use iso_c_binding, only: fp=>c_double
             real(kind=fp) dimension(nx_new) :: x_newgrid
             integer, optional,check(shape(x_newgrid, 0) == nx_new),depend(x_newgrid) :: nx_new=shape(x_newgrid, 0)
@@ -134,9 +134,9 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine gridbicub
 
-        !--------------------------------------
+        ! -------------------------------------
 
-        subroutine mktricub(x,nx,y,ny,z,nz,f,nf2,nf3,ibcxmin,bcxmin,ibcxmax,bcxmax,inb1x,ibcymin,bcymin,ibcymax,bcymax,inb1y,ibczmin,bczmin,ibczmax,bczmax,inb1z,ilinx,iliny,ilinz,ier) ! in :pspline_wrapped:src/mktricub.f90
+        subroutine mktricub(x,nx,y,ny,z,nz,f,nf2,nf3,ibcxmin,bcxmin,ibcxmax,bcxmax,inb1x,ibcymin,bcymin,ibcymax,bcymax,inb1y,ibczmin,bczmin,ibczmax,bczmax,inb1z,ilinx,iliny,ilinz,ier) ! in :fpspline:src/mktricub.f90
             use iso_c_binding, only: fp=>c_double
             real(kind=fp) dimension(nx) :: x
             integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
@@ -168,7 +168,7 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine mktricub
 
-        subroutine evtricub(xget,yget,zget,x,nx,y,ny,z,nz,ilinx,iliny,ilinz,f,inf2,inf3,ict,fval,ier) ! in :pspline_wrapped:src/evtricub.f90
+        subroutine evtricub(xget,yget,zget,x,nx,y,ny,z,nz,ilinx,iliny,ilinz,f,inf2,inf3,ict,fval,ier) ! in :fpspline:src/evtricub.f90
             use iso_c_binding, only: fp=>c_double
             real(kind=fp) :: xget
             real(kind=fp) :: yget
@@ -190,7 +190,7 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine evtricub
 
-        subroutine vectricub(ict,ivec,xvec,yvec,zvec,ivd,fval,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :pspline_wrapped:src/vectricub.f90
+        subroutine vectricub(ict,ivec,xvec,yvec,zvec,ivd,fval,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :fpspline:src/vectricub.f90
             use iso_c_binding, only: fp=>c_double
             integer dimension(10) :: ict
             integer, optional,check(shape(xvec, 0) == ivec),depend(xvec) :: ivec=shape(xvec, 0)
@@ -212,7 +212,7 @@ python module pspline_wrapped ! in
             integer :: ier
         end subroutine vectricub
 
-        subroutine gridtricub(x_newgrid,nx_new,y_newgrid,ny_new,z_newgrid,nz_new,f_new,if1,if2,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :pspline_wrapped:src/gridtricub.f90
+        subroutine gridtricub(x_newgrid,nx_new,y_newgrid,ny_new,z_newgrid,nz_new,f_new,if1,if2,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :fpspline:src/gridtricub.f90
             use iso_c_binding, only: fp=>c_double
             real(kind=fp) dimension(nx_new) :: x_newgrid
             integer, optional,check(shape(x_newgrid, 0) == nx_new),depend(x_newgrid) :: nx_new=shape(x_newgrid, 0)
@@ -237,7 +237,7 @@ python module pspline_wrapped ! in
         end subroutine gridtricub
 
     end interface
-end python module pspline_wrapped
+end python module fpspline
 
 ! This file was auto-generated with f2py (version:1.23.0).
 ! See:

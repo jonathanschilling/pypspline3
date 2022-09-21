@@ -6,7 +6,7 @@
 
 import numpy as _np
 
-import pspline_wrapped as fpspline
+import fpspline
 
 # to get the function value
 ICT_FVAL = _np.array( [1,0,0], dtype=_np.int32)
