@@ -30,7 +30,7 @@ For now, the build and installation process goes as follows:
 pip install --user .
 ```
 
-The `f2py` signature file [`src/fpyspline.pyf`](src/fpyspline.pyf) was auto-generated using the included [`run_f2py.sh`](run_f2py.sh) script
+The `f2py` signature file [`src/fpspline.pyf`](src/fpspline.pyf) was auto-generated using the included [`run_f2py.sh`](run_f2py.sh) script
 and then hand-adjusted to line up with the assumptions made in [the original](https://github.com/jonathanschilling/pypspline/blob/ab3a6858cb77345be1403be16061a27efdcd91a2/pypspline/fpspline/fpspline.pyf).
 
 ## History
