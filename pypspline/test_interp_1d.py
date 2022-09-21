@@ -4,7 +4,10 @@
 
 import numpy as _np
 from pypspline.pspline_1d import pspline
-EPS = 1.e-10
+
+import pytest
+
+eps = _np.finfo(float).eps
 
 def pointVal(spl, x1, ff):
     error = 0
@@ -42,8 +45,6 @@ def arrayDx(spl, x1, ff):
     error = _np.sqrt(_np.sum( (ff - fi)**2 )/float(mtot))
     return error
 
-
-
 def pointDxx(spl, x1, ff):
     error = 0
     m1 = _np.shape(ff)[0]
@@ -62,56 +63,61 @@ def arrayDxx(spl, x1, ff):
     error = _np.sqrt(_np.sum( (ff - fi)**2 )/float(mtot))
     return error
 
-
 ##################################################################
 
-if __name__=='__main__':
+# original grid
+n1, n2 = 11, 21
+x1 = _np.linspace(0., 1., n1)
+spl = pspline(x1)
+ff = x1**3
+spl.setup(ff)
 
-    import sys
+# new grid
+x1 = _np.linspace(0., 1., n1-1)
+ff = x1**3
+fx = 3*x1**2
+fxx= 3*2*x1
 
-    # original grid
-    n1, n2 = 11, 21
-    x1 = _np.linspace(0., 1., n1)
-    spl = pspline(x1)
-    ff = x1**3
-    spl.setup(ff)
+def test_pointVal():
+    error = pointVal(spl, x1, ff)
+    assert error < eps
+    print('error = %g'%error)
 
-    # new grid
-    x1 = _np.linspace(0., 1., n1-1)
-    ff = x1**3
-    fx = 3*x1**2
-    fxx= 3*2*x1
+def test_arrayVal():
+    error = arrayVal(spl, x1, ff)
+    print('error = %g'%error)
+    assert error < eps
 
+def test_pointDx():
+    error = pointDx(spl, x1, fx)
+    print('error = %g'%error)
+    assert error < 10*eps
 
-    cum_error = 0
+def test_arrayDx():
+    error = arrayDx(spl, x1, fx)
+    print('error = %g'%error)
+    assert error < 10*eps
+
+def test_pointDxx():
+    error = pointDxx(spl, x1, fxx)
+    print('error = %g'%error)
+    assert error < 100*eps
+
+def test_arrayDxx():
+    error = arrayDxx(spl, x1, fxx)
+    print('error = %g'%error)
+    assert error < 100*eps
+
+if __name__ == "__main__":
 
     print('..testing interpolation....................')
-
-    error = pointVal(spl, x1, ff)
-    cum_error += error
-    print('error = %g'%error)
-    error = arrayVal(spl, x1, ff)
-    cum_error += error
-    print('error = %g'%error)
+    test_pointVal()
+    test_arrayVal()
 
     print('..testing 1st order derivatives............')
-
-    error = pointDx(spl, x1, fx)
-    cum_error += error
-    print('error = %g'%error)
-    error = arrayDx(spl, x1, fx)
-    cum_error += error
-    print('error = %g'%error)
+    test_pointDx()
+    test_arrayDx()
 
     print('..testing 2nd order derivatives............')
-
-    error = pointDxx(spl, x1, fxx)
-    cum_error += error
-    print('error = %g'%error)
-    error = arrayDxx(spl, x1, fxx)
-    cum_error += error
-    print('error = %g'%error)
-
-    print('cumulated error = %g in %s' % (cum_error, sys.argv[0]))
-    if cum_error > 0.30:
-       print('TEST %s FAILED' %  sys.argv[0])
+    test_pointDxx()
+    test_arrayDxx()
