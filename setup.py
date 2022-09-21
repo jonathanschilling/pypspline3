@@ -25,14 +25,25 @@ pspline_ext = Extension(name = 'fpspline',
                                    'src/xlookup.f90',
                                    'src/zonfind.f90'])
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 if __name__ == "__main__":
     from numpy.distutils.core import setup
     setup(name = 'pypspline3',
           version ='1.0.0',
-          description       = "Princeton Spline and Hermite Cubic Interpolation Routines ",
           author            = "Jonathan Schilling",
           author_email      = "jonathan.schilling@mail.de",
+          description       = "Princeton Spline and Hermite Cubic Interpolation Routines ",
+          long_description=long_description,
+          long_description_content_type="text/markdown",
+          url="https://github.com/jonathanschilling/pypspline3",
           packages = setuptools.find_packages(),
-          ext_modules = [pspline_ext]
+          ext_modules = [pspline_ext],
+          classifiers=["Programming Language :: Python :: 3",
+                       "Operating System :: POSIX :: Linux",
+                       ],
+          python_requires='>=3',
+          install_requires=['numpy'],
           )
 
