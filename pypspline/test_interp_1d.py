@@ -3,7 +3,7 @@
 # $Id: test_interp1_r4.py,v 1.1 2004/03/30 16:33:20 pletzer Exp $
 
 import numpy as _np
-from pspline_1d import pspline
+from pypspline.pspline_1d import pspline
 EPS = 1.e-10
 
 def pointVal(spl, x1, ff):
