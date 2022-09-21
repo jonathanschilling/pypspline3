@@ -13,22 +13,23 @@ conflicts=(pyspline3)
 source=("https://github.com/jonathanschilling/pypspline3/archive/refs/tags/v1.0.0.tar.gz")
 md5sums=("4dfd9c7a31e04d194b0e4925372f3415")
 
-# prepare() {
-# 	cd "$pkgname-$pkgver"
-# 	patch -p1 -i "$srcdir/$pkgname-$pkgver.patch"
-# }
-
 build() {
 	cd "$pkgname-$pkgver"
 	python setup.py build
 }
 
 check() {
-	cd "$pkgname-$pkgver"
+	cd "$pkgname-$pkgver/build/lib.linux-x86_64-cpython-310/"
 	pytest
 }
 
 package() {
 	cd "$pkgname-$pkgver"
+
+	# actually install
 	pip install --no-deps --target="$pkgdir/usr/lib/python3.10/site-packages/" .
+
+	# cleanup leftovers
+	rm -rf "$pkgdir/usr/lib/python3.10/site-packages/$pkgname/__pycache__"
+	rm -f "$pkgdir/usr/lib/python3.10/site-packages/pypspline3-1.0.0.dist-info/direct_url.json"
 }
