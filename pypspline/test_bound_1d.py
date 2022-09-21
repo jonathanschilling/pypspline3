@@ -19,7 +19,6 @@ def periodic1():
     ffi, ier, iwarn = spl.interp_array(x1)
     return np.sqrt(np.sum(np.sum(np.sum( (ff-ffi)**2 )))/float(len(ff)))
 
-
 def slope1():
     n1 = 11
     x1 = np.linspace(0., 2*np.pi, n1)
@@ -50,13 +49,20 @@ def secondDer1():
 
 def test_periodic1():
     error = periodic1()
+    assert error < 2.5e-4
     print('error = %g'%error)
 
 def test_slope1():
     error = slope1()
+    assert error < 2.5e-4
     print('error = %g'%error)
 
 def test_secondDer1():
     error = secondDer1()
+    assert error < 1.5e-3
     print('error = %g'%error)
 
+if __name__ == "__main__":
+    test_periodic1()
+    test_slope1()
+    test_secondDer1()

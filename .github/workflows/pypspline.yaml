@@ -1,4 +1,4 @@
-name: PyPSPLINE
+name: build&test
 
 on: [push]
 
@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install gfortran gcc
-          pip install flake8 pytest
+          pip install flake8 pytest wheel
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Lint with flake8
         run: |
