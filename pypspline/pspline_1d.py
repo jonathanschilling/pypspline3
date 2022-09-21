@@ -89,7 +89,7 @@ class pspline:
         self.bcval1max = 0
 
         # Compact cubic coefficient arrays
-        self.__fspl = _np.zeros((2,n1), order='F')
+        self.__fspl = _np.zeros((n1,2))
 
         # storage
         self.__x1pkg = None
@@ -119,25 +119,22 @@ class pspline:
         ialg=-3       # algorithm selection code
 
         iper=0
-        if self.__ibctype1[0]==-1 or self.__ibctype1[1]==-1:
-            iper=1
-
-        self.__x1pkg = _np.zeros([self.__n1, 4], order='F')
-
-        ifail = 0
-        fpspline.genxpkg(self.__n1, self.__x1, self.__x1pkg, iper,
-                         imsg, itol, ztol, ialg, ifail)
+        if self.__ibctype1[0]==-1 or self.__ibctype1[1]==-1: iper=1
+        self.__x1pkg, ifail = fpspline.genxpkg(self.__x1, iper)
         if ifail!=0:
             raise 'pspline1_r4::setup failed to compute x1pkg'
 
         self.__isReady = 0
 
-        self.__fspl[0,:] = f
+        self.__fspl[:,0] = f
 
-        fpspline.mkspline(self.__x1, self.__n1, self.__fspl,
-                          self.__ibctype1[0], self.bcval1min,
-                          self.__ibctype1[1], self.bcval1max,
-                          self.__ilin1, ifail)
+        self.__ilin1, ifail = \
+                      fpspline.mkspline(self.__x1,
+                                        self.__fspl.flat,
+                                        self.__ibctype1[0], self.bcval1min,
+                                        self.__ibctype1[1], self.bcval1max
+                                        )
+
         if ifail != 0 :
             raise 'pspline1_r4::setup mkspline error'
 
@@ -150,15 +147,11 @@ class pspline:
         """
 
         iwarn = 0
-
-        fi = _np.zeros(1)
-        ier = 0
-        fpspline.evspline(p1,
-                          self.__x1, self.__n1,
-                          self.__ilin1, self.__fspl,
-                          ICT_FVAL, fi, ier)
-
-        return fi[0], ier, iwarn
+        fi,ier = fpspline.evspline(p1,
+                                   self.__x1,
+                                   self.__ilin1,
+                                   self.__fspl.flat, ICT_FVAL)
+        return fi, ier, iwarn
 
     def interp_cloud(self, p1):
 
@@ -168,18 +161,9 @@ class pspline:
         Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
-        nEval = len(p1)
-
-        fi = _np.zeros(nEval)
-
-        iwarn = 0
-        ier = 0
-        fpspline.vecspline(ICT_FVAL,
-                           nEval, p1,
-                           nEval, fi,
-                           self.__n1, self.__x1pkg,
-                           self.__fspl, iwarn, ier)
-
+        fi,iwarn,ier = fpspline.vecspline(ICT_FVAL, p1, \
+                                         self.__x1pkg, \
+                                         self.__fspl.flat)
         return fi, ier, iwarn
 
     def interp_array(self, p1):
@@ -190,17 +174,9 @@ class pspline:
         Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
-        nEval = len(p1)
-
-        fi = _np.zeros(nEval)
-
-        iwarn = 0
-        ier = 0
-        fpspline.vecspline(ICT_FVAL,
-                           nEval, p1,
-                           nEval, fi,
-                           self.__n1, self.__x1pkg,
-                           self.__fspl, iwarn, ier)
+        fi, iwarn,ier = fpspline.vecspline(ICT_FVAL, p1, \
+                                         self.__x1pkg, \
+                                         self.__fspl.flat)
 
         return fi, ier, iwarn
 
@@ -239,16 +215,12 @@ class pspline:
         Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
-        ier = 0
         iwarn = 0
-
-        fi = _np.zeros(1)
-        fpspline.evspline(p1,
-                          self.__x1, self.__n1,
-                          self.__ilin1, self.__fspl, ICT_MAP[i1],
-                          fi, ier)
-
-        return fi[0], ier, iwarn
+        fi,ier = fpspline.evspline(p1,
+                                   self.__x1,
+                                   self.__ilin1,
+                                   self.__fspl.flat, ICT_MAP[i1])
+        return fi, ier, iwarn
 
     def derivative_cloud(self, i1, p1):
 
@@ -258,19 +230,9 @@ class pspline:
         Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
-        nEval = len(p1)
-
-        ier = 0
-        iwarn = 0
-
-        fi = _np.zeros(nEval)
-
-        fpspline.vecspline(ICT_MAP[i1],
-                           nEval, p1,
-                           nEval, fi,
-                           self.__n1, self.__x1pkg,
-                           self.__fspl, iwarn, ier)
-
+        fi,iwarn,ier = fpspline.vecspline(ICT_MAP[i1], p1,
+                                          self.__x1pkg,
+                                          self.__fspl.flat)
         return fi, ier, iwarn
 
     def derivative_array(self, i1, p1):
@@ -281,19 +243,9 @@ class pspline:
         Return the interpolated function, an error flag  (=0 if ok) and a warning flag (=0 if ok).
         """
 
-        nEval = len(p1)
-
-        ier = 0
-        iwarn = 0
-
-        fi = _np.zeros(nEval)
-
-        fpspline.vecspline(ICT_MAP[i1],
-                           nEval, p1,
-                           nEval, fi,
-                           self.__n1, self.__x1pkg,
-                           self.__fspl, iwarn, ier)
-
+        fi,iwarn,ier = fpspline.vecspline(ICT_MAP[i1], p1,
+                                          self.__x1pkg,
+                                          self.__fspl.flat)
         return fi, ier, iwarn
 
     def derivative(self, i1, p1, meth=None):
