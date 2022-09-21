@@ -7,6 +7,13 @@ The routines of the `compact` F77 interface are wrapped in Python classes.
 Internal documentation of the underlying Fortran routines can be found in the [PSPLINE Help](https://w3.pppl.gov/~pshare/help/pspline.htm)
 at [F77_standard_software](https://w3.pppl.gov/~pshare/help/body_pspline_hlp.html#outfile24.html) --> [Compact_Splines](https://w3.pppl.gov/~pshare/help/body_pspline_hlp.html#outfile30.html) .
 
+## Usage
+The use of this package is demonstrated in a few scripts in the [`demo`](demo/) folder:
+
+* [`demo/demo_pspline_1d.py`](demo/demo_pspline_1d.py)
+* [`demo/demo_pspline_2d.py`](demo/demo_pspline_2d.py)
+* [`demo/demo_pspline_3d.py`](demo/demo_pspline_3d.py)
+
 ## Prerequisites
 
 * Python 3 (tested with 3.10.7): http://python.org
