@@ -1,0 +1,225 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module pspline_wrapped ! in 
+    interface  ! in :pspline_wrapped
+        subroutine evbicub(xget,yget,x,nx,y,ny,ilinx,iliny,f,inf2,ict,fval,ier) ! in :pspline_wrapped:src/evbicub.f90
+            use iso_c_binding, only: fp=>c_double
+            real(kind=fp) :: xget
+            real(kind=fp) :: yget
+            real(kind=fp) dimension(nx) :: x
+            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
+            real(kind=fp) dimension(ny) :: y
+            integer, optional,check(shape(y, 0) == ny),depend(y) :: ny=shape(y, 0)
+            integer :: ilinx
+            integer :: iliny
+            real(kind=fp) dimension(4,inf2,ny),depend(ny) :: f
+            integer, optional,check(shape(f, 1) == inf2),depend(f) :: inf2=shape(f, 1)
+            integer dimension(6) :: ict
+            real(kind=fp) dimension(*) :: fval
+            integer :: ier
+        end subroutine evbicub
+        subroutine evspline(xget,x,nx,ilinx,f,ict,fval,ier) ! in :pspline_wrapped:src/evspline.f90
+            use iso_c_binding, only: fp=>c_double
+            real(kind=fp) :: xget
+            real(kind=fp) dimension(nx) :: x
+            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
+            integer :: ilinx
+            real(kind=fp) dimension(2,nx),depend(nx) :: f
+            integer dimension(3) :: ict
+            real(kind=fp) dimension(*) :: fval
+            integer :: ier
+        end subroutine evspline
+        subroutine evtricub(xget,yget,zget,x,nx,y,ny,z,nz,ilinx,iliny,ilinz,f,inf2,inf3,ict,fval,ier) ! in :pspline_wrapped:src/evtricub.f90
+            use iso_c_binding, only: fp=>c_double
+            real(kind=fp) :: xget
+            real(kind=fp) :: yget
+            real(kind=fp) :: zget
+            real(kind=fp) dimension(nx) :: x
+            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
+            real(kind=fp) dimension(ny) :: y
+            integer, optional,check(shape(y, 0) == ny),depend(y) :: ny=shape(y, 0)
+            real(kind=fp) dimension(nz) :: z
+            integer, optional,check(shape(z, 0) == nz),depend(z) :: nz=shape(z, 0)
+            integer :: ilinx
+            integer :: iliny
+            integer :: ilinz
+            real(kind=fp) dimension(8,inf2,inf3,nz),depend(nz) :: f
+            integer, optional,check(shape(f, 1) == inf2),depend(f) :: inf2=shape(f, 1)
+            integer, optional,check(shape(f, 2) == inf3),depend(f) :: inf3=shape(f, 2)
+            integer dimension(10) :: ict
+            real(kind=fp) dimension(*) :: fval
+            integer :: ier
+        end subroutine evtricub
+        subroutine genxpkg(nx,x,xpkg,iper,imsg,itol,ztol,ialg,ier) ! in :pspline_wrapped:src/genxpkg.f90
+            use iso_c_binding, only: fp=>c_double
+            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
+            real(kind=fp) dimension(nx) :: x
+            real(kind=fp) dimension(nx,4),depend(nx) :: xpkg
+            integer :: iper
+            integer :: imsg
+            integer :: itol
+            real(kind=fp) :: ztol
+            integer :: ialg
+            integer :: ier
+        end subroutine genxpkg
+        subroutine gridbicub(x_newgrid,nx_new,y_newgrid,ny_new,f_new,if1,nx,xpkg,ny,ypkg,fspl,inf3,iwarn,ier) ! in :pspline_wrapped:src/gridbicub.f90
+            use iso_c_binding, only: fp=>c_double
+            real(kind=fp) dimension(nx_new) :: x_newgrid
+            integer, optional,check(shape(x_newgrid, 0) == nx_new),depend(x_newgrid) :: nx_new=shape(x_newgrid, 0)
+            real(kind=fp) dimension(ny_new) :: y_newgrid
+            integer, optional,check(shape(y_newgrid, 0) == ny_new),depend(y_newgrid) :: ny_new=shape(y_newgrid, 0)
+            real(kind=fp) dimension(if1,ny_new),depend(ny_new) :: f_new
+            integer, optional,check(shape(f_new, 0) == if1),depend(f_new) :: if1=shape(f_new, 0)
+            integer, optional,check(shape(xpkg, 0) == nx),depend(xpkg) :: nx=shape(xpkg, 0)
+            real(kind=fp) dimension(nx,4) :: xpkg
+            integer, optional,check(shape(ypkg, 0) == ny),depend(ypkg) :: ny=shape(ypkg, 0)
+            real(kind=fp) dimension(ny,4) :: ypkg
+            real(kind=fp) dimension(4,inf3,ny),depend(ny) :: fspl
+            integer, optional,check(shape(fspl, 1) == inf3),depend(fspl) :: inf3=shape(fspl, 1)
+            integer :: iwarn
+            integer :: ier
+        end subroutine gridbicub
+        subroutine gridtricub(x_newgrid,nx_new,y_newgrid,ny_new,z_newgrid,nz_new,f_new,if1,if2,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :pspline_wrapped:src/gridtricub.f90
+            use iso_c_binding, only: fp=>c_double
+            real(kind=fp) dimension(nx_new) :: x_newgrid
+            integer, optional,check(shape(x_newgrid, 0) == nx_new),depend(x_newgrid) :: nx_new=shape(x_newgrid, 0)
+            real(kind=fp) dimension(ny_new) :: y_newgrid
+            integer, optional,check(shape(y_newgrid, 0) == ny_new),depend(y_newgrid) :: ny_new=shape(y_newgrid, 0)
+            real(kind=fp) dimension(nz_new) :: z_newgrid
+            integer, optional,check(shape(z_newgrid, 0) == nz_new),depend(z_newgrid) :: nz_new=shape(z_newgrid, 0)
+            real(kind=fp) dimension(if1,if2,nz_new),depend(nz_new) :: f_new
+            integer, optional,check(shape(f_new, 0) == if1),depend(f_new) :: if1=shape(f_new, 0)
+            integer, optional,check(shape(f_new, 1) == if2),depend(f_new) :: if2=shape(f_new, 1)
+            integer, optional,check(shape(xpkg, 0) == nx),depend(xpkg) :: nx=shape(xpkg, 0)
+            real(kind=fp) dimension(nx,4) :: xpkg
+            integer, optional,check(shape(ypkg, 0) == ny),depend(ypkg) :: ny=shape(ypkg, 0)
+            real(kind=fp) dimension(ny,4) :: ypkg
+            integer, optional,check(shape(zpkg, 0) == nz),depend(zpkg) :: nz=shape(zpkg, 0)
+            real(kind=fp) dimension(nz,4) :: zpkg
+            real(kind=fp) dimension(8,inf4,inf5,nz),depend(nz) :: fspl
+            integer, optional,check(shape(fspl, 1) == inf4),depend(fspl) :: inf4=shape(fspl, 1)
+            integer, optional,check(shape(fspl, 2) == inf5),depend(fspl) :: inf5=shape(fspl, 2)
+            integer :: iwarn
+            integer :: ier
+        end subroutine gridtricub
+        subroutine mkbicub(x,nx,y,ny,f,nf2,ibcxmin,bcxmin,ibcxmax,bcxmax,ibcymin,bcymin,ibcymax,bcymax,ilinx,iliny,ier) ! in :pspline_wrapped:src/mkbicub.f90
+            use iso_c_binding, only: fp=>c_double
+            real(kind=fp) dimension(nx) :: x
+            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
+            real(kind=fp) dimension(ny) :: y
+            integer, optional,check(shape(y, 0) == ny),depend(y) :: ny=shape(y, 0)
+            real(kind=fp) dimension(4,nf2,ny),depend(ny) :: f
+            integer, optional,check(shape(f, 1) == nf2),depend(f) :: nf2=shape(f, 1)
+            integer :: ibcxmin
+            real(kind=fp) dimension(ny),depend(ny) :: bcxmin
+            integer :: ibcxmax
+            real(kind=fp) dimension(ny),depend(ny) :: bcxmax
+            integer :: ibcymin
+            real(kind=fp) dimension(nx),depend(nx) :: bcymin
+            integer :: ibcymax
+            real(kind=fp) dimension(nx),depend(nx) :: bcymax
+            integer :: ilinx
+            integer :: iliny
+            integer :: ier
+        end subroutine mkbicub
+        subroutine mkspline(x,nx,fspl,ibcxmin,bcxmin,ibcxmax,bcxmax,ilinx,ier) ! in :pspline_wrapped:src/mkspline.f90
+            use iso_c_binding, only: fp=>c_double
+            real(kind=fp) dimension(nx) :: x
+            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
+            real(kind=fp) dimension(2,nx),depend(nx) :: fspl
+            integer :: ibcxmin
+            real(kind=fp) :: bcxmin
+            integer :: ibcxmax
+            real(kind=fp) :: bcxmax
+            integer :: ilinx
+            integer :: ier
+        end subroutine mkspline
+        subroutine mktricub(x,nx,y,ny,z,nz,f,nf2,nf3,ibcxmin,bcxmin,ibcxmax,bcxmax,inb1x,ibcymin,bcymin,ibcymax,bcymax,inb1y,ibczmin,bczmin,ibczmax,bczmax,inb1z,ilinx,iliny,ilinz,ier) ! in :pspline_wrapped:src/mktricub.f90
+            use iso_c_binding, only: fp=>c_double
+            real(kind=fp) dimension(nx) :: x
+            integer, optional,check(shape(x, 0) == nx),depend(x) :: nx=shape(x, 0)
+            real(kind=fp) dimension(ny) :: y
+            integer, optional,check(shape(y, 0) == ny),depend(y) :: ny=shape(y, 0)
+            real(kind=fp) dimension(nz) :: z
+            integer, optional,check(shape(z, 0) == nz),depend(z) :: nz=shape(z, 0)
+            real(kind=fp) dimension(8,nf2,nf3,nz),depend(nz) :: f
+            integer, optional,check(shape(f, 1) == nf2),depend(f) :: nf2=shape(f, 1)
+            integer, optional,check(shape(f, 2) == nf3),depend(f) :: nf3=shape(f, 2)
+            integer :: ibcxmin
+            real(kind=fp) dimension(inb1x,nz),depend(nz) :: bcxmin
+            integer :: ibcxmax
+            real(kind=fp) dimension(inb1x,nz),depend(nz,inb1x) :: bcxmax
+            integer, optional,check(shape(bcxmin, 0) == inb1x),depend(bcxmin) :: inb1x=shape(bcxmin, 0)
+            integer :: ibcymin
+            real(kind=fp) dimension(inb1y,nz),depend(nz) :: bcymin
+            integer :: ibcymax
+            real(kind=fp) dimension(inb1y,nz),depend(nz,inb1y) :: bcymax
+            integer, optional,check(shape(bcymin, 0) == inb1y),depend(bcymin) :: inb1y=shape(bcymin, 0)
+            integer :: ibczmin
+            real(kind=fp) dimension(inb1z,ny),depend(ny) :: bczmin
+            integer :: ibczmax
+            real(kind=fp) dimension(inb1z,ny),depend(inb1z,ny) :: bczmax
+            integer, optional,check(shape(bczmin, 0) == inb1z),depend(bczmin) :: inb1z=shape(bczmin, 0)
+            integer :: ilinx
+            integer :: iliny
+            integer :: ilinz
+            integer :: ier
+        end subroutine mktricub
+        subroutine vecbicub(ict,ivec,xvec,yvec,ivd,fval,nx,xpkg,ny,ypkg,fspl,inf2,iwarn,ier) ! in :pspline_wrapped:src/vecbicub.f90
+            use iso_c_binding, only: fp=>c_double
+            integer dimension(6) :: ict
+            integer, optional,check(shape(xvec, 0) == ivec),depend(xvec) :: ivec=shape(xvec, 0)
+            real(kind=fp) dimension(ivec) :: xvec
+            real(kind=fp) dimension(ivec),depend(ivec) :: yvec
+            integer, optional,check(shape(fval, 0) == ivd),depend(fval) :: ivd=shape(fval, 0)
+            real(kind=fp) dimension(ivd,*) :: fval
+            integer, optional,check(shape(xpkg, 0) == nx),depend(xpkg) :: nx=shape(xpkg, 0)
+            real(kind=fp) dimension(nx,4) :: xpkg
+            integer, optional,check(shape(ypkg, 0) == ny),depend(ypkg) :: ny=shape(ypkg, 0)
+            real(kind=fp) dimension(ny,4) :: ypkg
+            real(kind=fp) dimension(4,inf2,ny),depend(ny) :: fspl
+            integer, optional,check(shape(fspl, 1) == inf2),depend(fspl) :: inf2=shape(fspl, 1)
+            integer :: iwarn
+            integer :: ier
+        end subroutine vecbicub
+        subroutine vecspline(ict,ivec,xvec,ivd,fval,nx,xpkg,fspl,iwarn,ier) ! in :pspline_wrapped:src/vecspline.f90
+            use iso_c_binding, only: fp=>c_double
+            integer dimension(3) :: ict
+            integer, optional,check(shape(xvec, 0) == ivec),depend(xvec) :: ivec=shape(xvec, 0)
+            real(kind=fp) dimension(ivec) :: xvec
+            integer, optional,check(shape(fval, 0) == ivd),depend(fval) :: ivd=shape(fval, 0)
+            real(kind=fp) dimension(ivd,*) :: fval
+            integer, optional,check(shape(xpkg, 0) == nx),depend(xpkg) :: nx=shape(xpkg, 0)
+            real(kind=fp) dimension(nx,4) :: xpkg
+            real(kind=fp) dimension(2,nx),depend(nx) :: fspl
+            integer :: iwarn
+            integer :: ier
+        end subroutine vecspline
+        subroutine vectricub(ict,ivec,xvec,yvec,zvec,ivd,fval,nx,xpkg,ny,ypkg,nz,zpkg,fspl,inf4,inf5,iwarn,ier) ! in :pspline_wrapped:src/vectricub.f90
+            use iso_c_binding, only: fp=>c_double
+            integer dimension(10) :: ict
+            integer, optional,check(shape(xvec, 0) == ivec),depend(xvec) :: ivec=shape(xvec, 0)
+            real(kind=fp) dimension(ivec) :: xvec
+            real(kind=fp) dimension(ivec),depend(ivec) :: yvec
+            real(kind=fp) dimension(ivec),depend(ivec) :: zvec
+            integer, optional,check(shape(fval, 0) == ivd),depend(fval) :: ivd=shape(fval, 0)
+            real(kind=fp) dimension(ivd,*) :: fval
+            integer, optional,check(shape(xpkg, 0) == nx),depend(xpkg) :: nx=shape(xpkg, 0)
+            real(kind=fp) dimension(nx,4) :: xpkg
+            integer, optional,check(shape(ypkg, 0) == ny),depend(ypkg) :: ny=shape(ypkg, 0)
+            real(kind=fp) dimension(ny,4) :: ypkg
+            integer, optional,check(shape(zpkg, 0) == nz),depend(zpkg) :: nz=shape(zpkg, 0)
+            real(kind=fp) dimension(nz,4) :: zpkg
+            real(kind=fp) dimension(8,inf4,inf5,nz),depend(nz) :: fspl
+            integer, optional,check(shape(fspl, 1) == inf4),depend(fspl) :: inf4=shape(fspl, 1)
+            integer, optional,check(shape(fspl, 2) == inf5),depend(fspl) :: inf5=shape(fspl, 2)
+            integer :: iwarn
+            integer :: ier
+        end subroutine vectricub
+    end interface 
+end python module pspline_wrapped
+
+! This file was auto-generated with f2py (version:1.23.0).
+! See:
+! https://web.archive.org/web/20140822061353/http://cens.ioc.ee/projects/f2py2e
