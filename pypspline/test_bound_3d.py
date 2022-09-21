@@ -4,7 +4,8 @@
 
 import numpy as _np
 from pypspline.pspline_3d import pspline, griddata
-EPS = 1.e-6
+
+import pytest
 
 def periodic1():
     n1, n2, n3 = 11, 21, 31
@@ -169,7 +170,6 @@ def secondDer2():
     ffi, ier, iwarn = spl.interp_array(x1, x2, x3)
     return _np.sqrt(_np.sum(_np.sum(_np.sum( (ff-ffi)**2 )))/float(len(ff)))
 
-
 def secondDer3():
     n1, n2, n3 = 11, 21, 31
     x1 = _np.linspace(0., 2*_np.pi, n1)
@@ -191,42 +191,67 @@ def secondDer3():
 
 ##################################################################
 
+def test_periodic1():
+    error = periodic1()
+    print('error = %g'%error)
+    assert error < 2e-3
+
+def test_periodic2():
+    error = periodic2()
+    print('error = %g'%error)
+    assert error < 3e-3
+
+def test_periodic3():
+    error = periodic3()
+    print('error = %g'%error)
+    assert error < 3e-3
+
+def test_allPeriodic():
+    error = allPeriodic()
+    print('error = %g'%error)
+    assert error < 2e-3
+
+def test_slope1():
+    error = slope1()
+    print('error = %g'%error)
+    assert error < 2e-3
+
+def test_slope2():
+    error = slope2()
+    print('error = %g'%error)
+    assert error < 3e-3
+
+def test_slope3():
+    error = slope3()
+    print('error = %g'%error)
+    assert error < 3e-3
+
+def test_secondDer1():
+    error = secondDer1()
+    print('error = %g'%error)
+    assert error < 1e-2
+
+def test_secondDer2():
+    error = secondDer2()
+    print('error = %g'%error)
+    assert error < 2e-3
+
+def test_secondDer3():
+    error = secondDer3()
+    print('error = %g'%error)
+    assert error < 2e-3
+
 if __name__=='__main__':
 
-    import sys
+    test_periodic1()
+    test_periodic2()
+    test_periodic3()
+    test_allPeriodic()
 
-    cum_error = 0
-    error = periodic1()
-    cum_error += error
-    print('error = %g'%error)
-    error = periodic2()
-    cum_error += error
-    print('error = %g'%error)
-    error = periodic3()
-    cum_error += error
-    print('error = %g'%error)
-    error = allPeriodic()
-    cum_error += error
-    print('error = %g'%error)
-    error = slope1()
-    cum_error += error
-    print('error = %g'%error)
-    error = slope2()
-    cum_error += error
-    print('error = %g'%error)
-    error = slope3()
-    cum_error += error
-    print('error = %g'%error)
-    error = secondDer1()
-    cum_error += error
-    print('error = %g'%error)
-    error = secondDer2()
-    cum_error += error
-    print('error = %g'%error)
-    error = secondDer3()
-    cum_error += error
-    print('error = %g'%error)
+    test_slope1()
+    test_slope2()
+    test_slope3()
 
-    print('cumulated error = %g in %s' % (cum_error, sys.argv[0]))
-    if cum_error > 0.30:
-       print('TEST %s FAILED' %  sys.argv[0])
+    test_secondDer1()
+    test_secondDer2()
+    test_secondDer3()
