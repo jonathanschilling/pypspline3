@@ -11,6 +11,7 @@ at [F77_standard_software](https://w3.pppl.gov/~pshare/help/body_pspline_hlp.htm
 
 The use of this package is demonstrated in a few scripts in the [`demo`](demo/) folder:
 
+* [`demo/demo_1d_periodic_interp.py`](demo/demo_1d_periodic_interp.py)
 * [`demo/demo_pspline_1d.py`](demo/demo_pspline_1d.py)
 * [`demo/demo_pspline_2d.py`](demo/demo_pspline_2d.py)
 * [`demo/demo_pspline_3d.py`](demo/demo_pspline_3d.py)
